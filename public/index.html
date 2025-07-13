@@ -7,15 +7,18 @@
     <title>TechStore</title>
   </head>
   <body>
-
-    <!-- --- INICIO DE LA SOLUCIÓN: FORMULARIO FANTASMA PARA NETLIFY --- -->
+    <!--
+      FORMULARIO FANTASMA PARA DETECCIÓN EN NETLIFY
+      - 'name' debe coincidir con el nombre en tu JSX.
+      - Los 'name' de los inputs deben coincidir con los del estado de React.
+      - 'hidden' lo oculta a los usuarios.
+    -->
     <form name="contact" netlify netlify-honeypot="bot-field" hidden>
       <input type="text" name="name" />
       <input type="email" name="email" />
       <textarea name="message"></textarea>
     </form>
-    <!-- --- FIN DE LA SOLUCIÓN --- -->
-
+    
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
