@@ -5,7 +5,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useAuthContext } from "../context/AuthContext";
 import { crearUsuario, loginEmailPass } from "../auth/firebase";
 import { dispararSweetBasico } from "../assets/SweetAlert";
-import LoginForm from "./LoginForm"; // 1. Importamos nuestro nuevo componente
+import LoginForm from "./LoginForm";
 import { StyledButton } from "./Button";
 
 function LoginBoost() {
@@ -15,7 +15,7 @@ function LoginBoost() {
 
   const { login, user, logout, admin } = useAuthContext();
   const navigate = useNavigate();
-  const location = useLocation(); // 2. Obtén la ubicación
+  const location = useLocation(); 
 
   // 3. Determinamos a dónde redirigir después del login
   const from = location.state?.from?.pathname || "/";
@@ -25,7 +25,12 @@ function LoginBoost() {
     crearUsuario(usuario, password)
       .then(() => {
         login(usuario);
-        dispararSweetBasico("¡Registro Exitoso!", "Tu cuenta ha sido creada y ya has iniciado sesión.", "success", "Empezar a Comprar");
+        dispararSweetBasico(
+          "¡Registro Exitoso!",
+          "Tu cuenta ha sido creada y ya has iniciado sesión.",
+          "success",
+          "Empezar a Comprar"
+        );
         navigate("/");
       })
       .catch((error) => {
@@ -44,11 +49,16 @@ function LoginBoost() {
     loginEmailPass(usuario, password)
       .then(() => {
         login(usuario);
-        dispararSweetBasico("Logeo exitoso", "", "success", "Confirmar");
-        // 4. Usamos nuestra nueva ruta de redirección dinámica
+        dispararSweetBasico(
+          "Logeo exitoso",
+          "",
+          "success",
+          "Empezar a Comprar"
+        );
         navigate(from, { replace: true });
       })
       .catch((error) => {
+        console.log(error)
         dispararSweetBasico(
           "Credenciales incorrectas",
           "El email o la contraseña no son válidos.",
@@ -80,7 +90,6 @@ function LoginBoost() {
     );
   }
 
-  // 2. Aquí está el nuevo layout mejorado
   return (
     <>
       <SEO
@@ -111,15 +120,6 @@ function LoginBoost() {
               >
                 Registrarse
               </button>
-              {/* <button
-                type="button"
-                className={`btn ${
-                  modo === "manual" ? "btn-primary" : "btn-outline-primary"
-                }`}
-                onClick={() => handleModo("manual")}
-              >
-                Acceso Admin
-              </button> */}
             </div>
 
             {/* Renderizado condicional del formulario reutilizable */}
@@ -146,19 +146,6 @@ function LoginBoost() {
                 setPassword={setPassword}
               />
             )}
-
-            {/* {modo === "manual" && (
-              <LoginForm
-                title="Acceso Admin"
-                usernameLabel="Usuario:"
-                onSubmit={handleSubmitManual}
-                buttonText="Iniciar Sesión"
-                usuario={usuario}
-                setUsuario={setUsuario}
-                password={password}
-                setPassword={setPassword}
-              />
-            )} */}
           </div>
         </div>
       </div>
