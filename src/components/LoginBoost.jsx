@@ -88,7 +88,7 @@ function LoginBoost() {
         description="Inicia sesión o regístrate en nuestra tienda"
       />
 
-      <div className="container mt-5">
+      <div className="container my-5 mt-5">
         <div className="row justify-content-center">
           <div className="col-lg-6 col-md-8">
             {/* Botones para cambiar de modo, ahora estilizados */}

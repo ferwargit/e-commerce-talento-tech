@@ -23,21 +23,17 @@ const app = initializeApp(firebaseConfig);
 // const provider = new GoogleAuthProvider();
 const auth = getAuth();
 
-export function crearUsuario(email, password) {
-  createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      // Signed up
-      console.log("Credenciales: ", userCredential);
-      const user = userCredential.user;
-      console.log("Usuario: ", user);
-      // ...
-    })
-    .catch((error) => {
-      console.log("Error al crear usuario: ", error.code, error.message);
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      // ..
-    });
+export async function crearUsuario(email, password) {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    console.log("Credenciales: ", userCredential);
+    const user = userCredential.user;
+    console.log("Usuario: ", user);
+    return user;
+  } catch (error) {
+    console.log("Error al crear usuario: ", error.code, error.message);
+    throw error;
+  }
 }
 
 export function loginEmailPass(email, password) {
@@ -52,8 +48,6 @@ export function loginEmailPass(email, password) {
       })
       .catch((error) => {
         console.log("Error al crear usuario: ", error.code, error.message);
-        const errorCode = error.code;
-        const errorMessage = error.message;
         rej(error);
       });
   });
