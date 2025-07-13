@@ -2,11 +2,17 @@
 import "./App.css";
 import Home from "./layouts/Home";
 // 1. Importa 'useLocation' para que App sea consciente de la ruta
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import ScrollToTop from "./components/ScrollToTop";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // Importa el resto de tus componentes de página...
 import ProductosContainer from "./components/ProductosContainer";
@@ -23,7 +29,7 @@ import AdminProductos from "./components/AdminProductos";
 // Creamos un sub-componente para poder usar el hook 'useLocation'
 function AppContent() {
   const location = useLocation();
-  const showFooter = location.pathname !== '/admin/login';
+  const showFooter = location.pathname !== "/admin/login";
 
   return (
     <div className="app-container">
@@ -41,6 +47,7 @@ function AppContent() {
       />
       <Nav />
       <main>
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<LoginBoost />} />
@@ -51,8 +58,14 @@ function AppContent() {
           <Route path="/contacto" element={<Contacto />} />
           <Route path="/productos/:id" element={<ProductoDetalle />} />
           <Route path="/admin" element={<AdminProductos />} />
-          <Route path="/admin/agregarProductos" element={<FormularioProducto />} />
-          <Route path="/admin/editarProducto/:id" element={<FormularioEdicion />} />
+          <Route
+            path="/admin/agregarProductos"
+            element={<FormularioProducto />}
+          />
+          <Route
+            path="/admin/editarProducto/:id"
+            element={<FormularioEdicion />}
+          />
         </Routes>
       </main>
       {/* 2. Renderizamos el Footer solo si 'showFooter' es true */}
