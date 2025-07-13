@@ -1,7 +1,6 @@
 // src/App.jsx
 import "./App.css";
 import Home from "./layouts/Home";
-// 1. Importa 'useLocation' para que App sea consciente de la ruta
 import {
   BrowserRouter as Router,
   Routes,
@@ -13,8 +12,6 @@ import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-// Importa el resto de tus componentes de página...
 import ProductosContainer from "./components/ProductosContainer";
 import Carrito from "./components/Carrito";
 import About from "./components/About";
@@ -75,7 +72,7 @@ function AppContent() {
 }
 
 function App() {
-  // La lógica de AuthContext ya no necesita estar aquí, vive en el propio contexto
+  
   return (
     <Router>
       <AppContent />

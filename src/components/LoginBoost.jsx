@@ -25,7 +25,7 @@ function LoginBoost() {
     crearUsuario(usuario, password)
       .then(() => {
         login(usuario);
-        dispararSweetBasico("Logeo exitoso", "", "success", "Confirmar");
+        dispararSweetBasico("¡Registro Exitoso!", "Tu cuenta ha sido creada y ya has iniciado sesión.", "success", "Empezar a Comprar");
         navigate("/");
       })
       .catch((error) => {
