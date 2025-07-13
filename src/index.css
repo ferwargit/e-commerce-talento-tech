@@ -1,0 +1,120 @@
+/* src/index.css */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap");
+
+:root {
+  --font-sans: "Inter", system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --color-primary: #14b8a6;
+  --color-primary-hover: #0d9488;
+  --color-danger: #ef4444;
+  --color-danger-hover: #dc2626;
+  --color-background-dark: #111827;
+  --color-background-light: #1f2937;
+  --color-text-primary: #f9fafb;
+  --color-text-muted: #9ca3af;
+  --color-border: #374151;
+
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: dark;
+  color: var(--color-text-primary);
+  background-color: var(--color-background-dark);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+a:hover {
+  color: var(--color-primary-hover);
+}
+
+/* --- ESTILOS GLOBALES DE FORMULARIO --- */
+
+/* Estilo para las etiquetas */
+label {
+  display: block; /* Cambiamos a block para que el text-align funcione correctamente */
+  width: 100%; /* Ocupa todo el ancho para centrarse bien */
+  text-align: center; /* ¡La clave! Centramos el texto de la etiqueta */
+  color: var(--color-text-muted);
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+/* --- INICIO DE LA SOLUCIÓN: TEMA OSCURO PARA SWEETALERT2 --- */
+
+.swal2-popup.swal2-custom-dark {
+  background-color: var(--color-background-light);
+  border: 1px solid var(--color-border);
+}
+
+.swal2-popup.swal2-custom-dark .swal2-title {
+  color: var(--color-text-primary);
+}
+
+.swal2-popup.swal2-custom-dark .swal2-html-container {
+  color: var(--color-text-muted);
+}
+
+/* Estilos para los botones de la alerta */
+.swal2-popup.swal2-custom-dark .swal2-confirm-button,
+.swal2-popup.swal2-custom-dark .swal2-cancel-button {
+  border-radius: 8px; /* Bordes consistentes con nuestros botones */
+  padding: 10px 20px;
+  border: none;
+  box-shadow: none;
+  transition: background-color 0.2s ease-in-out;
+}
+
+/* Añadimos espacio entre los botones */
+.swal2-popup.swal2-custom-dark .swal2-actions {
+  gap: 1rem; /* 1rem = 16px por defecto. Ajusta si lo quieres más grande o pequeño */
+}
+
+/* Botón de Confirmar (verde) */
+.swal2-popup.swal2-custom-dark .swal2-confirm-button {
+  background-color: var(--color-primary);
+}
+.swal2-popup.swal2-custom-dark .swal2-confirm-button:hover {
+  background-color: var(--color-primary-hover);
+}
+
+/* Botón de Cancelar (gris) */
+.swal2-popup.swal2-custom-dark .swal2-cancel-button {
+  background-color: #4b5563; /* Un gris neutro */
+}
+.swal2-popup.swal2-custom-dark .swal2-cancel-button:hover {
+  background-color: #374151;
+}
+
+/* Icono de éxito (hacemos el círculo y el check más visibles) */
+.swal2-popup.swal2-custom-dark
+  .swal2-icon.swal2-success
+  .swal2-success-line-tip,
+.swal2-popup.swal2-custom-dark
+  .swal2-icon.swal2-success
+  .swal2-success-line-long {
+  stroke: var(--color-primary);
+}
+.swal2-popup.swal2-custom-dark .swal2-icon.swal2-success .swal2-success-ring {
+  border-color: rgba(
+    20,
+    184,
+    166,
+    0.3
+  ); /* Un borde de nuestro color primario semi-transparente */
+}
+/* --- FIN DE LA SOLUCIÓN --- */

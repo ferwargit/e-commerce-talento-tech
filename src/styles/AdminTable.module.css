@@ -1,0 +1,194 @@
+/* src/styles/AdminTable.module.css (Mobile-First) */
+
+.customTable {
+  /* border: none; */
+  width: 100%;
+}
+.customTable thead {
+  display: none;
+}
+
+.customTable tr {
+  display: block;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  background-color: var(--color-background-light);
+  /* border: 1px solid var(--color-border); */
+  /* box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); */
+}
+
+.customTable td {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.customTable td::before {
+  content: attr(data-label);
+  font-weight: 500;
+  color: var(--color-text-muted);
+  padding-right: 1rem;
+}
+
+.cellValue {
+  text-align: right;
+  word-break: break-word;
+  color: var(--color-text-primary);
+}
+
+.imageCell,
+.actionsCell {
+  display: block;
+  text-align: center;
+  padding: 1rem;
+}
+
+.imageCell::before,
+.actionsCell::before {
+  display: none;
+}
+
+/* CORREGIDO: Centrado de botones en mobile */
+.actionsCell {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.actionsCell .btn-group {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  width: 100% !important;
+}
+
+/* --- ESTILOS PARA DESKTOP --- */
+@media (min-width: 992px) {
+  .customTable {
+    border-collapse: separate;
+    border-spacing: 0 0.5rem;
+  }
+
+  .customTable thead {
+    display: table-header-group;
+  }
+
+  .customTable tr {
+    display: table-row;
+    margin-bottom: 0;
+    border: none;
+    background-color: var(--color-background-light);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.2s ease-in-out,
+      border-left-color 0.2s ease-in-out;
+    border-left: 3px solid transparent;
+  }
+
+  .tableHeader th {
+    color: var(--color-text-muted);
+    background-color: transparent;
+    border: none;
+    border-bottom: 2px solid var(--color-border);
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    padding: 1rem;
+    white-space: nowrap;
+  }
+
+  /* Ensure "Imagen" header is visible */
+  .imageHeader {
+    display: table-cell !important;
+    text-align: center !important;
+  }
+
+  /* Centrado específico para columnas Precio y Acciones */
+  .customTable thead.tableHeader th.priceHeader {
+    text-align: center !important;
+  }
+
+  .customTable thead.tableHeader th.actionsHeader {
+    text-align: center !important;
+    min-width: 200px; /* Ensure sufficient width for header */
+  }
+
+  .customTable td {
+    display: table-cell;
+    text-align: left;
+    padding: 1rem;
+    position: static;
+    border: none;
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+    vertical-align: middle;
+    color: var(--color-text-primary);
+    height: 80px; /* Keep fixed height */
+    box-sizing: border-box;
+  }
+
+  .customTable td::before {
+    display: none;
+  }
+
+  .customTable tbody td:first-child {
+    border-left: 1px solid var(--color-border);
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+  }
+
+  .customTable tbody td:last-child {
+    border-right: 1px solid var(--color-border);
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+  }
+
+  /* CORRECCIÓN PRINCIPAL: Asegurar que la última fila tenga borde inferior */
+  .customTable tbody tr:last-child td {
+    border-bottom: 1px solid var(--color-border) !important;
+  }
+
+  /* Esquinas redondeadas para la última fila */
+  .customTable tbody tr:last-child td:first-child {
+    border-bottom-left-radius: 8px;
+  }
+
+  .customTable tbody tr:last-child td:last-child {
+    border-bottom-right-radius: 8px;
+  }
+
+  .cellValue {
+    text-align: inherit;
+    color: var(--color-text-primary);
+  }
+
+  /* Columna de precio centrada */
+  .customTable td.priceCell {
+    text-align: center !important;
+  }
+
+  .customTable td.priceCell .cellValue {
+    text-align: center !important;
+  }
+
+  .imageCell {
+    text-align: center;
+    padding: 1rem;
+    vertical-align: middle;
+  }
+
+  .customTable .actionsCell .btn-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    width: auto;
+  }
+
+  .customTable tbody tr:hover {
+    background-color: var(--color-background-dark);
+    border-left-color: var(--color-primary);
+  }
+}

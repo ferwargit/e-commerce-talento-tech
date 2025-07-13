@@ -1,0 +1,26 @@
+/* src/App.css */
+
+/* Estilos para el contenedor principal de la aplicación */
+.app-container {
+  /* Ocupa al menos toda la altura de la pantalla */
+  min-height: 100vh;
+
+  /* Lo convertimos en un contenedor flex vertical */
+  display: flex;
+  flex-direction: column;
+
+  /* Le damos el color de fondo oscuro de nuestra paleta */
+  background-color: var(--color-background-dark);
+}
+
+/* El contenido principal (donde están las rutas) crecerá para empujar el footer hacia abajo */
+.app-container > main {
+  flex-grow: 1;
+}
+
+/* El #root ya no necesita estos estilos, los hemos movido a .app-container */
+#root {
+  max-width: 100%;
+  margin: 0 auto;
+  text-align: center;
+}
