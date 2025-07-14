@@ -1,12 +1,9 @@
-// src/components/LoginForm.jsx
-
 import React from "react";
-import styled from "styled-components"; // 1. Importa styled-components
+import styled from "styled-components";
 import { StyledButton } from "./Button";
 
-// --- INICIO DE LA SOLUCIÓN ---
 
-// 2. Creamos un componente de input estilizado
+// Creamos un componente de input estilizado
 const StyledInput = styled.input`
   /* Estilos que ya tenías aplicados con 'style' */
   background-color: var(--color-background-dark);
@@ -31,8 +28,6 @@ const StyledInput = styled.input`
     box-shadow: 0 0 0 0.25rem rgba(20, 184, 166, 0.25); /* Sombra con nuestro color primario */
   }
 `;
-
-// --- FIN DE LA SOLUCIÓN ---
 
 function LoginForm({
   title,
@@ -66,7 +61,6 @@ function LoginForm({
             >
               {usernameLabel}
             </label>
-            {/* 3. Reemplazamos el <input> por nuestro <StyledInput> */}
             <StyledInput
               type={usernameLabel === "Email" ? "email" : "text"}
               value={usuario}
@@ -85,7 +79,6 @@ function LoginForm({
             >
               Contraseña
             </label>
-            {/* 4. Hacemos lo mismo para el input de contraseña */}
             <StyledInput
               type="password"
               value={password}

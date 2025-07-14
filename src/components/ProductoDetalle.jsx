@@ -1,4 +1,3 @@
-// src/components/ProductoDetalle.jsx
 import SEO from "./SEO";
 import { useEffect, useState, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";

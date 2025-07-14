@@ -1,7 +1,4 @@
-/* src/styles/AdminTable.module.css (Mobile-First) */
-
 .customTable {
-  /* border: none; */
   width: 100%;
 }
 .customTable thead {
@@ -13,8 +10,6 @@
   margin-bottom: 1rem;
   border-radius: 8px;
   background-color: var(--color-background-light);
-  /* border: 1px solid var(--color-border); */
-  /* box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); */
 }
 
 .customTable td {
@@ -50,7 +45,6 @@
   display: none;
 }
 
-/* CORREGIDO: Centrado de botones en mobile */
 .actionsCell {
   display: flex !important;
   justify-content: center !important;
@@ -145,12 +139,10 @@
     border-bottom-right-radius: 8px;
   }
 
-  /* CORRECCIÓN PRINCIPAL: Asegurar que la última fila tenga borde inferior */
   .customTable tbody tr:last-child td {
     border-bottom: 1px solid var(--color-border) !important;
   }
 
-  /* Esquinas redondeadas para la última fila */
   .customTable tbody tr:last-child td:first-child {
     border-bottom-left-radius: 8px;
   }

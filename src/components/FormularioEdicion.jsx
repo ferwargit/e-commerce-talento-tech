@@ -11,16 +11,14 @@ function FormularioEdicion() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  // 'producto' es el estado del formulario, inicializado como null
   const [producto, setProducto] = useState(null);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
 
-  // 1. useEffect mejorado para cargar los datos del producto
   useEffect(() => {
     obtenerProducto(id)
       .then((productoCargado) => {
-        setProducto(productoCargado); // Poblamos el estado del formulario con los datos recibidos
+        setProducto(productoCargado); 
       })
       .catch((err) => {
         setError(
@@ -66,7 +64,6 @@ function FormularioEdicion() {
     }
   };
 
-  // 2. Estados de carga y error profesionales
   if (cargando) {
     return (
       <div className="container text-center my-5">
@@ -94,7 +91,6 @@ function FormularioEdicion() {
     );
   }
 
-  // 3. JSX del formulario modernizado
   return (
     <div className="container mt-5 mb-5">
       <div className="row justify-content-center">

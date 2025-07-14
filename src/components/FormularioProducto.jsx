@@ -17,7 +17,7 @@ function FormularioProducto() {
     image: "",
   });
 
-  // La lógica de validación y envío no necesita cambios
+  // lógica de validación y envío
   const validarFormulario = () => {
     if (!producto.name.trim()) {
       return "El nombre es obligatorio.";
@@ -76,7 +76,6 @@ function FormularioProducto() {
     return <Navigate to="/login" replace />;
   }
 
-  // 2. Aquí está el nuevo JSX con el layout de Bootstrap
   return (
     <div className="container mt-5 mb-5">
       <div className="row justify-content-center">

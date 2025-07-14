@@ -6,16 +6,12 @@ import Paginador from "./Paginador";
 
 function ProductosContainer() {
   const { productos, obtenerProductos, terminoBusqueda } =
-    useProductosContext(); // 1. Obtén el término de búsqueda
+    useProductosContext(); 
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
-
-  // --- INICIO DE LA LÓGICA DE PAGINACIÓN ---
   const [currentPage, setCurrentPage] = useState(1);
-  const [productsPerPage] = useState(6); // Muestra 6 productos por página
-  // --- FIN DE LA LÓGICA DE PAGINACIÓN ---
+  const [productsPerPage] = useState(6); 
 
-  // Usamos useCallback para la función de carga
   const cargarProductos = useCallback(async () => {
     try {
       await obtenerProductos();
@@ -30,12 +26,10 @@ function ProductosContainer() {
     cargarProductos();
   }, [cargarProductos]);
 
-  // Efecto para resetear la página a 1 cuando la búsqueda cambia
   useEffect(() => {
     setCurrentPage(1);
   }, [terminoBusqueda]);
 
-  // Mensaje de carga mejorado
   if (cargando) {
     return (
       <div className="container text-center my-5">
@@ -94,7 +88,6 @@ function ProductosContainer() {
         </div>
 
         <div className="row g-4">
-          {/* Mapeamos sobre los productos de la página actual */}
           {currentProducts.map((producto) => (
             <div
               key={producto.id}
@@ -116,7 +109,6 @@ function ProductosContainer() {
           )}
         </div>
 
-        {/* Añadimos el componente Paginador al final */}
         <div className="mt-5">
           <Paginador
             currentPage={currentPage}

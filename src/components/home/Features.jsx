@@ -1,4 +1,3 @@
-// src/components/Features.jsx
 import { FaShippingFast, FaShieldAlt, FaHeadset } from "react-icons/fa";
 
 const Feature = ({ icon, title, text }) => (

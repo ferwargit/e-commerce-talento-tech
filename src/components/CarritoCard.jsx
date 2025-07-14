@@ -1,5 +1,3 @@
-// src/components/CarritoCard.jsx
-import React from "react";
 import { StyledButton } from "./Button";
 
 function CarritoCard({ producto, onEliminar }) {

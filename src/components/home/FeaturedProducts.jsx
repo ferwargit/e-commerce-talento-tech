@@ -1,4 +1,3 @@
-// src/components/FeaturedProducts.jsx
 import { useEffect, useState, useCallback } from "react";
 import { useProductosContext } from "../../context/ProductosContext";
 import Card from "../Card";
@@ -19,7 +18,6 @@ function FeaturedProducts() {
     cargarProductos();
   }, [cargarProductos]);
 
-  // Tomamos solo los primeros 3 productos para destacarlos
   const featured = productos.slice(0, 3);
 
   return (

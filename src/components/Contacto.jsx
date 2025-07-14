@@ -1,5 +1,4 @@
-// src/components/Contacto.jsx
-import React, { useState } from 'react';
+import { useState } from 'react';
 import SEO from './SEO';
 import { StyledInput, StyledTextarea } from './StyledFormElements';
 import { StyledButton } from './Button';
@@ -18,7 +17,6 @@ const InfoItem = ({ icon, title, children }) => (
 );
 
 function Contacto() {
-  // Estado para el formulario
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -37,7 +35,6 @@ function Contacto() {
     setIsSubmitting(true);
     
     try {
-      // Crear FormData para envío
       const formData = new FormData();
       formData.append('form-name', 'contact');
       formData.append('name', e.target.name.value);

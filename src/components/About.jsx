@@ -1,7 +1,5 @@
-// src/components/About.jsx
-import React from "react";
 import SEO from "./SEO";
-import { FaMicrochip, FaAward, FaHeadset } from "react-icons/fa"; // Importamos iconos relevantes
+import { FaMicrochip, FaAward, FaHeadset } from "react-icons/fa"; 
 
 const Feature = ({ icon, title, text }) => (
   <div className="col-lg-4 text-center px-4">

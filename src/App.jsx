@@ -1,4 +1,3 @@
-// src/App.jsx
 import "./App.css";
 import Home from "./layouts/Home";
 import {
@@ -71,7 +70,6 @@ function AppContent() {
           />
         </Routes>
       </main>
-      {/* 2. Renderizamos el Footer solo si 'showFooter' es true */}
       {showFooter && <Footer />}
     </div>
   );

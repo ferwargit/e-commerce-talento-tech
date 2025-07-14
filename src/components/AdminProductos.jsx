@@ -1,4 +1,3 @@
-// src/components/AdminProductos.jsx
 import { useEffect, useState, useCallback } from "react";
 import { useProductosContext } from "../context/ProductosContext";
 import { StyledLinkButton, StyledButton } from "./Button";
@@ -139,9 +138,7 @@ function AdminProductos() {
                       {formatPrice(producto.price)}
                     </span>
                   </td>
-                  {/* <td data-label="Acciones" className={styles.actionsCell}> */}
                   <td data-label="Acciones">
-                    {/* <div className="btn-group gap-2 d-flex justify-content-center"> */}
                     <div className="btn-group d-flex justify-content-center">
                       <StyledLinkButton
                         to={`/admin/editarProducto/${producto.id}`}

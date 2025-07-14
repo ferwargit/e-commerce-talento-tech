@@ -98,7 +98,6 @@ export function ProductosProvider({ children }) {
   }, []);
 
   const eliminarProducto = useCallback((id) => {
-    // QUITAMOS el window.confirm de aquí
     return new Promise(async (res, rej) => {
       try {
         const respuesta = await fetch(

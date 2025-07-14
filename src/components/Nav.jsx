@@ -1,5 +1,3 @@
-// src/components/Nav.jsx
-
 import { useContext, useState } from "react"; // Importamos useState
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { CarritoContext } from "../context/CarritoContext";
@@ -223,14 +221,6 @@ function Nav() {
                 <FaUserCircle className="me-1" /> {user.split("@")[0]}
               </a>
               <ul className="dropdown-menu dropdown-menu-dark dropdown-menu-end">
-                {/* <li>
-                  <a className="dropdown-item" href="#" onClick={closeMenu}>
-                    Mi Perfil
-                  </a>
-                </li>
-                <li>
-                  <hr className="dropdown-divider" />
-                </li> */}
                 <li>
                   <Link className="dropdown-item" to="/" onClick={handleLogout}>
                     <RiLoginBoxLine className="me-1" />
@@ -268,7 +258,7 @@ function Nav() {
           <button
             className="navbar-toggler"
             type="button"
-            onClick={handleNavCollapse} // Controlado por nuestro estado
+            onClick={handleNavCollapse} 
             aria-controls="navContent"
             aria-expanded={!isNavCollapsed}
             aria-label="Toggle navigation"

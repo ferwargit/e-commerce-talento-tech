@@ -1,4 +1,3 @@
-// src/components/StyledFormElements.jsx
 import styled, { css } from "styled-components";
 
 // Definimos los estilos comunes para todos nuestros inputs y textareas
@@ -27,7 +26,6 @@ const commonInputStyles = css`
   }
 `;
 
-// Exportamos los componentes estilizados
 export const StyledInput = styled.input`
   ${commonInputStyles}
 `;

@@ -1,5 +1,3 @@
-// src/components/Footer.jsx
-import React from "react";
 import { Link } from "react-router-dom";
 import styles from "../styles/Footer.module.css";
 import { useAuthContext } from "../context/AuthContext";
@@ -92,8 +90,6 @@ function Footer() {
 
             <div className="col-lg-4 col-md-4">
               <h5 className={styles.footerTitle}>Síguenos</h5>
-              {/* --- INICIO DE LA CORRECCIÓN --- */}
-              {/* Eliminamos la clase 'justify-content-md-start' para que siempre esté centrado */}
               <div className={`${styles.socialIcons} justify-content-center`}>
                 <a
                   href="https://www.facebook.com/"
@@ -123,7 +119,6 @@ function Footer() {
                   <FaLinkedin />
                 </a>
               </div>
-              {/* --- FIN DE LA CORRECCIÓN --- */}
             </div>
           </div>
         </div>

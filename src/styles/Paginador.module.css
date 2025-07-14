@@ -1,7 +1,4 @@
-/* src/styles/Paginador.module.css */
-
 .pagination {
-  /* No se necesita mucho aquí, Bootstrap ya centra con .justify-content-center */
   --bs-pagination-focus-box-shadow: 0 0 0 0.25rem rgba(20, 184, 166, 0.25); /* Sombra de foco con nuestro color primario */
 }
 

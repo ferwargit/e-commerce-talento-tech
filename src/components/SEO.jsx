@@ -1,5 +1,3 @@
-// src/components/SEO.jsx (versión React 19 nativa)
-
 function SEO({ title, description }) {
   const defaultTitle = "TechStore";
   const defaultDescription =

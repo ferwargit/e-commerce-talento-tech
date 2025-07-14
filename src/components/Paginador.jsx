@@ -1,6 +1,4 @@
-// src/components/Paginador.jsx
-import React from "react";
-import styles from "../styles/Paginador.module.css"; // 1. Importa el módulo CSS
+import styles from "../styles/Paginador.module.css"; 
 
 function Paginador({ currentPage, totalPages, onPageChange }) {
   const pageNumbers = [];
@@ -14,9 +12,7 @@ function Paginador({ currentPage, totalPages, onPageChange }) {
 
   return (
     <nav aria-label="Navegación de páginas">
-      {/* 2. Aplicamos nuestra clase principal del módulo */}
       <ul className={`pagination justify-content-center ${styles.pagination}`}>
-        {/* 3. Aplicamos la clase a cada item y link */}
         <li
           className={`${styles.pageItem} page-item ${
             currentPage === 1 ? styles.disabled + " disabled" : ""

@@ -1,4 +1,3 @@
-// src/components/LoginBoost.jsx
 import SEO from "./SEO";
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -17,7 +16,6 @@ function LoginBoost() {
   const navigate = useNavigate();
   const location = useLocation(); 
 
-  // 3. Determinamos a dónde redirigir después del login
   const from = location.state?.from?.pathname || "/";
 
   const registrarUsuario = (e) => {

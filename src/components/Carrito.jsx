@@ -59,7 +59,6 @@ export default function Carrito() {
     });
   };
 
-  // --- NUEVA FUNCIÓN PARA MANEJAR LA ELIMINACIÓN ---
   const handleEliminarProducto = (id, nombre) => {
     ThemedSwal.fire({
       title: "¿Quitar producto?",
@@ -133,7 +132,7 @@ export default function Carrito() {
               <CarritoCard
                 key={producto.id}
                 producto={producto}
-                // Pasamos la nueva función al componente hijo
+                // Pasamos la función al componente hijo
                 onEliminar={handleEliminarProducto}
               />
             ))}

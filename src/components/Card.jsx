@@ -1,9 +1,5 @@
-// src/components/Card.jsx
-import React from "react";
 import { StyledLinkButton } from "./Button";
 import styled from "styled-components";
-
-// --- COMPONENTES ESTILIZADOS MEJORADOS ---
 
 const CardImage = styled.img`
   max-width: 100%;
@@ -28,11 +24,8 @@ const StyledCard = styled.div`
     transform: translateY(-5px);
     border-color: var(--color-primary);
 
-    /* --- INICIO DE LA MEJORA DEL RESPLANDOR --- */
-    /* Apilamos una tercera sombra: un resplandor con nuestro color de marca */
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-      0 4px 6px -2px rgba(0, 0, 0, 0.1), 0 0 12px rgba(20, 184, 166, 0.3); /* Resplandor de marca (Teal) */
-    /* --- FIN DE LA MEJORA DEL RESPLANDOR --- */
+      0 4px 6px -2px rgba(0, 0, 0, 0.1), 0 0 12px rgba(20, 184, 166, 0.3);
 
     ${CardImage} {
       transform: scale(1.05);

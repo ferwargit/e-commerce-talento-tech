@@ -1,5 +1,3 @@
-// src/components/Button.jsx
-
 import styled, { css } from "styled-components";
 import { Link } from "react-router-dom";
 
@@ -47,7 +45,6 @@ const buttonStyles = css`
   }
 `;
 
-// No se necesitan cambios aquí, los estilos se aplican igual
 export const StyledButton = styled.button`
   ${buttonStyles}
 `;
