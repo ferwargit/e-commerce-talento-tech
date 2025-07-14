@@ -1,90 +1,105 @@
+# TechStore - E-commerce Avanzado con React
+
+<!-- Añade aquí una captura de pantalla principal de tu proyecto -->
+![Captura de Pantalla de TechStore](https://e-commerce-talento-2.netlify.app/images/products/inicio.jpg) 
+
+**TechStore** es una aplicación web de comercio electrónico (e-commerce) completamente funcional, desarrollada desde cero con **React 19**. Este proyecto es un escaparate de las mejores prácticas en el desarrollo frontend moderno, abarcando desde una arquitectura de componentes robusta y una gestión de estado centralizada, hasta una experiencia de usuario (UX) pulida, responsiva y coherente.
+
+La aplicación simula un entorno de venta real con un catálogo de productos dinámico, un carrito de compras persistente, y un sistema de autenticación dual que separa claramente los flujos de cliente y administrador.
+
+**[Ver Demo en Vivo - Cliente](https://e-commerce-talento-2.netlify.app/)**
+
+**[Ver Demo en Vivo - Administrador](https://e-commerce-talento-2.netlify.app/admin/login/)**
 
 ---
 
-# TechStore - E-commerce Moderno con React
-
- <!-- Reemplaza esta URL con una captura de pantalla actualizada de tu proyecto -->
-
-**TechStore** es una aplicación web de comercio electrónico (e-commerce) completamente funcional y responsiva, desarrollada desde cero con **React 19**. Este proyecto no solo demuestra la creación de una tienda online, sino que también sirve como un caso de estudio en la implementación de las mejores prácticas de desarrollo frontend, desde la gestión de estado y la arquitectura de componentes hasta el diseño de una experiencia de usuario (UX) pulida y coherente.
-
-La aplicación cuenta con un catálogo de productos dinámico, un carrito de compras persistente, un sistema de autenticación dual (clientes y administradores) con rutas protegidas, y un completo panel de administración para la gestión de productos (CRUD).
-
-**[Ver Demo en Vivo](https://e-commerce-10.netlify.app/)** <!-- Reemplaza con el enlace a tu deploy en Netlify -->
-
 ## ✨ Características Principales
 
--   **Catálogo de Productos Dinámico:** Carga y muestra productos desde una API externa (`mockAPI`), con funcionalidades de **búsqueda global**, **ordenamiento alfabético** y **paginación**.
--   **Diseño "Dark Mode" Sofisticado y Responsivo:** Interfaz completamente adaptable a cualquier dispositivo, construida con **Bootstrap 5** y un sistema de diseño personalizado con variables CSS para una consistencia visual impecable.
--   **Carrito de Compras Persistente:** Los productos añadidos al carrito se conservan entre sesiones de navegación gracias al uso de `localStorage`, mejorando la retención de usuarios.
--   **Panel de Administración Completo y Protegido:**
-    -   Ruta de acceso exclusiva y protegida (`/admin`).
-    -   Funcionalidades CRUD (Crear, Leer, Actualizar, Eliminar) para la gestión de productos.
-    -   Tabla de productos responsiva que se transforma en tarjetas en la vista móvil.
--   **Sistema de Autenticación y Roles:**
-    -   Registro e inicio de sesión de clientes utilizando **Firebase Authentication**.
-    -   Rol de Administrador con credenciales separadas, permisos especiales y una interfaz de navegación adaptada a su rol.
--   **Experiencia de Usuario (UX) Pulida:**
-    -   **Optimización SEO:** Metadatos (`<title>`, `<meta name="description">`) dinámicos para cada página, renderizados de forma nativa con React 19.
-    -   **Notificaciones Interactivas:** Uso de **SweetAlert2** para confirmaciones críticas (ej. eliminar producto) y **React-Toastify** para notificaciones pasivas (ej. producto agregado), ambas tematizadas para coincidir con el diseño.
-    -   **Microinteracciones y Efectos Visuales:** Efectos de `hover` en las tarjetas de producto (elevación, resplandor de marca y zoom de imagen) que mejoran el feedback visual y la sensación de calidad.
--   **Arquitectura de Componentes Profesional:**
-    -   Fuerte separación de incumbencias utilizando componentes reutilizables como `Button`, `Paginador`, y `StyledFormElements`.
-    -   Uso de **Styled Components** para crear un sistema de diseño encapsulado y mantenible.
+### Para Clientes:
+-   **Navegación Intuitiva:** Catálogo de productos con **búsqueda global**, **ordenamiento alfabético** y **paginación**.
+-   **Diseño "Dark Mode" Premium:** Interfaz completamente responsiva construida con **Bootstrap 5** y un sistema de diseño personalizado que garantiza una experiencia visual impecable en cualquier dispositivo.
+-   **Flujo de Compra Completo:** Desde la selección de productos y la gestión de cantidad, hasta un carrito de compras persistente que simula costos de envío dinámicos.
+-   **Autenticación Segura:** Registro e inicio de sesión de usuarios a través de **Firebase Authentication**.
+-   **Redirección Contextual:** La aplicación recuerda la página a la que el usuario intentaba acceder antes de iniciar sesión (ej. `/carrito`) y lo redirige allí después de una autenticación exitosa.
 
-## 🛠️ Tecnologías y Librerías Utilizadas
+### Para Administradores:
+-   **Panel de Administración Protegido:** Ruta de acceso exclusiva (`/admin/login`) y una interfaz de navegación adaptada a las tareas de gestión.
+-   **Gestión de Productos (CRUD):** Funcionalidad completa para Crear, Leer, Actualizar y Eliminar productos.
+-   **Tabla de Datos Inteligente:**
+    -   Totalmente responsiva, transformándose de una tabla de datos en escritorio a una lista de tarjetas en móviles.
+    -   Funcionalidad de búsqueda y paginación integrada directamente en el panel.
 
-### Frontend
--   **[React 19](https://react.dev/):** Utilizando las últimas características, incluyendo el renderizado nativo de metadatos.
--   **[Vite](https://vitejs.dev/):** Herramienta de construcción moderna y ultrarrápida.
--   **[React Router](https://reactrouter.com/):** Para la gestión de rutas del lado del cliente en esta Single Page Application (SPA).
--   **[Bootstrap 5](https://getbootstrap.com/):** Para el sistema de rejilla (Grid), responsividad y componentes base de la UI.
--   **[Styled Components](https://styled-components.com/):** Para crear componentes estilizados, reutilizables y con lógica de variantes.
--   **Context API & Hooks (`useState`, `useEffect`, `useContext`, `useCallback`):** Para una gestión de estado global (productos, carrito, autenticación) eficiente y optimizada.
--   **[React Icons](https://react-icons.github.io/react-icons/):** Para una iconografía clara y consistente en toda la aplicación.
--   **[SweetAlert2](https://sweetalert2.github.io/):** Para modales de confirmación interactivos y tematizados.
--   **[React-Toastify](https://fkhadra.github.io/react-toastify/introduction):** Para notificaciones "toast" no intrusivas y personalizadas.
+### Características Técnicas y de UX:
+-   **Optimización SEO:** Metadatos (`<title>`, `<meta name="description">`) dinámicos para cada página, renderizados de forma nativa con React 19.
+-   **Sistema de Notificaciones Unificado:**
+    -   Uso de **SweetAlert2** para modales de confirmación críticos (ej. "¿Eliminar producto?").
+    -   Uso de **React-Toastify** para notificaciones pasivas ("toast") de éxito o error.
+    -   Ambas librerías están tematizadas para integrarse perfectamente con el diseño "dark mode".
+-   **Microinteracciones y Efectos Visuales:** Efectos de `:hover` en las tarjetas de producto que incluyen elevación, un resplandor de marca y un sutil zoom en la imagen para mejorar el feedback visual.
+-   **Seguridad de Claves:** Todas las claves de API y secretos están correctamente gestionados a través de variables de entorno (`.env`), y el historial de Git ha sido limpiado para eliminar cualquier exposición accidental.
 
-### Backend & Servicios
--   **[Firebase Authentication](https://firebase.google.com/docs/auth):** Para la gestión de registro e inicio de sesión de usuarios.
--   **[MockAPI](https://mockapi.io/):** Utilizado como un backend simulado para el CRUD de productos.
+---
 
-## 🚀 Cómo Empezar
+## 🛠️ Tecnologías y Arquitectura
 
-Para ejecutar este proyecto de forma local, sigue estos pasos:
+-   **Framework:** **[React 19](https://react.dev/)**
+-   **Herramienta de Build:** **[Vite](https://vitejs.dev/)**
+-   **Routing:** **[React Router](https://reactrouter.com/)**
+-   **Estilos:**
+    -   **[Bootstrap 5](https://getbootstrap.com/)** para el layout y la responsividad.
+    -   **[Styled Components](https://styled-components.com/)** para un sistema de diseño de componentes encapsulado y reutilizable (`Button`, `StyledInput`, etc.).
+    -   **Módulos CSS** para estilos específicos de componentes (`AdminTable.module.css`).
+    -   **Variables CSS Globales (`:root`)** para una paleta de colores centralizada y mantenible.
+-   **Gestión de Estado:**
+    -   **Context API & Hooks (`useState`, `useEffect`, `useContext`, `useCallback`)** para una gestión de estado global desacoplada y eficiente.
+-   **Iconografía:** **[React Icons](https://react-icons.github.io/react-icons/)**
+-   **Backend & Servicios:**
+    -   **[Firebase Authentication](https://firebase.google.com/docs/auth)** para la autenticación de usuarios.
+    -   **[MockAPI](https://mockapi.io/)** como backend simulado para el CRUD de productos.
+    -   **[Netlify Forms](https://docs.netlify.com/forms/setup/)** para la gestión segura y sin servidor del formulario de contacto.
 
-1.  **Clona el repositorio:**
+---
+
+## 🚀 Cómo Empezar Localmente
+
+1.  **Clonar el Repositorio:**
     ```bash
-    git clone https://github.com/tu-usuario/tu-repositorio.git
-    cd tu-repositorio
+    git clone https://github.com/tu-usuario/e-commerce-talento-tech.git
+    cd e-commerce-talento-tech
     ```
 
-2.  **Instala las dependencias:**
+2.  **Instalar Dependencias:**
     ```bash
     npm install
     ```
 
-3.  **Configura el archivo de redirección para despliegue (Netlify):**
-    Asegúrate de que el archivo `_redirects` exista dentro de la carpeta `/public` con el siguiente contenido para manejar las rutas de la SPA:
-    ```
-    /*    /index.html    200
-    ```
+3.  **Crear el Archivo de Variables de Entorno:**
+    -   En la raíz del proyecto, crea un archivo `.env`.
+    -   Añade las claves de tu proyecto de Firebase con el prefijo `VITE_`, por ejemplo:
+        ```env
+        VITE_FIREBASE_API_KEY="TU_API_KEY"
+        VITE_FIREBASE_AUTH_DOMAIN="TU_AUTH_DOMAIN"
+        # ... y así sucesivamente para todas las claves.
+        ```
 
-4.  **Inicia el servidor de desarrollo:**
+4.  **Iniciar el Servidor de Desarrollo:**
     ```bash
     npm run dev
-    ```    La aplicación estará disponible en `http://localhost:5173`.
-
-## 🔑 Credenciales de Acceso
-
--   **Cliente:** Puedes registrar un nuevo usuario en la sección de "Registrarse" en la página de Login.
--   **Administrador:**
-    -   Navega directamente a la ruta: `/admin/login`
-    -   **Usuario:** `admin`
-    -   **Contraseña:** `1234`
-
-## ✍️ Autor
-
--   **[Tu Nombre](https://github.com/tu-usuario)** - ¡Conecta conmigo!
+    ```
+    La aplicación estará disponible en `http://localhost:5173`.
 
 ---
 
+## 🔑 Credenciales de Acceso
+
+-   **Cliente:** Puedes registrar una nueva cuenta en la sección "Registrarse".
+-   **Administrador:**
+    -   Navega a la ruta: `/admin/login`
+    -   **Usuario:** `admin`
+    -   **Contraseña:** `1234`
+
+---
+
+## ✍️ Autor
+
+-   **[Fernando Warno](https://github.com/ferwargit/)** - GitHub
