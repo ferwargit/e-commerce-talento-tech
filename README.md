@@ -9,7 +9,7 @@ La aplicación simula un entorno de venta real con un catálogo de productos din
 
 **[Ver Demo en Vivo - Cliente](https://e-commerce-talento-2.netlify.app/)**
 
-**[Ver Demo en Vivo - Administrador](https://e-commerce-talento-2.netlify.app/admin/login/)**
+**[Ver Demo en Vivo - Administrador](https://e-commerce-talento-2.netlify.app/admin/login)**
 
 ---
 

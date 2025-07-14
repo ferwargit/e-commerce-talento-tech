@@ -23,10 +23,16 @@ import FormularioProducto from "./components/FormularioProducto";
 import FormularioEdicion from "./components/FormularioEdicion";
 import AdminProductos from "./components/AdminProductos";
 
-// Creamos un sub-componente para poder usar el hook 'useLocation'
 function AppContent() {
   const location = useLocation();
-  const showFooter = location.pathname !== "/admin/login";
+
+  const pathname = location.pathname;
+  const normalizedPath =
+    pathname.length > 1 && pathname.endsWith("/")
+      ? pathname.slice(0, -1)
+      : pathname;
+
+  const showFooter = normalizedPath !== "/admin/login";
 
   return (
     <div className="app-container">
@@ -72,7 +78,6 @@ function AppContent() {
 }
 
 function App() {
-  
   return (
     <Router>
       <AppContent />
