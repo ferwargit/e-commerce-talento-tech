@@ -4,7 +4,6 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  useLocation,
 } from "react-router-dom";
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
@@ -16,22 +15,12 @@ import Carrito from "./components/Carrito";
 import About from "./components/About";
 import Contacto from "./components/Contacto";
 import ProductoDetalle from "./components/ProductoDetalle";
-import LoginAdmin from "./components/LoginAdmin";
 import LoginBoost from "./components/LoginBoost";
 import FormularioProducto from "./components/FormularioProducto";
 import FormularioEdicion from "./components/FormularioEdicion";
 import AdminProductos from "./components/AdminProductos";
 
 function AppContent() {
-  const location = useLocation();
-
-  const pathname = location.pathname;
-  const normalizedPath =
-    pathname.length > 1 && pathname.endsWith("/")
-      ? pathname.slice(0, -1)
-      : pathname;
-
-  const showFooter = normalizedPath !== "/admin/login";
 
   return (
     <div className="app-container">
@@ -53,7 +42,6 @@ function AppContent() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<LoginBoost />} />
-          <Route path="/admin/login" element={<LoginAdmin />} />
           <Route path="/productos" element={<ProductosContainer />} />
           <Route path="/carrito" element={<Carrito />} />
           <Route path="/nosotros" element={<About />} />
@@ -70,7 +58,7 @@ function AppContent() {
           />
         </Routes>
       </main>
-      {showFooter && <Footer />}
+      <Footer />
     </div>
   );
 }

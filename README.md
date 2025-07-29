@@ -7,9 +7,12 @@
 
 La aplicación simula un entorno de venta real con un catálogo de productos dinámico, un carrito de compras persistente, y un sistema de autenticación dual que separa claramente los flujos de cliente y administrador.
 
-**[Ver Demo en Vivo - Cliente](https://e-commerce-talento-2.netlify.app/)**
+### 🌐 Demo en Vivo
 
-**[Ver Demo en Vivo - Administrador](https://e-commerce-talento-2.netlify.app/admin/login)**
+| Rol | Link de Acceso |
+| :--- | :--- |
+| 🛍️ **Cliente** | [**Acceder a la Tienda**](https://e-commerce-talento-2.netlify.app/) |
+| ⚙️ **Administrador** | [**Acceder al Panel**](https://e-commerce-talento-2.netlify.app/login) |
 
 ---
 
@@ -94,9 +97,9 @@ La aplicación simula un entorno de venta real con un catálogo de productos din
 
 -   **Cliente:** Puedes registrar una nueva cuenta en la sección "Registrarse".
 -   **Administrador:**
-    -   Navega a la ruta: `/admin/login`
-    -   **Usuario:** `admin`
-    -   **Contraseña:** `1234`
+    -   Navega a la ruta de **Login** (`/login`).
+    -   **Email:** `admin@admin.com`
+    -   **Contraseña:** `123456`
 
 ---
 
