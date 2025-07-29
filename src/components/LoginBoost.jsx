@@ -2,7 +2,7 @@ import SEO from "./SEO";
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuthContext } from "../context/AuthContext";
-import { crearUsuario, loginEmailPass } from "../auth/firebase";
+import { crearUsuario, loginEmailPass } from "../services/authService"; // No necesitamos `cerrarSesion` aquí
 import { dispararSweetBasico } from "../assets/SweetAlert";
 import LoginForm from "./LoginForm";
 import { StyledButton } from "./Button";
@@ -12,7 +12,7 @@ function LoginBoost() {
   const [password, setPassword] = useState("");
   const [modo, setModo] = useState("firebase");
 
-  const { login, user, logout, admin } = useAuthContext();
+  const { user, logout, admin } = useAuthContext();
   const navigate = useNavigate();
   const location = useLocation(); 
 
@@ -22,7 +22,6 @@ function LoginBoost() {
     e.preventDefault();
     crearUsuario(usuario, password)
       .then(() => {
-        login(usuario);
         dispararSweetBasico(
           "¡Registro Exitoso!",
           "Tu cuenta ha sido creada y ya has iniciado sesión.",
@@ -46,7 +45,6 @@ function LoginBoost() {
     e.preventDefault();
     loginEmailPass(usuario, password)
       .then(() => {
-        login(usuario);
         dispararSweetBasico(
           "Logeo exitoso",
           "",
@@ -66,22 +64,17 @@ function LoginBoost() {
       });
   };
 
-  const cerrarSesion = (e) => {
-    e.preventDefault();
-    logout();
-  };
-
   const handleModo = (nuevoModo) => {
     setModo(nuevoModo);
     setUsuario("");
     setPassword("");
   };
 
-  if (user || admin) {
+  if (user || admin) { // Si hay un usuario o un admin logueado
     return (
       <div className="container text-center mt-5">
-        <p>Ya has iniciado sesión</p>
-        <StyledButton onClick={cerrarSesion} $variant="danger">
+        <p>Ya has iniciado sesión como {user || admin}</p>
+        <StyledButton onClick={logout} $variant="danger">
           Cerrar sesión
         </StyledButton>
       </div>
