@@ -1,3 +1,4 @@
+// src/components/AdminProductos.jsx
 import { useEffect, useState, useCallback } from "react";
 import { useProductosContext } from "../context/ProductosContext";
 import { getProducts, deleteProduct } from "../services/productService";
@@ -107,6 +108,15 @@ function AdminProductos() {
           Gestión de Productos
         </h1>
 
+        <div className="d-flex justify-content-end mb-4">
+          <StyledLinkButton
+            to="/admin/agregarProducto"
+            $variant="success"
+          >
+            + Crear Nuevo Producto
+          </StyledLinkButton>
+        </div>
+
         <div>
           <table className={`w-100 ${styles.customTable}`}>
             <thead className={styles.tableHeader}>
@@ -194,3 +204,4 @@ function AdminProductos() {
 }
 
 export default AdminProductos;
+

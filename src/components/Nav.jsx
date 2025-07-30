@@ -112,7 +112,7 @@ function Nav() {
             <li>
               <NavLink
                 className="dropdown-item"
-                to="/admin/agregarProductos"
+                to="/admin/agregarProducto"
                 onClick={closeMenu}
               >
                 <RiAddBoxFill className="me-1" />

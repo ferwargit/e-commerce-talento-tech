@@ -49,7 +49,7 @@ function AppContent() {
           <Route path="/productos/:id" element={<ProductoDetalle />} />
           <Route path="/admin" element={<AdminProductos />} />
           <Route
-            path="/admin/agregarProductos"
+            path="/admin/agregarProducto"
             element={<FormularioProducto />}
           />
           <Route
