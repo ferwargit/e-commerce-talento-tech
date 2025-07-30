@@ -1,3 +1,5 @@
+// src/components/ProductoDetalle.jsx
+// Este componente muestra los detalles de un producto específico.
 import SEO from "./SEO";
 import { useEffect, useState, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";

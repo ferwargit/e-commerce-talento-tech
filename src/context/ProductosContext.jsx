@@ -1,4 +1,13 @@
+// src/context/ProductosContext.jsx
+// Este contexto maneja el estado y las operaciones relacionadas con los productos.
 import { createContext, useState, useContext, useCallback } from "react";
+import {
+  getProducts,
+  createProduct,
+  getProductById,
+  updateProduct,
+  deleteProduct,
+} from "../services/productService";
 
 const ProductosContext = createContext();
 
@@ -7,110 +16,36 @@ export function ProductosProvider({ children }) {
   const [productoEncontrado, setProductoEncontrado] = useState(null);
   const [terminoBusqueda, setTerminoBusqueda] = useState("");
 
-  const obtenerProductos = useCallback(() => {
-    return new Promise((res, rej) => {
-      fetch("https://6869ee8c2af1d945cea2cfff.mockapi.io/productos")
-        .then((respuesta) => {
-          if (!respuesta.ok) throw new Error("Error en la petición");
-          return respuesta.json();
-        })
-        .then((datos) => {
-          setProductos(datos);
-          res(datos);
-        })
-        .catch((error) => {
-          console.log("Error", error);
-          rej(error);
-        });
-    });
+  // Las funciones ahora son mucho más limpias, simplemente llaman al servicio
+  // y actualizan el estado cuando es necesario.
+
+  const obtenerProductos = useCallback(async () => {
+    const datos = await getProducts();
+    setProductos(datos);
+    return datos;
   }, []);
 
-  const agregarProducto = useCallback((producto) => {
-    return new Promise(async (res, rej) => {
-      try {
-        const respuesta = await fetch(
-          "https://6869ee8c2af1d945cea2cfff.mockapi.io/productos",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(producto),
-          }
-        );
-        if (!respuesta.ok) {
-          throw new Error("Error al agregar el producto.");
-        }
-        const data = await respuesta.json();
-        res(data);
-      } catch (error) {
-        console.error(error.message);
-        rej(error.message);
-      }
-    });
+  const agregarProducto = useCallback(async (producto) => {
+    return createProduct(producto);
   }, []);
 
-  const obtenerProducto = useCallback((id) => {
-    return new Promise((res, rej) => {
-      fetch(`https://6869ee8c2af1d945cea2cfff.mockapi.io/productos/${id}`)
-        .then((respuesta) => {
-          if (!respuesta.ok) {
-            if (respuesta.status === 404)
-              throw new Error("Producto no encontrado");
-            throw new Error("Error en la petición");
-          }
-          return respuesta.json();
-        })
-        .then((producto) => {
-          setProductoEncontrado(producto);
-          res(producto);
-        })
-        .catch((err) => {
-          console.log("Error:", err);
-          rej(err.message);
-        });
-    });
+  const obtenerProducto = useCallback(async (id) => {
+    const producto = await getProductById(id);
+    if (!producto) {
+      throw new Error("Producto no encontrado");
+    }
+    setProductoEncontrado(producto);
+    return producto;
   }, []);
 
-  const editarProducto = useCallback((producto) => {
-    return new Promise(async (res, rej) => {
-      try {
-        const respuesta = await fetch(
-          `https://6869ee8c2af1d945cea2cfff.mockapi.io/productos/${producto.id}`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(producto),
-          }
-        );
-        if (!respuesta.ok) {
-          throw new Error("Error al actualizar el producto.");
-        }
-        const data = await respuesta.json();
-        res(data);
-      } catch (error) {
-        console.error(error.message);
-        rej(error);
-      }
-    });
+  const editarProducto = useCallback(async (producto) => {
+    // El servicio de actualización espera el id y los datos por separado.
+    const { id, ...data } = producto;
+    return updateProduct(id, data);
   }, []);
 
-  const eliminarProducto = useCallback((id) => {
-    return new Promise(async (res, rej) => {
-      try {
-        const respuesta = await fetch(
-          `https://6869ee8c2af1d945cea2cfff.mockapi.io/productos/${id}`,
-          { method: "DELETE" }
-        );
-        if (!respuesta.ok) throw new Error("Error en el servidor al eliminar");
-        res(); // Resolvemos la promesa en caso de éxito
-      } catch (error) {
-        console.error(error.message);
-        rej(error); // Rechazamos la promesa en caso de error
-      }
-    });
+  const eliminarProducto = useCallback(async (id) => {
+    return deleteProduct(id);
   }, []);
 
   return (

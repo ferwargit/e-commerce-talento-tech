@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { useProductosContext } from "../context/ProductosContext";
+import { getProducts, deleteProduct } from "../services/productService";
 import { StyledLinkButton, StyledButton } from "./Button";
 import SEO from "./SEO";
 import { toast } from "react-toastify";
@@ -8,21 +9,22 @@ import ThemedSwal from "../assets/ThemedSwal";
 import Paginador from "./Paginador";
 
 function AdminProductos() {
-  const { productos, obtenerProductos, terminoBusqueda, eliminarProducto } =
-    useProductosContext();
+  const { terminoBusqueda } = useProductosContext();
+  const [productos, setProductos] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(10);
 
   const cargarProductos = useCallback(async () => {
     try {
-      await obtenerProductos();
+      const firestoreProducts = await getProducts();
+      setProductos(firestoreProducts);
     } catch (err) {
       toast.error("Hubo un problema al cargar los productos.");
     } finally {
       setCargando(false);
     }
-  }, [obtenerProductos]);
+  }, []);
 
   useEffect(() => {
     cargarProductos();
@@ -44,7 +46,7 @@ function AdminProductos() {
       cancelButtonColor: "#4b5563",
     }).then((result) => {
       if (result.isConfirmed) {
-        const promise = eliminarProducto(id).then(() => {
+        const promise = deleteProduct(id).then(() => {
           cargarProductos();
         });
         toast.promise(promise, {
@@ -164,11 +166,21 @@ function AdminProductos() {
           </table>
         </div>
 
-        {productosFiltradosYOrdenados.length === 0 && (
-          <p className="text-center mt-3 text-muted">
-            No se encontraron productos con ese término de búsqueda.
-          </p>
-        )}
+        {/* Lógica de mensajes condicionales mejorada */}
+        {productos.length === 0 && !cargando ? (
+          <div className="text-center mt-4">
+            <h4 style={{ color: "var(--color-text-primary)" }}>No hay productos para mostrar</h4>
+            <p style={{ color: "var(--color-text-muted)" }}>
+              ¡Comienza agregando tu primer producto!
+            </p>
+          </div>
+        ) : productosFiltradosYOrdenados.length === 0 && !cargando ? (
+          <div className="text-center mt-4">
+            <p className="text-light">
+              No se encontraron productos con ese término de búsqueda.
+            </p>
+          </div>
+        ) : null}
         <div className="my-5">
           <Paginador
             currentPage={currentPage}

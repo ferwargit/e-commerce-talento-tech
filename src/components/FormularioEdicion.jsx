@@ -1,3 +1,5 @@
+// src/components/FormularioEdicion.jsx
+// Este componente muestra un formulario para editar un producto existente.
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useProductosContext } from "../context/ProductosContext";
@@ -39,6 +41,10 @@ function FormularioEdicion() {
     if (!producto.name.trim()) return "El nombre es obligatorio.";
     if (!producto.price || producto.price <= 0)
       return "El precio debe ser un número positivo.";
+    if (producto.stock === "" || producto.stock < 0)
+      return "El stock debe ser un número positivo o cero.";
+    if (!producto.category || !producto.category.trim())
+      return "La categoría es obligatoria.";
     if (!producto.description.trim() || producto.description.length < 10)
       return "La descripción debe tener al menos 10 caracteres.";
     if (!producto.image.trim())
@@ -50,6 +56,12 @@ function FormularioEdicion() {
     e.preventDefault();
     const esValido = validarFormulario();
     if (esValido === true) {
+      // Aseguramos que los valores numéricos se envíen como números
+      const productoAActualizar = {
+        ...producto,
+        price: Number(producto.price),
+        stock: Number(producto.stock),
+      };
       toast
         .promise(editarProducto(producto), {
           pending: "Actualizando producto...",
@@ -171,6 +183,48 @@ function FormularioEdicion() {
                       color: "var(--color-text-primary)",
                       borderColor: "var(--color-border)",
                     }}
+                    />
+                  </div>
+                </div>
+
+                <div className="row">
+                  <div className="col-md-6 mb-3">
+                    <label htmlFor="stock" className="form-label">
+                      Stock
+                    </label>
+                    <StyledInput
+                      id="stock"
+                      type="number"
+                      name="stock"
+                      value={producto.stock || ""}
+                      onChange={handleChange}
+                      className="form-control"
+                      required
+                      min="0"
+                      style={{
+                        backgroundColor: "var(--color-background-dark)",
+                        color: "var(--color-text-primary)",
+                        borderColor: "var(--color-border)",
+                      }}
+                    />
+                  </div>
+                  <div className="col-md-6 mb-3">
+                    <label htmlFor="category" className="form-label">
+                      Categoría
+                    </label>
+                    <StyledInput
+                      id="category"
+                      type="text"
+                      name="category"
+                      value={producto.category || ""}
+                      onChange={handleChange}
+                      className="form-control"
+                      required
+                      style={{
+                        backgroundColor: "var(--color-background-dark)",
+                        color: "var(--color-text-primary)",
+                        borderColor: "var(--color-border)",
+                      }}
                     />
                   </div>
                 </div>
