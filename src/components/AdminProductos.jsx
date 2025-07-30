@@ -1,7 +1,6 @@
 // src/components/AdminProductos.jsx
 import { useEffect, useState, useCallback } from "react";
 import { useProductosContext } from "../context/ProductosContext";
-import { getProducts, deleteProduct } from "../services/productService";
 import { StyledLinkButton, StyledButton } from "./Button";
 import SEO from "./SEO";
 import { toast } from "react-toastify";
@@ -10,22 +9,21 @@ import ThemedSwal from "../assets/ThemedSwal";
 import Paginador from "./Paginador";
 
 function AdminProductos() {
-  const { terminoBusqueda } = useProductosContext();
-  const [productos, setProductos] = useState([]);
+  const { productos, obtenerProductos, eliminarProducto, terminoBusqueda } =
+    useProductosContext();
   const [cargando, setCargando] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(10);
 
   const cargarProductos = useCallback(async () => {
     try {
-      const firestoreProducts = await getProducts();
-      setProductos(firestoreProducts);
+      await obtenerProductos();
     } catch (err) {
       toast.error("Hubo un problema al cargar los productos.");
     } finally {
       setCargando(false);
     }
-  }, []);
+  }, [obtenerProductos]);
 
   useEffect(() => {
     cargarProductos();
@@ -47,9 +45,7 @@ function AdminProductos() {
       cancelButtonColor: "#4b5563",
     }).then((result) => {
       if (result.isConfirmed) {
-        const promise = deleteProduct(id).then(() => {
-          cargarProductos();
-        });
+        const promise = eliminarProducto(id);
         toast.promise(promise, {
           pending: "Eliminando producto...",
           success: "Producto eliminado con éxito 👌",

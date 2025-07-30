@@ -45,7 +45,10 @@ export function ProductosProvider({ children }) {
   }, []);
 
   const eliminarProducto = useCallback(async (id) => {
-    return deleteProduct(id);
+    // Primero, eliminamos el producto en Firebase
+    await deleteProduct(id);
+    // Después, actualizamos el estado local para reflejar el cambio al instante.
+    setProductos((productosAnteriores) => productosAnteriores.filter((p) => p.id !== id));
   }, []);
 
   return (

@@ -60,7 +60,10 @@ export const createProduct = async (productData) => {
  */
 export const updateProduct = async (id, productData) => {
   const docRef = doc(db, "products", id);
-  return updateDoc(docRef, productData);
+  return updateDoc(docRef, {
+    ...productData,
+    updatedAt: serverTimestamp(), // ¡Añade esto para saber cuándo se actualizó!
+  });
 };
 
 /**

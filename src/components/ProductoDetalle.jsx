@@ -40,6 +40,7 @@ function ProductoDetalle() {
   const { productoEncontrado, obtenerProducto, eliminarProducto } =
     useProductosContext();
   const { id } = useParams();
+
   const [cantidad, setCantidad] = useState(1);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
@@ -54,6 +55,7 @@ function ProductoDetalle() {
   }, [id, obtenerProducto]);
 
   function funcionCarrito() {
+
     if (cantidad < 1) return;
     agregarAlCarrito({ ...productoEncontrado, cantidad });
     ThemedSwal.fire({
