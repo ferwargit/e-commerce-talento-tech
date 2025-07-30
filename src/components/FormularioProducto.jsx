@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { dispararSweetBasico } from "../assets/SweetAlert";
 import { useAuthContext } from "../context/AuthContext";
+import { toast } from "react-toastify";
 import { Navigate } from "react-router-dom";
 import { useProductosContext } from "../context/ProductosContext";
 import { StyledButton } from "./Button";
@@ -13,6 +13,8 @@ function FormularioProducto() {
   const [producto, setProducto] = useState({
     name: "",
     price: "",
+    stock: "",
+    category: "",
     description: "",
     image: "",
   });
@@ -24,6 +26,12 @@ function FormularioProducto() {
     }
     if (!producto.price || producto.price <= 0) {
       return "El precio debe ser un número positivo.";
+    }
+    if (!producto.stock || producto.stock < 0) {
+      return "El stock debe ser un número positivo o cero.";
+    }
+    if (!producto.category.trim()) {
+      return "La categoría es obligatoria.";
     }
     if (!producto.description.trim() || producto.description.length < 10) {
       return "La descripción debe tener al menos 10 caracteres.";
@@ -39,36 +47,35 @@ function FormularioProducto() {
     setProducto({ ...producto, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validarForm = validarFormulario();
     if (validarForm === true) {
-      agregarProducto(producto)
-        .then(() => {
-          dispararSweetBasico(
-            "¡Éxito!",
-            "El producto fue agregado correctamente.",
-            "success",
-            "Aceptar"
-          );
-          // Reseteamos el formulario
-          setProducto({ name: "", price: "", description: "", image: "" });
-        })
-        .catch((error) => {
-          dispararSweetBasico(
-            "Hubo un problema",
-            error.toString(),
-            "error",
-            "Cerrar"
-          );
+      const productoConNumeros = {
+        ...producto,
+        price: Number(producto.price),
+        stock: Number(producto.stock),
+      };
+
+      const promise = agregarProducto(productoConNumeros).then(() => {
+        // Reseteamos el formulario
+        setProducto({
+          name: "",
+          price: "",
+          stock: "",
+          category: "",
+          description: "",
+          image: "",
         });
+      });
+
+      toast.promise(promise, {
+        pending: "Agregando producto...",
+        success: "¡Producto agregado con éxito!",
+        error: "Hubo un problema al agregar el producto.",
+      });
     } else {
-      dispararSweetBasico(
-        "Error en el formulario",
-        validarForm,
-        "error",
-        "Cerrar"
-      );
+      toast.error(validarForm);
     }
   };
 
@@ -154,6 +161,50 @@ function FormularioProducto() {
                       required
                       min="0.01"
                       step="0.01"
+                      style={{
+                        backgroundColor: "var(--color-background-dark)",
+                        color: "var(--color-text-primary)",
+                        borderColor: "var(--color-border)",
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <div className="row">
+                  <div className="col-md-6 mb-3">
+                    <label htmlFor="stock" className="form-label">
+                      Stock
+                    </label>
+                    <StyledInput
+                      id="stock"
+                      type="number"
+                      name="stock"
+                      value={producto.stock}
+                      onChange={handleChange}
+                      className="form-control"
+                      placeholder="Ej: 50"
+                      required
+                      min="0"
+                      style={{
+                        backgroundColor: "var(--color-background-dark)",
+                        color: "var(--color-text-primary)",
+                        borderColor: "var(--color-border)",
+                      }}
+                    />
+                  </div>
+                  <div className="col-md-6 mb-3">
+                    <label htmlFor="category" className="form-label">
+                      Categoría
+                    </label>
+                    <StyledInput
+                      id="category"
+                      type="text"
+                      name="category"
+                      value={producto.category}
+                      onChange={handleChange}
+                      className="form-control"
+                      placeholder="Ej: Teclados"
+                      required
                       style={{
                         backgroundColor: "var(--color-background-dark)",
                         color: "var(--color-text-primary)",

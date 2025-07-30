@@ -1,3 +1,5 @@
+// src/components/home/FeaturedProducts.jsx
+// Este componente muestra los productos destacados en la página de inicio.
 import { useEffect, useState, useCallback } from "react";
 import { useProductosContext } from "../../context/ProductosContext";
 import Card from "../Card";

@@ -1,3 +1,5 @@
+// src/components/ProductosContainer.jsx
+// Este componente muestra una lista de productos con paginación y búsqueda.
 import SEO from "./SEO";
 import { useEffect, useState, useCallback } from "react";
 import Card from "./Card";

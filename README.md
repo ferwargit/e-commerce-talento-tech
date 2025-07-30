@@ -58,7 +58,7 @@ La aplicación simula un entorno de venta real con un catálogo de productos din
 -   **Iconografía:** **[React Icons](https://react-icons.github.io/react-icons/)**
 -   **Backend & Servicios:**
     -   **[Firebase Authentication](https://firebase.google.com/docs/auth)** para la autenticación de usuarios.
-    -   **[MockAPI](https://mockapi.io/)** como backend simulado para el CRUD de productos.
+    -   **[Firebase Firestore](https://firebase.google.com/docs/firestore)** como base de datos NoSQL para el CRUD de productos.
     -   **[Netlify Forms](https://docs.netlify.com/forms/setup/)** para la gestión segura y sin servidor del formulario de contacto.
 
 ---
