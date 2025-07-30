@@ -26,11 +26,12 @@ La aplicación simula un entorno de venta real con un catálogo de productos din
 -   **Redirección Contextual:** La aplicación recuerda la página a la que el usuario intentaba acceder antes de iniciar sesión (ej. `/carrito`) y lo redirige allí después de una autenticación exitosa.
 
 ### Para Administradores:
--   **Panel de Administración Protegido:** Ruta de acceso exclusiva (`/admin/login`) y una interfaz de navegación adaptada a las tareas de gestión.
+-   **Panel de Administración Protegido:** Acceso a través de la ruta de **Login** unificada (`/login`) que, con credenciales de administrador, redirige a una interfaz de gestión exclusiva y protegida.
 -   **Gestión de Productos (CRUD):** Funcionalidad completa para Crear, Leer, Actualizar y Eliminar productos.
 -   **Tabla de Datos Inteligente:**
-    -   Totalmente responsiva, transformándose de una tabla de datos en escritorio a una lista de tarjetas en móviles.
-    -   Funcionalidad de búsqueda y paginación integrada directamente en el panel.
+    -   Vista de tabla enriquecida con **imágenes, categoría y stock** para una gestión rápida.
+    -   Totalmente responsiva, transformándose de una tabla de datos a una lista de tarjetas en móviles.
+    -   Funcionalidad de **búsqueda por nombre o categoría** y paginación integrada.
 
 ### Características Técnicas y de UX:
 -   **Optimización SEO:** Metadatos (`<title>`, `<meta name="description">`) dinámicos para cada página, renderizados de forma nativa con React 19.
