@@ -60,7 +60,12 @@ function AdminProductos() {
   };
 
   const productosFiltradosYOrdenados = productos
-    .filter((p) => p.name.toLowerCase().includes(terminoBusqueda.toLowerCase()))
+    .filter(
+      (p) =>
+        p.name.toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
+        (p.category && // Verificamos que la categoría exista para evitar errores
+          p.category.toLowerCase().includes(terminoBusqueda.toLowerCase()))
+    )
     .sort((a, b) => a.name.localeCompare(b.name));
 
   const indexOfLastProduct = currentPage * productsPerPage;
@@ -123,6 +128,8 @@ function AdminProductos() {
               <tr>
                 <th>Imagen</th>
                 <th>Nombre</th>
+                <th>Categoría</th>
+                <th>Stock</th>
                 <th className={styles.priceHeader}>Precio</th>
                 <th className={styles.actionsHeader}>Acciones</th>
               </tr>
@@ -144,6 +151,12 @@ function AdminProductos() {
                   </td>
                   <td data-label="Nombre">
                     <span className={styles.cellValue}>{producto.name}</span>
+                  </td>
+                  <td data-label="Categoría">
+                    <span className={styles.cellValue}>{producto.category}</span>
+                  </td>
+                  <td data-label="Stock">
+                    <span className={styles.cellValue}>{producto.stock}</span>
                   </td>
                   <td data-label="Precio" className={styles.priceCell}>
                     <span className={styles.cellValue}>
@@ -204,4 +217,3 @@ function AdminProductos() {
 }
 
 export default AdminProductos;
-
