@@ -1,7 +1,6 @@
 // src/features/admin/components/AdminProductos.jsx
 import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useProductosContext } from "../../products/context/useProductosContext";
 import { getProducts, deleteProduct } from "../../products/services/productService";
 import { StyledLinkButton, StyledButton } from "../../../components/ui/Button";
 import SEO from "../../../components/ui/SEO";
@@ -10,8 +9,7 @@ import styles from "./AdminTable.module.css";
 import ThemedSwal from "../../../assets/ThemedSwal";
 import Paginador from "../../../components/ui/Paginador";
 
-function AdminProductos() {
-  const { terminoBusqueda } = useProductosContext();
+function AdminProductos({ terminoBusqueda }) {
   const queryClient = useQueryClient();
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(10);

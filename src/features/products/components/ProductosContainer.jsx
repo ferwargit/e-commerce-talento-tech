@@ -4,12 +4,10 @@ import SEO from "../../../components/ui/SEO";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Card from "./Card";
-import { useProductosContext } from "../context/ProductosContext";
 import { getProducts } from "../services/productService";
 import Paginador from "../../../components/ui/Paginador";
 
-function ProductosContainer() {
-  const { terminoBusqueda } = useProductosContext();
+function ProductosContainer({ terminoBusqueda }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(6);
 

@@ -1,13 +1,14 @@
-// src/components/ProductoDetalle.jsx
+// src/features/products/components/ProductoDetalle.jsx
 // Este componente muestra los detalles de un producto específico.
 import SEO from "../../../components/ui/SEO";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import ThemedSwal from "../../../assets/ThemedSwal";
 import { toast } from "react-toastify"; 
 import { useCarritoContext } from "../../cart/context/CarritoContext"; 
 import { useAuthContext } from "../../auth/context/AuthContext"; 
-import { useProductosContext } from "../context/ProductosContext";
+import { getProductById, deleteProduct } from "../services/productService";
 import { StyledButton, StyledLinkButton } from "../../../components/ui/Button";
 import styled from "styled-components";
 
@@ -35,24 +36,26 @@ const ContadorWrapper = styled.div`
 
 function ProductoDetalle() {
   const navegar = useNavigate();
+  const queryClient = useQueryClient();
   const { admin } = useAuthContext();
   const { agregarAlCarrito } = useCarritoContext();
-  const { productoEncontrado, obtenerProducto, eliminarProducto } =
-    useProductosContext();
   const { id } = useParams();
 
   const [cantidad, setCantidad] = useState(1);
-  const [cargando, setCargando] = useState(true);
-  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    obtenerProducto(id)
-      .then(() => setCargando(false))
-      .catch((err) => {
-        setError(err.message || "Hubo un error al obtener el producto.");
-        setCargando(false);
-      });
-  }, [id, obtenerProducto]);
+  const { data: productoEncontrado, isLoading: cargando, error } = useQuery({
+    queryKey: ["product", id],
+    queryFn: () => getProductById(id),
+    enabled: !!id,
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteProduct,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      setTimeout(() => navegar("/admin"), 1500);
+    },
+  });
 
   function funcionCarrito() {
     if (cantidad < 1) return;
@@ -86,10 +89,7 @@ function ProductoDetalle() {
       cancelButtonColor: "#4b5563",
     }).then((result) => {
       if (result.isConfirmed) {
-        const promise = eliminarProducto(id).then(() => {
-          setTimeout(() => navegar("/admin"), 1500);
-        });
-        toast.promise(promise, {
+        toast.promise(deleteMutation.mutateAsync(id), {
           pending: "Eliminando producto...",
           success: "Producto eliminado con éxito. Redirigiendo...",
           error: "Error al eliminar el producto.",

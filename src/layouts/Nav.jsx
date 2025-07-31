@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useCarritoContext } from "../features/cart/context/CarritoContext";
 import { useAuthContext } from "../features/auth/context/AuthContext";
-import { useProductosContext } from "../features/products/context/ProductosContext";
 import { StyledInput } from "../components/ui/StyledFormElements";
 
 import { FaShoppingCart, FaUserCircle } from "react-icons/fa";
@@ -14,10 +13,9 @@ import {
   BsFillTelephoneFill,
 } from "react-icons/bs";
 
-function Nav() {
+function Nav({ terminoBusqueda, setTerminoBusqueda }) {
   const { productosCarrito } = useCarritoContext();
   const { user, admin, logout } = useAuthContext();
-  const { terminoBusqueda, setTerminoBusqueda } = useProductosContext();
   const navigate = useNavigate();
   const location = useLocation();
 

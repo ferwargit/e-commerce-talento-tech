@@ -1,11 +1,11 @@
 // src/components/ProductoDetalle.test.jsx
 
 import { render, screen, waitFor } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import userEvent from "@testing-library/user-event"; 
 import { describe, it, expect, vi } from "vitest";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ProductoDetalle from "./ProductoDetalle";
-import { ProductosProvider } from "../context/ProductosContext";
 import { CarritoProvider } from "../../cart/context/CarritoContext";
 import { AuthProvider } from "../../auth/context/AuthContext";
 
@@ -18,39 +18,48 @@ vi.mock("react-router-dom", async () => {
     useNavigate: () => mockNavigate,
   };
 });
-// Mock (simulación) de los hooks y contextos
-vi.mock("../context/ProductosContext", async () => {
-  const originalModule = await vi.importActual("../context/ProductosContext");
+
+// Mock (simulación) de los servicios
+vi.mock("../services/productService", async () => {
+  const originalModule = await vi.importActual("../services/productService");
   return {
     ...originalModule,
-    useProductosContext: () => ({
-      productoEncontrado: {
-        id: "1",
-        name: "Teclado Mecánico",
-        price: 150,
-        description: "Un teclado increíble.",
-        image: "test.jpg",
-      },
-      obtenerProducto: vi.fn().mockResolvedValue(true),
-      eliminarProducto: vi.fn(),
+    getProductById: vi.fn().mockResolvedValue({
+      id: "1",
+      name: "Teclado Mecánico",
+      price: 150,
+      description: "Un teclado increíble.",
+      image: "test.jpg",
     }),
+    deleteProduct: vi.fn(),
   };
 });
 
 // Wrapper para proveer todos los contextos necesarios
-const AllTheProviders = ({ children }) => (
-  <AuthProvider>
-    <ProductosProvider>
+const AllTheProviders = ({ children }) => {
+  // Creamos una nueva instancia de QueryClient para cada test
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        // Desactivamos los reintentos para que los tests no esperen innecesariamente
+        retry: false,
+      },
+    },
+  });
+  return (
+    <QueryClientProvider client={queryClient}>
       <CarritoProvider>
-        <MemoryRouter initialEntries={["/productos/1"]}>
-          <Routes>
-            <Route path="/productos/:id" element={children} />
-          </Routes>
-        </MemoryRouter>
+        <AuthProvider>
+          <MemoryRouter initialEntries={["/productos/1"]}>
+            <Routes>
+              <Route path="/productos/:id" element={children} />
+            </Routes>
+          </MemoryRouter>
+        </AuthProvider>
       </CarritoProvider>
-    </ProductosProvider>
-  </AuthProvider>
-);
+    </QueryClientProvider>
+  );
+};
 
 describe("ProductoDetalle", () => {
   it("debería renderizar los detalles del producto y permitir añadirlo al carrito", async () => {

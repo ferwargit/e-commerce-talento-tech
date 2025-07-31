@@ -20,6 +20,8 @@ const commonInputStyles = css`
 
   /* Efecto de foco consistente */
   &:focus {
+    background-color: var(--color-background-dark);
+    color: var(--color-text-primary);
     border-color: var(--color-primary);
     outline: 0;
     box-shadow: 0 0 0 0.25rem rgba(20, 184, 166, 0.25);

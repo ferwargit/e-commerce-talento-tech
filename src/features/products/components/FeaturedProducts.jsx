@@ -1,24 +1,14 @@
 // src/features/products/components/FeaturedProducts.jsx
 // Este componente muestra los productos destacados en la página de inicio.
-import { useEffect, useState, useCallback } from "react";
-import { useProductosContext } from "../context/ProductosContext";
+import { useQuery } from "@tanstack/react-query";
+import { getProducts } from "../services/productService";
 import Card from "./Card";
 
 function FeaturedProducts() {
-  const { productos, obtenerProductos } = useProductosContext();
-  const [cargando, setCargando] = useState(true);
-
-  const cargarProductos = useCallback(async () => {
-    try {
-      await obtenerProductos();
-    } finally {
-      setCargando(false);
-    }
-  }, [obtenerProductos]);
-
-  useEffect(() => {
-    cargarProductos();
-  }, [cargarProductos]);
+  const { data: productos = [], isLoading: cargando, error } = useQuery({
+    queryKey: ["products"],
+    queryFn: getProducts,
+  });
 
   const featured = productos.slice(0, 3);
 
@@ -40,6 +30,10 @@ function FeaturedProducts() {
           <div className="spinner-border text-light" role="status">
             <span className="visually-hidden">Cargando...</span>
           </div>
+        </div>
+      ) : error ? (
+        <div className="text-center text-danger">
+          <p>Error al cargar los productos destacados.</p>
         </div>
       ) : (
         <div className="row g-4">

@@ -2,59 +2,44 @@
 // Este componente muestra un formulario para editar un producto existente.
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useProductosContext } from "../../products/context/ProductosContext";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getProductById, updateProduct } from "../../products/services/productService";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css"; // Asegúrate de importar los estilos de Toastify
-import { StyledButton, StyledLinkButton } from "../../../components/ui/Button";
-import { StyledInput, StyledTextarea } from "../../../components/ui/StyledFormElements";
+import "react-toastify/dist/ReactToastify.css";
+import { StyledLinkButton } from "../../../components/ui/Button";
+import ProductForm from "./ProductForm";
+import { validarFormularioProducto } from "../utils/productValidation";
 
 function FormularioEdicion() {
-  const { obtenerProducto, editarProducto } = useProductosContext();
   const { id } = useParams();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const [producto, setProducto] = useState(null);
-  const [cargando, setCargando] = useState(true);
-  const [error, setError] = useState(null);
+
+  const { data: initialProductData, isLoading: cargando, error } = useQuery({
+    queryKey: ["product", id],
+    queryFn: () => getProductById(id),
+    enabled: !!id,
+  });
 
   useEffect(() => {
-    obtenerProducto(id)
-      .then((productoCargado) => {
-        setProducto(productoCargado);
-      })
-      .catch((err) => {
-        setError(
-          err.message || "Hubo un error al cargar los datos del producto."
-        );
-      })
-      .finally(() => {
-        setCargando(false);
-      });
-  }, [id, obtenerProducto]);
+    if (initialProductData) {
+      setProducto(initialProductData);
+    }
+  }, [initialProductData]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setProducto({ ...producto, [name]: value });
-  };
-
-  const validarFormulario = () => {
-    if (!producto.name.trim()) return "El nombre es obligatorio.";
-    if (!producto.price || producto.price <= 0)
-      return "El precio debe ser un número positivo.";
-    if (producto.stock === "" || producto.stock < 0)
-      return "El stock debe ser un número positivo o cero.";
-    if (!producto.category || !producto.category.trim())
-      return "La categoría es obligatoria.";
-    if (!producto.description.trim() || producto.description.length < 10)
-      return "La descripción debe tener al menos 10 caracteres.";
-    if (!producto.image.trim())
-      return "La URL de la imagen no debe estar vacía.";
-    return true;
-  };
+  const updateMutation = useMutation({
+    mutationFn: (updatedProduct) => updateProduct(updatedProduct.id, updatedProduct),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      queryClient.invalidateQueries({ queryKey: ["product", id] });
+    },
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const esValido = validarFormulario();
+    const esValido = validarFormularioProducto(producto);
     if (esValido === true) {
       // Aseguramos que los valores numéricos se envíen como números
       const productoAActualizar = {
@@ -62,15 +47,14 @@ function FormularioEdicion() {
         price: Number(producto.price),
         stock: Number(producto.stock),
       };
-      toast
-        .promise(editarProducto(producto), {
-          pending: "Actualizando producto...",
-          success: "¡Producto actualizado con éxito!",
-          error: "Hubo un problema al actualizar el producto.",
-        })
-        .then(() => {
-          setTimeout(() => navigate(`/productos/${id}`), 2000); // Redirige al detalle después de 2s
-        });
+      toast.promise(
+        updateMutation.mutateAsync(productoAActualizar), {
+        pending: "Actualizando producto...",
+        success: "¡Producto actualizado con éxito!",
+        error: "Hubo un problema al actualizar el producto.",
+      }).then(() => {
+        setTimeout(() => navigate(`/productos/${id}`), 2000);
+      });
     } else {
       toast.error(esValido);
     }
@@ -94,7 +78,7 @@ function FormularioEdicion() {
       <div className="container my-5">
         <div className="alert alert-danger text-center">
           <h2>Error</h2>
-          <p>{error}</p>
+          <p>{error.message}</p>
           <StyledLinkButton to="/productos" $variant="primary">
             Volver a Productos
           </StyledLinkButton>
@@ -102,6 +86,9 @@ function FormularioEdicion() {
       </div>
     );
   }
+
+  // Evita renderizar el formulario hasta que los datos iniciales estén listos
+  if (!producto) return null;
 
   return (
     <div className="container mt-5 mb-5">
@@ -121,140 +108,13 @@ function FormularioEdicion() {
               >
                 Editar Producto
               </h2>
-              <form onSubmit={handleSubmit}>
-                <div className="mb-3">
-                  <label htmlFor="name" className="form-label">
-                    Nombre del Producto
-                  </label>
-                  <StyledInput
-                    id="name"
-                    type="text"
-                    name="name"
-                    value={producto.name || ""}
-                    onChange={handleChange}
-                    className="form-control"
-                    required
-                    style={{
-                      backgroundColor: "var(--color-background-dark)",
-                      color: "var(--color-text-primary)",
-                      borderColor: "var(--color-border)",
-                    }}
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <label htmlFor="image" className="form-label">
-                    URL de la Imagen
-                  </label>
-                  <StyledInput
-                    id="image"
-                    type="text"
-                    name="image"
-                    value={producto.image || ""}
-                    onChange={handleChange}
-                    className="form-control"
-                    required
-                    style={{
-                      backgroundColor: "var(--color-background-dark)",
-                      color: "var(--color-text-primary)",
-                      borderColor: "var(--color-border)",
-                    }}
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <label htmlFor="price" className="form-label">
-                    Precio
-                  </label>
-                  <div className="input-group">
-                    <span className="input-group-text">$</span>
-                    <StyledInput
-                      id="price"
-                      type="number"
-                      name="price"
-                      value={producto.price || ""}
-                      onChange={handleChange}
-                      className="form-control"
-                      required
-                      min="0.01"
-                      step="0.01"
-                      style={{
-                        backgroundColor: "var(--color-background-dark)",
-                        color: "var(--color-text-primary)",
-                        borderColor: "var(--color-border)",
-                      }}
-                    />
-                  </div>
-                </div>
-
-                <div className="row">
-                  <div className="col-md-6 mb-3">
-                    <label htmlFor="stock" className="form-label">
-                      Stock
-                    </label>
-                    <StyledInput
-                      id="stock"
-                      type="number"
-                      name="stock"
-                      value={producto.stock || ""}
-                      onChange={handleChange}
-                      className="form-control"
-                      required
-                      min="0"
-                      style={{
-                        backgroundColor: "var(--color-background-dark)",
-                        color: "var(--color-text-primary)",
-                        borderColor: "var(--color-border)",
-                      }}
-                    />
-                  </div>
-                  <div className="col-md-6 mb-3">
-                    <label htmlFor="category" className="form-label">
-                      Categoría
-                    </label>
-                    <StyledInput
-                      id="category"
-                      type="text"
-                      name="category"
-                      value={producto.category || ""}
-                      onChange={handleChange}
-                      className="form-control"
-                      required
-                      style={{
-                        backgroundColor: "var(--color-background-dark)",
-                        color: "var(--color-text-primary)",
-                        borderColor: "var(--color-border)",
-                      }}
-                    />
-                  </div>
-                </div>
-
-                <div className="mb-4">
-                  <label htmlFor="description" className="form-label">
-                    Descripción
-                  </label>
-                  <StyledTextarea
-                    id="description"
-                    name="description"
-                    value={producto.description || ""}
-                    onChange={handleChange}
-                    className="form-control"
-                    rows="4"
-                    required
-                    style={{
-                      backgroundColor: "var(--color-background-dark)",
-                      color: "var(--color-text-primary)",
-                      borderColor: "var(--color-border)",
-                    }}
-                  />
-                </div>
-
-                <div className="d-grid">
-                  <StyledButton type="submit" $variant="primary">
-                    Actualizar Producto
-                  </StyledButton>
-                </div>
-              </form>
+              <ProductForm
+                producto={producto}
+                setProducto={setProducto}
+                onSubmit={handleSubmit}
+                isSubmitting={updateMutation.isPending}
+                submitButtonText="Actualizar Producto"
+              />
             </div>
           </div>
         </div>

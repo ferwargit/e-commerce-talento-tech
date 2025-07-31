@@ -1,4 +1,4 @@
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useState } from "react";
 import "./App.css";
 import {
   BrowserRouter as Router,
@@ -25,6 +25,7 @@ const FormularioEdicion = lazy(() => import("./features/admin/components/Formula
 const AdminProductos = lazy(() => import("./features/admin/components/AdminProductos"));
 
 function AppContent() {
+  const [terminoBusqueda, setTerminoBusqueda] = useState("");
 
   return (
     <div className="app-container">
@@ -40,7 +41,10 @@ function AppContent() {
         pauseOnHover
         theme="dark"
       />
-      <Nav />
+      <Nav
+        terminoBusqueda={terminoBusqueda}
+        setTerminoBusqueda={setTerminoBusqueda}
+      />
       <main>
         <ScrollToTop />
         <Suspense
@@ -53,12 +57,18 @@ function AppContent() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<LoginBoost />} />
-            <Route path="/productos" element={<ProductosContainer />} />
+            <Route
+              path="/productos"
+              element={<ProductosContainer terminoBusqueda={terminoBusqueda} />}
+            />
             <Route path="/carrito" element={<Carrito />} />
             <Route path="/nosotros" element={<About />} />
             <Route path="/contacto" element={<Contacto />} />
             <Route path="/productos/:id" element={<ProductoDetalle />} />
-            <Route path="/admin" element={<AdminProductos />} />
+            <Route
+              path="/admin"
+              element={<AdminProductos terminoBusqueda={terminoBusqueda} />}
+            />
             <Route
               path="/admin/agregarProducto"
               element={<FormularioProducto />}

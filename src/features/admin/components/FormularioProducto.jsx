@@ -1,13 +1,14 @@
 import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuthContext } from "../../auth/context/AuthContext";
 import { toast } from "react-toastify";
 import { Navigate } from "react-router-dom";
-import { useProductosContext } from "../../products/context/ProductosContext";
-import { StyledButton } from "../../../components/ui/Button";
-import { StyledInput, StyledTextarea } from "../../../components/ui/StyledFormElements";
+import { createProduct } from "../../products/services/productService";
+import ProductForm from "./ProductForm";
+import { validarFormularioProducto } from "../utils/productValidation";
 
 function FormularioProducto() {
-  const { agregarProducto } = useProductosContext();
+  const queryClient = useQueryClient();
   const { admin } = useAuthContext();
 
   const [producto, setProducto] = useState({
@@ -19,37 +20,21 @@ function FormularioProducto() {
     image: "",
   });
 
-  // lógica de validación y envío
-  const validarFormulario = () => {
-    if (!producto.name.trim()) {
-      return "El nombre es obligatorio.";
-    }
-    if (!producto.price || producto.price <= 0) {
-      return "El precio debe ser un número positivo.";
-    }
-    if (!producto.stock || producto.stock < 0) {
-      return "El stock debe ser un número positivo o cero.";
-    }
-    if (!producto.category.trim()) {
-      return "La categoría es obligatoria.";
-    }
-    if (!producto.description.trim() || producto.description.length < 10) {
-      return "La descripción debe tener al menos 10 caracteres.";
-    }
-    if (!producto.image.trim()) {
-      return "La URL de la imagen no debe estar vacía.";
-    }
-    return true;
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setProducto({ ...producto, [name]: value });
-  };
+  const createMutation = useMutation({
+    mutationFn: createProduct,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      // Reseteamos el formulario
+      setProducto({
+        name: "", price: "", stock: "",
+        category: "", description: "", image: "",
+      });
+    },
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const validarForm = validarFormulario();
+    const validarForm = validarFormularioProducto(producto);
     if (validarForm === true) {
       const productoConNumeros = {
         ...producto,
@@ -57,19 +42,7 @@ function FormularioProducto() {
         stock: Number(producto.stock),
       };
 
-      const promise = agregarProducto(productoConNumeros).then(() => {
-        // Reseteamos el formulario
-        setProducto({
-          name: "",
-          price: "",
-          stock: "",
-          category: "",
-          description: "",
-          image: "",
-        });
-      });
-
-      toast.promise(promise, {
+      toast.promise(createMutation.mutateAsync(productoConNumeros), {
         pending: "Agregando producto...",
         success: "¡Producto agregado con éxito!",
         error: "Hubo un problema al agregar el producto.",
@@ -101,146 +74,14 @@ function FormularioProducto() {
               >
                 Agregar Nuevo Producto
               </h2>
-              <form onSubmit={handleSubmit}>
-                <div className="mb-3">
-                  <label htmlFor="name" className="form-label">
-                    Nombre del Producto
-                  </label>
-                  <StyledInput
-                    id="name"
-                    type="text"
-                    name="name"
-                    value={producto.name}
-                    onChange={handleChange}
-                    className="form-control"
-                    placeholder="Ej: Teclado Mecánico RGB"
-                    required
-                    style={{
-                      backgroundColor: "var(--color-background-dark)",
-                      color: "var(--color-text-primary)",
-                      borderColor: "var(--color-border)",
-                    }}
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <label htmlFor="image" className="form-label">
-                    URL de la Imagen
-                  </label>
-                  <StyledInput
-                    id="image"
-                    type="text"
-                    name="image"
-                    value={producto.image}
-                    onChange={handleChange}
-                    className="form-control"
-                    placeholder="/images/products/nombre-del-producto.jpg"
-                    required
-                    style={{
-                      backgroundColor: "var(--color-background-dark)",
-                      color: "var(--color-text-primary)",
-                      borderColor: "var(--color-border)",
-                    }}
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <label htmlFor="price" className="form-label">
-                    Precio
-                  </label>
-                  <div className="input-group">
-                    <span className="input-group-text">$</span>
-                    <StyledInput
-                      id="price"
-                      type="number"
-                      name="price"
-                      value={producto.price}
-                      onChange={handleChange}
-                      className="form-control"
-                      placeholder="Ej: 150.99"
-                      required
-                      min="0.01"
-                      step="0.01"
-                      style={{
-                        backgroundColor: "var(--color-background-dark)",
-                        color: "var(--color-text-primary)",
-                        borderColor: "var(--color-border)",
-                      }}
-                    />
-                  </div>
-                </div>
-
-                <div className="row">
-                  <div className="col-md-6 mb-3">
-                    <label htmlFor="stock" className="form-label">
-                      Stock
-                    </label>
-                    <StyledInput
-                      id="stock"
-                      type="number"
-                      name="stock"
-                      value={producto.stock}
-                      onChange={handleChange}
-                      className="form-control"
-                      placeholder="Ej: 50"
-                      required
-                      min="0"
-                      style={{
-                        backgroundColor: "var(--color-background-dark)",
-                        color: "var(--color-text-primary)",
-                        borderColor: "var(--color-border)",
-                      }}
-                    />
-                  </div>
-                  <div className="col-md-6 mb-3">
-                    <label htmlFor="category" className="form-label">
-                      Categoría
-                    </label>
-                    <StyledInput
-                      id="category"
-                      type="text"
-                      name="category"
-                      value={producto.category}
-                      onChange={handleChange}
-                      className="form-control"
-                      placeholder="Ej: Teclados"
-                      required
-                      style={{
-                        backgroundColor: "var(--color-background-dark)",
-                        color: "var(--color-text-primary)",
-                        borderColor: "var(--color-border)",
-                      }}
-                    />
-                  </div>
-                </div>
-
-                <div className="mb-4">
-                  <label htmlFor="description" className="form-label">
-                    Descripción
-                  </label>
-                  <StyledTextarea
-                    id="description"
-                    name="description"
-                    value={producto.description}
-                    onChange={handleChange}
-                    className="form-control"
-                    rows="4"
-                    placeholder="Describe el producto aquí..."
-                    required
-                    style={{
-                      backgroundColor: "var(--color-background-dark)",
-                      color: "var(--color-text-primary)",
-                      borderColor: "var(--color-border)",
-                    }}
-                  />
-                </div>
-
-                <div className="d-grid">
-                  <StyledButton type="submit" $variant="success">
-                    Agregar Producto
-                  </StyledButton>
-                </div>
-              </form>
+              <ProductForm
+                producto={producto}
+                setProducto={setProducto}
+                onSubmit={handleSubmit}
+                isSubmitting={createMutation.isPending}
+                submitButtonText="Agregar Producto"
+                submitButtonVariant="success"
+              />
             </div>
           </div>
         </div>
