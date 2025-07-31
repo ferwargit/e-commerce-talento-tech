@@ -1,4 +1,4 @@
-// src/components/AdminProductos.jsx
+// src/features/admin/components/AdminProductos.jsx
 import { useEffect, useState, useCallback } from "react";
 import { useProductosContext } from "../../products/context/ProductosContext";
 import { StyledLinkButton, StyledButton } from "../../../components/ui/Button";
