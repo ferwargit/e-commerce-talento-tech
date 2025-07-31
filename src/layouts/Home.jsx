@@ -1,7 +1,7 @@
-import SEO from "../components/SEO";
-import Hero from "../components/home/Hero";
-import FeaturedProducts from "../components/home/FeaturedProducts";
-import Features from "../components/home/Features";
+import SEO from "../components/ui/SEO.jsx";
+import Hero from "./Hero.jsx";
+import FeaturedProducts from "../features/products/components/FeaturedProducts.jsx";
+import Features from "../components/ui/Features.jsx";
 
 function Home() {
   return (
