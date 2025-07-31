@@ -1,6 +1,6 @@
-import { useContext, useState } from "react"; // Importamos useState
+import { useState } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-import { CarritoContext } from "../features/cart/context/CarritoContext";
+import { useCarritoContext } from "../features/cart/context/CarritoContext";
 import { useAuthContext } from "../features/auth/context/AuthContext";
 import { useProductosContext } from "../features/products/context/ProductosContext";
 import { StyledInput } from "../components/ui/StyledFormElements";
@@ -15,7 +15,7 @@ import {
 } from "react-icons/bs";
 
 function Nav() {
-  const { productosCarrito } = useContext(CarritoContext);
+  const { productosCarrito } = useCarritoContext();
   const { user, admin, logout } = useAuthContext();
   const { terminoBusqueda, setTerminoBusqueda } = useProductosContext();
   const navigate = useNavigate();

@@ -1,8 +1,7 @@
 // src/components/Carrito.jsx
 import SEO from "../../../components/ui/SEO";
 import { Navigate, useNavigate, useLocation } from "react-router-dom";
-import { useContext } from "react";
-import { CarritoContext } from "../context/CarritoContext.jsx";
+import { useCarritoContext } from "../context/CarritoContext.jsx";
 import { useAuthContext } from "../../auth/context/AuthContext.jsx";
 import CarritoCard from "./CarritoCard.jsx";
 import { StyledButton, StyledLinkButton } from "../../../components/ui/Button.jsx";
@@ -12,8 +11,7 @@ import { toast } from "react-toastify";
 export default function Carrito() {
   const { user, admin } = useAuthContext();
   const location = useLocation();
-  const { productosCarrito, vaciarCarrito, borrarProductoCarrito } =
-    useContext(CarritoContext);
+  const { productosCarrito, vaciarCarrito, borrarProductoCarrito } = useCarritoContext();
   const navigate = useNavigate();
 
   const subtotal = productosCarrito.reduce(
