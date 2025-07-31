@@ -10,6 +10,7 @@ import Nav from "./layouts/Nav";
 import Footer from "./layouts/Footer";
 import ScrollToTop from "./components/ui/ScrollToTop";
 import { ToastContainer } from "react-toastify";
+import { PATHS } from "./constants/paths";
 import "react-toastify/dist/ReactToastify.css";
 
 // --- Lazy Imports para Code Splitting ---
@@ -55,26 +56,26 @@ function AppContent() {
           }
         >
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<LoginBoost />} />
+            <Route path={PATHS.HOME} element={<Home />} />
+            <Route path={PATHS.LOGIN} element={<LoginBoost />} />
             <Route
-              path="/productos"
+              path={PATHS.PRODUCTS}
               element={<ProductosContainer terminoBusqueda={terminoBusqueda} />}
             />
-            <Route path="/carrito" element={<Carrito />} />
-            <Route path="/nosotros" element={<About />} />
-            <Route path="/contacto" element={<Contacto />} />
-            <Route path="/productos/:id" element={<ProductoDetalle />} />
+            <Route path={PATHS.CART} element={<Carrito />} />
+            <Route path={PATHS.ABOUT} element={<About />} />
+            <Route path={PATHS.CONTACT} element={<Contacto />} />
+            <Route path={PATHS.PRODUCT_DETAIL} element={<ProductoDetalle />} />
             <Route
-              path="/admin"
+              path={PATHS.ADMIN_DASHBOARD}
               element={<AdminProductos terminoBusqueda={terminoBusqueda} />}
             />
             <Route
-              path="/admin/agregarProducto"
+              path={PATHS.ADMIN_ADD_PRODUCT}
               element={<FormularioProducto />}
             />
             <Route
-              path="/admin/editarProducto/:id"
+              path={PATHS.ADMIN_EDIT_PRODUCT}
               element={<FormularioEdicion />}
             />
           </Routes>

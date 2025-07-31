@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuthContext } from "../context/AuthContext";
 import { crearUsuario, loginEmailPass } from "../services/authService"; // No necesitamos `cerrarSesion` aquí
+import { PATHS } from "../../../constants/paths";
 import { dispararSweetBasico } from "../../../assets/SweetAlert";
 import LoginForm from "./LoginForm";
 import { StyledButton } from "../../../components/ui/Button";
@@ -16,7 +17,7 @@ function LoginBoost() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const from = location.state?.from?.pathname || "/";
+  const from = location.state?.from?.pathname || PATHS.HOME;
 
   const registrarUsuario = (e) => {
     e.preventDefault();
@@ -28,7 +29,7 @@ function LoginBoost() {
           "success",
           "Empezar a Comprar"
         );
-        navigate("/");
+        navigate(PATHS.HOME);
       })
       .catch((error) => {
         let message = "Ocurrió un error inesperado.";

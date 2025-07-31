@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useCarritoContext } from "../features/cart/context/CarritoContext";
 import { useAuthContext } from "../features/auth/context/AuthContext";
+import { PATHS } from "../constants/paths";
 import { StyledInput } from "../components/ui/StyledFormElements";
 
 import { FaShoppingCart, FaUserCircle } from "react-icons/fa";
@@ -36,8 +37,8 @@ function Nav({ terminoBusqueda, setTerminoBusqueda }) {
   const handleBusquedaChange = (e) => {
     const nuevoTermino = e.target.value;
     setTerminoBusqueda(nuevoTermino);
-    if (location.pathname !== "/productos" && nuevoTermino) {
-      navigate("/productos");
+    if (location.pathname !== PATHS.PRODUCTS && nuevoTermino) {
+      navigate(PATHS.PRODUCTS);
     }
   };
 
@@ -53,7 +54,7 @@ function Nav({ terminoBusqueda, setTerminoBusqueda }) {
           <NavLink
             className="nav-link"
             style={({ isActive }) => (isActive ? activeLinkStyle : undefined)}
-            to="/"
+            to={PATHS.HOME}
             onClick={closeMenu}
           >
             <BsFillHouseDoorFill className="me-2" />
@@ -64,7 +65,7 @@ function Nav({ terminoBusqueda, setTerminoBusqueda }) {
           <NavLink
             className="nav-link"
             style={({ isActive }) => (isActive ? activeLinkStyle : undefined)}
-            to="/productos"
+            to={PATHS.PRODUCTS}
             onClick={closeMenu}
           >
             <BsBoxSeamFill className="me-2" />
@@ -100,7 +101,7 @@ function Nav({ terminoBusqueda, setTerminoBusqueda }) {
             <li>
               <NavLink
                 className="dropdown-item"
-                to="/admin"
+                to={PATHS.ADMIN_DASHBOARD}
                 onClick={closeMenu}
               >
                 <RiAdminFill className="me-1" />
@@ -110,7 +111,7 @@ function Nav({ terminoBusqueda, setTerminoBusqueda }) {
             <li>
               <NavLink
                 className="dropdown-item"
-                to="/admin/agregarProducto"
+                to={PATHS.ADMIN_ADD_PRODUCT}
                 onClick={closeMenu}
               >
                 <RiAddBoxFill className="me-1" />
@@ -121,7 +122,7 @@ function Nav({ terminoBusqueda, setTerminoBusqueda }) {
               <hr className="dropdown-divider" />
             </li>
             <li>
-              <Link className="dropdown-item" to="/" onClick={handleLogout}>
+              <Link className="dropdown-item" to={PATHS.HOME} onClick={handleLogout}>
                 <RiLoginBoxLine className="me-1" />
                 Cerrar Sesión
               </Link>
@@ -139,7 +140,7 @@ function Nav({ terminoBusqueda, setTerminoBusqueda }) {
           <NavLink
             className="nav-link"
             style={({ isActive }) => (isActive ? activeLinkStyle : undefined)}
-            to="/"
+            to={PATHS.HOME}
             onClick={closeMenu}
           >
             <BsFillHouseDoorFill className="me-2" />
@@ -150,7 +151,7 @@ function Nav({ terminoBusqueda, setTerminoBusqueda }) {
           <NavLink
             className="nav-link"
             style={({ isActive }) => (isActive ? activeLinkStyle : undefined)}
-            to="/productos"
+            to={PATHS.PRODUCTS}
             onClick={closeMenu}
           >
             <BsBoxSeamFill className="me-2" />
@@ -161,7 +162,7 @@ function Nav({ terminoBusqueda, setTerminoBusqueda }) {
           <NavLink
             className="nav-link"
             style={({ isActive }) => (isActive ? activeLinkStyle : undefined)}
-            to="/nosotros"
+            to={PATHS.ABOUT}
             onClick={closeMenu}
           >
             <BsFillInfoCircleFill className="me-2" />
@@ -172,7 +173,7 @@ function Nav({ terminoBusqueda, setTerminoBusqueda }) {
           <NavLink
             className="nav-link"
             style={({ isActive }) => (isActive ? activeLinkStyle : undefined)}
-            to="/contacto"
+            to={PATHS.CONTACT}
             onClick={closeMenu}
           >
             <BsFillTelephoneFill className="me-2" />
@@ -200,7 +201,7 @@ function Nav({ terminoBusqueda, setTerminoBusqueda }) {
         </form>
         <ul className="navbar-nav d-flex flex-row justify-content-between w-100 w-lg-auto pt-3 pt-lg-0">
           <li className="nav-item">
-            <NavLink className="nav-link" to="/carrito" onClick={closeMenu}>
+            <NavLink className="nav-link" to={PATHS.CART} onClick={closeMenu}>
               <FaShoppingCart />
               {totalItems > 0 && (
                 <span className="badge bg-primary ms-1">{totalItems}</span>
@@ -220,7 +221,7 @@ function Nav({ terminoBusqueda, setTerminoBusqueda }) {
               </a>
               <ul className="dropdown-menu dropdown-menu-dark dropdown-menu-end">
                 <li>
-                  <Link className="dropdown-item" to="/" onClick={handleLogout}>
+                  <Link className="dropdown-item" to={PATHS.HOME} onClick={handleLogout}>
                     <RiLoginBoxLine className="me-1" />
                     Cerrar Sesión
                   </Link>
@@ -229,7 +230,7 @@ function Nav({ terminoBusqueda, setTerminoBusqueda }) {
             </li>
           ) : (
             <li className="nav-item">
-              <NavLink className="nav-link" to="/login" onClick={closeMenu}>
+              <NavLink className="nav-link" to={PATHS.LOGIN} onClick={closeMenu}>
                 <RiLoginBoxLine className="me-1" />
                 Login
               </NavLink>
@@ -249,7 +250,7 @@ function Nav({ terminoBusqueda, setTerminoBusqueda }) {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
       <div className="container-fluid">
-        <Link className="navbar-brand" to="/" onClick={closeMenu}>
+        <Link className="navbar-brand" to={PATHS.HOME} onClick={closeMenu}>
           TechStore
         </Link>
         {!location.pathname.startsWith("/admin/login") && (

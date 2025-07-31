@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import styles from "./Footer.module.css";
 import { useAuthContext } from "../features/auth/context/AuthContext";
+import { PATHS } from "../constants/paths";
 import { FaFacebook, FaInstagram, FaTwitter, FaLinkedin } from "react-icons/fa";
 
 function Footer() {
@@ -13,12 +14,12 @@ function Footer() {
         <h5 className={styles.footerTitle}>Administración</h5>
         <ul className={styles.footerLinks}>
           <li>
-            <Link to="/admin" className={styles.footerLink}>
+            <Link to={PATHS.ADMIN_DASHBOARD} className={styles.footerLink}>
               Gestión de Productos
             </Link>
           </li>
           <li>
-            <Link to="/admin/agregarProducto" className={styles.footerLink}>
+            <Link to={PATHS.ADMIN_ADD_PRODUCT} className={styles.footerLink}>
               Agregar Productos
             </Link>
           </li>
@@ -28,7 +29,7 @@ function Footer() {
         <h5 className={styles.footerTitle}>Tienda</h5>
         <ul className={styles.footerLinks}>
           <li>
-            <Link to="/productos" className={styles.footerLink}>
+            <Link to={PATHS.PRODUCTS} className={styles.footerLink}>
               Ver Productos
             </Link>
           </li>
@@ -43,12 +44,12 @@ function Footer() {
         <h5 className={styles.footerTitle}>Tienda</h5>
         <ul className={styles.footerLinks}>
           <li>
-            <Link to="/productos" className={styles.footerLink}>
+            <Link to={PATHS.PRODUCTS} className={styles.footerLink}>
               Productos
             </Link>
           </li>
           <li>
-            <Link to="/carrito" className={styles.footerLink}>
+            <Link to={PATHS.CART} className={styles.footerLink}>
               Carrito
             </Link>
           </li>
@@ -58,12 +59,12 @@ function Footer() {
         <h5 className={styles.footerTitle}>Empresa</h5>
         <ul className={styles.footerLinks}>
           <li>
-            <Link to="/nosotros" className={styles.footerLink}>
+            <Link to={PATHS.ABOUT} className={styles.footerLink}>
               Nosotros
             </Link>
           </li>
           <li>
-            <Link to="/contacto" className={styles.footerLink}>
+            <Link to={PATHS.CONTACT} className={styles.footerLink}>
               Contacto
             </Link>
           </li>
