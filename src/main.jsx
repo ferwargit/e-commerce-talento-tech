@@ -1,3 +1,6 @@
+// src/main.jsx
+
+import "./config/env.js"; // Importar para ejecutar la validación al inicio
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
