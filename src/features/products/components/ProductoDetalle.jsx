@@ -1,11 +1,11 @@
 // src/components/ProductoDetalle.jsx
 // Este componente muestra los detalles de un producto específico.
 import SEO from "../../../components/ui/SEO";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ThemedSwal from "../../../assets/ThemedSwal";
 import { toast } from "react-toastify"; 
-import { CarritoContext } from "../../cart/context/CarritoContext"; 
+import { useCarritoContext } from "../../cart/context/CarritoContext"; 
 import { useAuthContext } from "../../auth/context/AuthContext"; 
 import { useProductosContext } from "../context/ProductosContext";
 import { StyledButton, StyledLinkButton } from "../../../components/ui/Button";
@@ -36,7 +36,7 @@ const ContadorWrapper = styled.div`
 function ProductoDetalle() {
   const navegar = useNavigate();
   const { admin } = useAuthContext();
-  const { agregarAlCarrito } = useContext(CarritoContext);
+  const { agregarAlCarrito } = useCarritoContext();
   const { productoEncontrado, obtenerProducto, eliminarProducto } =
     useProductosContext();
   const { id } = useParams();

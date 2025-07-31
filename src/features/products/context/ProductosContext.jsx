@@ -72,4 +72,15 @@ export function ProductosProvider({ children }) {
   );
 }
 
-export const useProductosContext = () => useContext(ProductosContext);
+/**
+ * Hook personalizado para acceder al contexto de productos.
+ * Proporciona una forma más limpia y segura de consumir el contexto,
+ * asegurando que se utilice dentro de un ProductosProvider.
+ */
+export const useProductosContext = () => {
+  const context = useContext(ProductosContext);
+  if (context === undefined) {
+    throw new Error("useProductosContext debe ser usado dentro de un ProductosProvider");
+  }
+  return context;
+};

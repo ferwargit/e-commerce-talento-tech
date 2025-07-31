@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useContext } from "react";
 
 // Crear el contexto
 export const CarritoContext = createContext();
@@ -58,3 +58,15 @@ export function CarritoProvider({ children }) {
     </CarritoContext.Provider>
   );
 }
+
+/**
+ * Hook personalizado para acceder al contexto del carrito.
+ * Simplifica el uso del contexto y añade una capa de validación.
+ */
+export const useCarritoContext = () => {
+  const context = useContext(CarritoContext);
+  if (context === undefined) {
+    throw new Error("useCarritoContext debe ser usado dentro de un CarritoProvider");
+  }
+  return context;
+};

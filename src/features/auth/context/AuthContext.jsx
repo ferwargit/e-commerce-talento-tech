@@ -46,4 +46,15 @@ export function AuthProvider({ children }) {
   );
 }
 
-export const useAuthContext = () => useContext(AuthContext);
+/**
+ * Hook personalizado para acceder al contexto de autenticación.
+ * Proporciona una forma más limpia y segura de consumir el contexto,
+ * asegurando que se utilice dentro de un AuthProvider.
+ */
+export const useAuthContext = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuthContext debe ser usado dentro de un AuthProvider");
+  }
+  return context;
+};
