@@ -1,6 +1,8 @@
 // src/features/admin/components/AdminProductos.jsx
-import { useEffect, useState, useCallback } from "react";
-import { useProductosContext } from "../../products/context/ProductosContext";
+import { useEffect, useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useProductosContext } from "../../products/context/useProductosContext";
+import { getProducts, deleteProduct } from "../../products/services/productService";
 import { StyledLinkButton, StyledButton } from "../../../components/ui/Button";
 import SEO from "../../../components/ui/SEO";
 import { toast } from "react-toastify";
@@ -9,29 +11,26 @@ import ThemedSwal from "../../../assets/ThemedSwal";
 import Paginador from "../../../components/ui/Paginador";
 
 function AdminProductos() {
-  const { productos, obtenerProductos, eliminarProducto, terminoBusqueda } =
-    useProductosContext();
-  const [cargando, setCargando] = useState(true);
+  const { terminoBusqueda } = useProductosContext();
+  const queryClient = useQueryClient();
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(10);
 
-  const cargarProductos = useCallback(async () => {
-    try {
-      await obtenerProductos();
-    } catch (err) {
-      toast.error("Hubo un problema al cargar los productos.");
-    } finally {
-      setCargando(false);
-    }
-  }, [obtenerProductos]);
-
-  useEffect(() => {
-    cargarProductos();
-  }, [cargarProductos]);
+  const { data: productos = [], isLoading: cargando, error } = useQuery({
+    queryKey: ["products"],
+    queryFn: getProducts,
+  });
 
   useEffect(() => {
     setCurrentPage(1);
   }, [terminoBusqueda]);
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteProduct,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+    },
+  });
 
   const handleEliminar = (id, nombreProducto) => {
     ThemedSwal.fire({
@@ -45,8 +44,7 @@ function AdminProductos() {
       cancelButtonColor: "#4b5563",
     }).then((result) => {
       if (result.isConfirmed) {
-        const promise = eliminarProducto(id);
-        toast.promise(promise, {
+        toast.promise(deleteMutation.mutateAsync(id), {
           pending: "Eliminando producto...",
           success: "Producto eliminado con éxito 👌",
           error: "Error al eliminar el producto 🤯",
@@ -92,6 +90,14 @@ function AdminProductos() {
     );
   }
 
+  if (error) {
+    return (
+      <div className="container text-center my-5 text-danger">
+        <h4>Error al cargar los productos</h4>
+        <p>{error.message}</p>
+      </div>
+    );
+  }
   const formatPrice = (value) =>
     new Intl.NumberFormat("es-AR", {
       style: "currency",
