@@ -1,32 +1,23 @@
 // src/components/ProductosContainer.jsx
 // Este componente muestra una lista de productos con paginación y búsqueda.
 import SEO from "./SEO";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import Card from "./Card";
 import { useProductosContext } from "../context/ProductosContext";
+import { getProducts } from "../services/productService";
 import Paginador from "./Paginador";
 
 function ProductosContainer() {
-  const { productos, obtenerProductos, terminoBusqueda } =
-    useProductosContext(); 
-  const [cargando, setCargando] = useState(true);
-  const [error, setError] = useState(null);
+  const { terminoBusqueda } = useProductosContext();
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(6); 
 
-  const cargarProductos = useCallback(async () => {
-    try {
-      await obtenerProductos();
-    } catch (err) {
-      setError("Hubo un problema al cargar los productos.");
-    } finally {
-      setCargando(false);
-    }
-  }, [obtenerProductos]);
+  const { data: productos = [], isLoading: cargando, error } = useQuery({
+    queryKey: ["products"],
+    queryFn: getProducts,
+  });
 
-  useEffect(() => {
-    cargarProductos();
-  }, [cargarProductos]);
 
   useEffect(() => {
     setCurrentPage(1);
