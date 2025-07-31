@@ -6,23 +6,23 @@ import {
   Route,
 } from "react-router-dom";
 import Spinner from "react-bootstrap/Spinner";
-import Nav from "./components/Nav";
-import Footer from "./components/Footer";
-import ScrollToTop from "./components/ScrollToTop";
+import Nav from "./layouts/Nav";
+import Footer from "./layouts/Footer";
+import ScrollToTop from "./components/ui/ScrollToTop";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 // --- Lazy Imports para Code Splitting ---
 const Home = lazy(() => import("./layouts/Home"));
-const ProductosContainer = lazy(() => import("./components/ProductosContainer"));
-const Carrito = lazy(() => import("./components/Carrito"));
-const About = lazy(() => import("./components/About"));
-const Contacto = lazy(() => import("./components/Contacto"));
-const ProductoDetalle = lazy(() => import("./components/ProductoDetalle"));
-const LoginBoost = lazy(() => import("./components/LoginBoost"));
-const FormularioProducto = lazy(() => import("./components/FormularioProducto"));
-const FormularioEdicion = lazy(() => import("./components/FormularioEdicion"));
-const AdminProductos = lazy(() => import("./components/AdminProductos"));
+const ProductosContainer = lazy(() => import("./features/products/components/ProductosContainer"));
+const Carrito = lazy(() => import("./features/cart/components/Carrito"));
+const About = lazy(() => import("./pages/About"));
+const Contacto = lazy(() => import("./pages/Contacto"));
+const ProductoDetalle = lazy(() => import("./features/products/components/ProductoDetalle"));
+const LoginBoost = lazy(() => import("./features/auth/components/LoginBoost"));
+const FormularioProducto = lazy(() => import("./features/admin/components/FormularioProducto"));
+const FormularioEdicion = lazy(() => import("./features/admin/components/FormularioEdicion"));
+const AdminProductos = lazy(() => import("./features/admin/components/AdminProductos"));
 
 function AppContent() {
 
