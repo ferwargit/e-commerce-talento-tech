@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import SEO from '../components/ui/SEO.jsx';
-import { StyledInput, StyledTextarea } from '../components/ui/StyledFormElements.jsx';
-import { StyledButton } from '../components/ui/Button.jsx';
+import SEO from '@/components/ui/SEO.jsx';
+import { StyledInput, StyledTextarea } from '@/components/ui/StyledFormElements.jsx';
+import { StyledButton } from '@/components/ui/Button.jsx';
 import { FaMapMarkerAlt, FaPhone, FaEnvelope } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 

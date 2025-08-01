@@ -2,12 +2,12 @@
 // Este componente muestra un formulario para editar un producto existente.
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient, useIsMutating } from "@tanstack/react-query";
-import { getProductById, updateProduct } from "../../products/services/productService";
+import { getProductById, updateProduct } from "@/features/products/services/productService";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { StyledLinkButton } from "../../../components/ui/Button";
+import { StyledLinkButton } from "@/components/ui/Button";
 import ProductForm from "./ProductForm";
-import { PATHS } from "../../../constants/paths";
+import { PATHS } from "@/constants/paths";
 
 function FormularioEdicion() {
   const { id } = useParams();

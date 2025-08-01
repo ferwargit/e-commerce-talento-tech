@@ -1,4 +1,4 @@
-import SEO from "../components/ui/SEO.jsx";
+import SEO from "@/components/ui/SEO.jsx";
 import { FaMicrochip, FaAward, FaHeadset } from "react-icons/fa";
 
 const Feature = ({ icon, title, text }) => (

@@ -6,7 +6,7 @@ import { describe, it, expect, vi } from "vitest";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ProductoDetalle from "./ProductoDetalle";
-import * as productService from '../services/productService';
+import * as productService from '@/features/products/services/productService';
 
 // Mock para react-router-dom para simular la navegación
 const mockNavigate = vi.fn();
@@ -19,11 +19,11 @@ vi.mock("react-router-dom", async () => {
 });
 
 // Mock del service layer. Esta es la solución pragmática y robusta para este caso.
-vi.mock("../services/productService");
+vi.mock("@/features/products/services/productService");
 
 // Mock del store de Zustand para espiar sus acciones
 const mockAgregarAlCarrito = vi.fn();
-vi.mock('../../cart/store/carritoStore', () => ({
+vi.mock('@/features/cart/store/carritoStore', () => ({
   useCarritoStore: vi.fn(() => mockAgregarAlCarrito),
 }));
 

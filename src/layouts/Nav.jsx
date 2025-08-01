@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-import { useCarritoStore } from "../features/cart/store/carritoStore";
-import { useAuthStore } from "../features/auth/store/authStore";
-import { useSearchStore } from "../features/search/store/searchStore";
-import { PATHS } from "../constants/paths";
-import { StyledInput } from "../components/ui/StyledFormElements";
+import { useCarritoStore } from "@/features/cart/store/carritoStore";
+import { useAuthStore } from "@/features/auth/store/authStore";
+import { useSearchStore } from "@/features/search/store/searchStore";
+import { PATHS } from "@/constants/paths";
+import { StyledInput } from "@/components/ui/StyledFormElements";
 
 import { FaShoppingCart, FaUserCircle } from "react-icons/fa";
 import { RiAdminFill, RiLoginBoxLine, RiAddBoxFill } from "react-icons/ri";

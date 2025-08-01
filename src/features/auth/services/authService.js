@@ -1,11 +1,11 @@
-// src/services/authService.js
+// src/features/auth/services/authService.js
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
 } from "firebase/auth";
-import { auth } from "../../../lib/firebase/config"; // Importamos la instancia centralizada
+import { auth } from "@/lib/firebase/config"; // Importamos la instancia centralizada
 
 export async function crearUsuario(email, password) {
   try {

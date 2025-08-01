@@ -10,7 +10,7 @@ import {
   doc,
   serverTimestamp,
 } from "firebase/firestore";
-import { db } from "../../../lib/firebase/config"; // Importar la instancia de la base de datos
+import { db } from "@/lib/firebase/config"; // Importar la instancia de la base de datos
 
 // Referencia a la colección 'products' en Firestore
 const productsCollectionRef = collection(db, "products");

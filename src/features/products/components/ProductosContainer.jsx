@@ -1,12 +1,12 @@
 // src/components/ProductosContainer.jsx
 // Este componente muestra una lista de productos con paginación y búsqueda.
-import SEO from "../../../components/ui/SEO";
+import SEO from "@/components/ui/SEO";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Card from "./Card";
-import { getProducts } from "../services/productService";
-import Paginador from "../../../components/ui/Paginador";
-import { useSearchStore } from "../../search/store/searchStore";
+import { getProducts } from "@/features/products/services/productService";
+import Paginador from "@/components/ui/Paginador";
+import { useSearchStore } from "@/features/search/store/searchStore";
 
 function ProductosContainer() {
   const [currentPage, setCurrentPage] = useState(1);

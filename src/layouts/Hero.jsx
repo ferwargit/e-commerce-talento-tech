@@ -1,5 +1,6 @@
 import styled from "styled-components";
-import { StyledLinkButton } from "../components/ui/Button";
+import { StyledLinkButton } from "@/components/ui/Button";
+import { PATHS } from "@/constants/paths";
 
 // La imagen completa, codificada como texto.
 const heroImageBase64 =
@@ -46,7 +47,7 @@ function Hero() {
           Calidad y rendimiento garantizados.
         </p>
         <StyledLinkButton
-          to="/productos"
+          to={PATHS.PRODUCTS}
           $variant="primary"
           style={{ fontSize: "1.2rem", padding: "15px 30px" }}
         >

@@ -1,15 +1,15 @@
 // src/features/products/components/ProductoDetalle.jsx
 // Este componente muestra los detalles de un producto específico.
-import SEO from "../../../components/ui/SEO";
+import SEO from "@/components/ui/SEO";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import ThemedSwal from "../../../assets/ThemedSwal";
+import ThemedSwal from "@/assets/ThemedSwal";
 import { toast } from "react-toastify"; 
-import { useCarritoStore } from "../../cart/store/carritoStore"; 
-import { useAuthStore } from "../../auth/store/authStore";
-import { getProductById, deleteProduct } from "../services/productService";
-import { StyledButton, StyledLinkButton } from "../../../components/ui/Button";
+import { useCarritoStore } from "@/features/cart/store/carritoStore"; 
+import { useAuthStore } from "@/features/auth/store/authStore";
+import { getProductById, deleteProduct } from "@/features/products/services/productService";
+import { StyledButton, StyledLinkButton } from "@/components/ui/Button";
 import styled from "styled-components";
 
 // Componente estilizado para el contenedor de la imagen de detalle

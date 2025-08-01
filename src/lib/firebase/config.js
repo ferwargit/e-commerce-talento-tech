@@ -2,7 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-import { env } from "../../config/env"; // Importamos nuestras variables seguras
+import { env } from "@/config/env"; // Importamos nuestras variables seguras
 
 // Tu configuración de Firebase desde las variables de entorno
 const firebaseConfig = {

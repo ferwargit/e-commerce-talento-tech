@@ -1,6 +1,6 @@
 import { useFormContext } from "react-hook-form";
-import { StyledButton } from "../../../components/ui/Button";
-import { StyledInput } from "../../../components/ui/StyledFormElements";
+import { StyledButton } from "@/components/ui/Button";
+import { StyledInput } from "@/components/ui/StyledFormElements";
 
 // Componente de UI para mostrar errores de validación
 const ErrorMessage = ({ message }) => (

@@ -1,15 +1,15 @@
-import SEO from "../../../components/ui/SEO";
+import SEO from "@/components/ui/SEO";
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema } from "../schemas/loginSchema";
-import { useAuthStore } from "../store/authStore";
-import { crearUsuario, loginEmailPass } from "../services/authService";
-import { PATHS } from "../../../constants/paths";
-import { dispararSweetBasico } from "../../../assets/SweetAlert";
+import { loginSchema } from "@/features/auth/schemas/loginSchema";
+import { useAuthStore } from "@/features/auth/store/authStore";
+import { crearUsuario, loginEmailPass } from "@/features/auth/services/authService";
+import { PATHS } from "@/constants/paths";
+import { dispararSweetBasico } from "@/assets/SweetAlert";
 import LoginForm from "./LoginForm";
-import { StyledButton } from "../../../components/ui/Button";
+import { StyledButton } from "@/components/ui/Button";
 
 function LoginBoost() {
   const [modo, setModo] = useState("firebase");

@@ -1,11 +1,11 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { productSchema } from "../../products/schemas/productSchema";
-import { StyledButton } from "../../../components/ui/Button";
+import { productSchema } from "@/features/products/schemas/productSchema";
+import { StyledButton } from "@/components/ui/Button";
 import {
   StyledInput,
   StyledTextarea,
-} from "../../../components/ui/StyledFormElements";
+} from "@/components/ui/StyledFormElements";
 
 // Componente de UI para mostrar errores de validación
 const ErrorMessage = ({ message }) => (
