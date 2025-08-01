@@ -1,16 +1,19 @@
+import { useFormContext } from "react-hook-form";
 import { StyledButton } from "../../../components/ui/Button";
 import { StyledInput } from "../../../components/ui/StyledFormElements";
 
+// Componente de UI para mostrar errores de validación
+const ErrorMessage = ({ message }) => (
+  <p className="text-danger mt-1 mb-0" style={{ fontSize: '0.875em' }}>{message}</p>
+);
+
 function LoginForm({
   title,
-  onSubmit,
   buttonText,
   usernameLabel = "Email",
-  usuario,
-  setUsuario,
-  password,
-  setPassword,
 }) {
+  const { register, formState: { errors, isSubmitting } } = useFormContext();
+
   return (
     <div
       className="card shadow-lg border-0"
@@ -26,45 +29,36 @@ function LoginForm({
         >
           {title}
         </h2>
-        <form onSubmit={onSubmit}>
-          <div className="mb-3">
-            <label
-              className="form-label d-block"
-            >
-              {usernameLabel}
-            </label>
-            <StyledInput
-              type={usernameLabel === "Email" ? "email" : "text"}
-              value={usuario}
-              onChange={(e) => setUsuario(e.target.value)}
-              placeholder={
-                usernameLabel === "Email"
-                  ? "Ingrese su email"
-                  : "Ingrese su usuario"
-              }
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              className="form-label d-block"
-            >
-              Contraseña
-            </label>
-            <StyledInput
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Ingrese su contraseña"
-              required
-            />
-          </div>
-          <div className="d-grid">
-            <StyledButton type="submit" $variant="primary">
-              {buttonText}
-            </StyledButton>
-          </div>
-        </form>
+        {/* El <form> ahora está en el componente padre (LoginBoost) */}
+        <div className="mb-3">
+          <label htmlFor="email" className="form-label d-block">
+            {usernameLabel}
+          </label>
+          <StyledInput
+            id="email"
+            type="email"
+            {...register("email")}
+            placeholder="Ingrese su email"
+          />
+          {errors.email && <ErrorMessage message={errors.email.message} />}
+        </div>
+        <div className="mb-4">
+          <label htmlFor="password" className="form-label d-block">
+            Contraseña
+          </label>
+          <StyledInput
+            id="password"
+            type="password"
+            {...register("password")}
+            placeholder="Ingrese su contraseña"
+          />
+          {errors.password && <ErrorMessage message={errors.password.message} />}
+        </div>
+        <div className="d-grid">
+          <StyledButton type="submit" $variant="primary" disabled={isSubmitting}>
+            {isSubmitting ? 'Procesando...' : buttonText}
+          </StyledButton>
+        </div>
       </div>
     </div>
   );

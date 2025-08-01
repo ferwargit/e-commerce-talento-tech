@@ -6,10 +6,12 @@ import { useQuery } from "@tanstack/react-query";
 import Card from "./Card";
 import { getProducts } from "../services/productService";
 import Paginador from "../../../components/ui/Paginador";
+import { useSearchStore } from "../../search/store/searchStore";
 
-function ProductosContainer({ terminoBusqueda }) {
+function ProductosContainer() {
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(6);
+  const terminoBusqueda = useSearchStore((state) => state.terminoBusqueda);
 
   const {
     data: productos = [],

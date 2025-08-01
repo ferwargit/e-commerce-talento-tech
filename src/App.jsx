@@ -1,4 +1,4 @@
-import { Suspense, lazy, useState } from "react";
+import { Suspense, lazy } from "react"; // Eliminamos useState
 import "./App.css";
 import {
   BrowserRouter as Router,
@@ -26,8 +26,6 @@ const FormularioEdicion = lazy(() => import("./features/admin/components/Formula
 const AdminProductos = lazy(() => import("./features/admin/components/AdminProductos"));
 
 function AppContent() {
-  const [terminoBusqueda, setTerminoBusqueda] = useState("");
-
   return (
     <div className="app-container">
       <ToastContainer
@@ -42,10 +40,7 @@ function AppContent() {
         pauseOnHover
         theme="dark"
       />
-      <Nav
-        terminoBusqueda={terminoBusqueda}
-        setTerminoBusqueda={setTerminoBusqueda}
-      />
+      <Nav />
       <main>
         <ScrollToTop />
         <Suspense
@@ -60,7 +55,7 @@ function AppContent() {
             <Route path={PATHS.LOGIN} element={<LoginBoost />} />
             <Route
               path={PATHS.PRODUCTS}
-              element={<ProductosContainer terminoBusqueda={terminoBusqueda} />}
+              element={<ProductosContainer />}
             />
             <Route path={PATHS.CART} element={<Carrito />} />
             <Route path={PATHS.ABOUT} element={<About />} />
@@ -68,7 +63,7 @@ function AppContent() {
             <Route path={PATHS.PRODUCT_DETAIL} element={<ProductoDetalle />} />
             <Route
               path={PATHS.ADMIN_DASHBOARD}
-              element={<AdminProductos terminoBusqueda={terminoBusqueda} />}
+              element={<AdminProductos />}
             />
             <Route
               path={PATHS.ADMIN_ADD_PRODUCT}

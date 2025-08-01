@@ -1,17 +1,22 @@
 import SEO from "../../../components/ui/SEO";
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useForm, FormProvider } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema } from "../schemas/loginSchema";
 import { useAuthContext } from "../context/AuthContext";
-import { crearUsuario, loginEmailPass } from "../services/authService"; // No necesitamos `cerrarSesion` aquí
+import { crearUsuario, loginEmailPass } from "../services/authService";
 import { PATHS } from "../../../constants/paths";
 import { dispararSweetBasico } from "../../../assets/SweetAlert";
 import LoginForm from "./LoginForm";
 import { StyledButton } from "../../../components/ui/Button";
 
 function LoginBoost() {
-  const [usuario, setUsuario] = useState("");
-  const [password, setPassword] = useState("");
   const [modo, setModo] = useState("firebase");
+
+  const methods = useForm({
+    resolver: zodResolver(loginSchema),
+  });
 
   const { user, logout, admin } = useAuthContext();
   const navigate = useNavigate();
@@ -19,9 +24,8 @@ function LoginBoost() {
 
   const from = location.state?.from?.pathname || PATHS.HOME;
 
-  const registrarUsuario = (e) => {
-    e.preventDefault();
-    crearUsuario(usuario, password)
+  const registrarUsuario = (data) => {
+    crearUsuario(data.email, data.password)
       .then(() => {
         dispararSweetBasico(
           "¡Registro Exitoso!",
@@ -42,9 +46,8 @@ function LoginBoost() {
       });
   };
 
-  const iniciarSesionEmailPass = (e) => {
-    e.preventDefault();
-    loginEmailPass(usuario, password)
+  const iniciarSesionEmailPass = (data) => {
+    loginEmailPass(data.email, data.password)
       .then(() => {
         dispararSweetBasico(
           "Logeo exitoso",
@@ -65,10 +68,10 @@ function LoginBoost() {
       });
   };
 
+  // Limpiar el formulario al cambiar de modo
   const handleModo = (nuevoModo) => {
     setModo(nuevoModo);
-    setUsuario("");
-    setPassword("");
+    methods.reset();
   };
 
   if (user || admin) {
@@ -116,29 +119,21 @@ function LoginBoost() {
             </div>
 
             {/* Renderizado condicional del formulario reutilizable */}
-            {modo === "firebase" && (
-              <LoginForm
-                title="Iniciar Sesión"
-                onSubmit={iniciarSesionEmailPass}
-                buttonText="Iniciar Sesión"
-                usuario={usuario}
-                setUsuario={setUsuario}
-                password={password}
-                setPassword={setPassword}
-              />
-            )}
-
-            {modo === "registro" && (
-              <LoginForm
-                title="Crear una Cuenta"
-                onSubmit={registrarUsuario}
-                buttonText="Registrarse"
-                usuario={usuario}
-                setUsuario={setUsuario}
-                password={password}
-                setPassword={setPassword}
-              />
-            )}
+            <FormProvider {...methods}>
+              {modo === "firebase" && (
+                <form onSubmit={methods.handleSubmit(iniciarSesionEmailPass)}>
+                  <LoginForm
+                    title="Iniciar Sesión"
+                    buttonText="Iniciar Sesión"
+                  />
+                </form>
+              )}
+              {modo === "registro" && (
+                <form onSubmit={methods.handleSubmit(registrarUsuario)}>
+                  <LoginForm title="Crear una Cuenta" buttonText="Registrarse" />
+                </form>
+              )}
+            </FormProvider>
           </div>
         </div>
       </div>

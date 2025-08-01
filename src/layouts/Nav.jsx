@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useCarritoStore } from "../features/cart/store/carritoStore";
 import { useAuthContext } from "../features/auth/context/AuthContext";
+import { useSearchStore } from "../features/search/store/searchStore"; // Importamos el nuevo store
 import { PATHS } from "../constants/paths";
 import { StyledInput } from "../components/ui/StyledFormElements";
 
@@ -14,10 +15,13 @@ import {
   BsFillTelephoneFill,
 } from "react-icons/bs";
 
-function Nav({ terminoBusqueda, setTerminoBusqueda }) {
+function Nav() { // Eliminamos las props de aquí
   // Seleccionamos solo la pieza de estado que necesitamos.
   // Este componente solo se re-renderizará si `productosCarrito` cambia.
   const productosCarrito = useCarritoStore(state => state.productosCarrito);
+  // Obtenemos el estado y las acciones del searchStore
+  const terminoBusqueda = useSearchStore((state) => state.terminoBusqueda);
+  const setTerminoBusqueda = useSearchStore((state) => state.setTerminoBusqueda);
   const { user, admin, logout } = useAuthContext();
   const navigate = useNavigate();
   const location = useLocation();

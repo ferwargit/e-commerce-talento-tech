@@ -8,11 +8,13 @@ import { toast } from "react-toastify";
 import styles from "./AdminTable.module.css";
 import ThemedSwal from "../../../assets/ThemedSwal";
 import Paginador from "../../../components/ui/Paginador";
+import { useSearchStore } from "../../search/store/searchStore";
 
-function AdminProductos({ terminoBusqueda }) {
+function AdminProductos() {
   const queryClient = useQueryClient();
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(10);
+  const terminoBusqueda = useSearchStore((state) => state.terminoBusqueda);
 
   const { data: productos = [], isLoading: cargando, error } = useQuery({
     queryKey: ["products"],
