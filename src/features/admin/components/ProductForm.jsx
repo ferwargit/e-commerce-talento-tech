@@ -1,39 +1,45 @@
-// src/features/admin/components/ProductForm.jsx
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { productSchema } from "../../products/schemas/productSchema";
 import { StyledButton } from "../../../components/ui/Button";
 import {
   StyledInput,
   StyledTextarea,
 } from "../../../components/ui/StyledFormElements";
 
+// Componente de UI para mostrar errores de validación
+const ErrorMessage = ({ message }) => (
+  <p className="text-danger mt-1 mb-0" style={{ fontSize: '0.875em' }}>{message}</p>
+);
+
 function ProductForm({
-  producto,
-  setProducto,
   onSubmit,
-  isSubmitting,
+  initialData = {},
   submitButtonText,
   submitButtonVariant = "primary",
 }) {
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setProducto({ ...producto, [name]: value });
-  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(productSchema),
+    defaultValues: initialData,
+  });
 
   return (
-    <form onSubmit={onSubmit} noValidate>
+    <form onSubmit={handleSubmit(onSubmit)} noValidate>
       <div className="mb-3">
         <label htmlFor="name" className="form-label">
           Nombre del Producto
         </label>
         <StyledInput
           id="name"
-          type="text"
-          name="name"
-          value={producto.name || ""}
-          onChange={handleChange}
+          {...register("name")}
           className="form-control"
           placeholder="Ej: Teclado Mecánico RGB"
-          required
         />
+        {errors.name && <ErrorMessage message={errors.name.message} />}
       </div>
 
       <div className="mb-3">
@@ -42,14 +48,11 @@ function ProductForm({
         </label>
         <StyledInput
           id="image"
-          type="text"
-          name="image"
-          value={producto.image || ""}
-          onChange={handleChange}
+          {...register("image")}
           className="form-control"
           placeholder="/images/products/nombre-del-producto.jpg"
-          required
         />
+        {errors.image && <ErrorMessage message={errors.image.message} />}
       </div>
 
       <div className="mb-3">
@@ -61,15 +64,13 @@ function ProductForm({
           <StyledInput
             id="price"
             type="number"
-            name="price"
-            value={producto.price || ""}
-            onChange={handleChange}
+            {...register("price")}
             className="form-control"
-            required
             min="0.01"
             step="0.01"
           />
         </div>
+        {errors.price && <ErrorMessage message={errors.price.message} />}
       </div>
 
       <div className="row">
@@ -80,13 +81,11 @@ function ProductForm({
           <StyledInput
             id="stock"
             type="number"
-            name="stock"
-            value={producto.stock || ""}
-            onChange={handleChange}
+            {...register("stock")}
             className="form-control"
-            required
             min="0"
           />
+          {errors.stock && <ErrorMessage message={errors.stock.message} />}
         </div>
         <div className="col-md-6 mb-3">
           <label htmlFor="category" className="form-label">
@@ -94,14 +93,11 @@ function ProductForm({
           </label>
           <StyledInput
             id="category"
-            type="text"
-            name="category"
-            value={producto.category || ""}
-            onChange={handleChange}
+            {...register("category")}
             className="form-control"
-            required
             placeholder="Ej: Teclados"
           />
+          {errors.category && <ErrorMessage message={errors.category.message} />}
         </div>
       </div>
 
@@ -111,14 +107,12 @@ function ProductForm({
         </label>
         <StyledTextarea
           id="description"
-          name="description"
-          value={producto.description || ""}
-          onChange={handleChange}
+          {...register("description")}
           className="form-control"
           rows="4"
-          required
           placeholder="Describe el producto aquí..."
         />
+        {errors.description && <ErrorMessage message={errors.description.message} />}
       </div>
 
       <div className="d-grid">

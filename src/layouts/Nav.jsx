@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-import { useCarritoContext } from "../features/cart/context/CarritoContext";
+import { useCarritoStore } from "../features/cart/store/carritoStore";
 import { useAuthContext } from "../features/auth/context/AuthContext";
 import { PATHS } from "../constants/paths";
 import { StyledInput } from "../components/ui/StyledFormElements";
@@ -15,7 +15,9 @@ import {
 } from "react-icons/bs";
 
 function Nav({ terminoBusqueda, setTerminoBusqueda }) {
-  const { productosCarrito } = useCarritoContext();
+  // Seleccionamos solo la pieza de estado que necesitamos.
+  // Este componente solo se re-renderizará si `productosCarrito` cambia.
+  const productosCarrito = useCarritoStore(state => state.productosCarrito);
   const { user, admin, logout } = useAuthContext();
   const navigate = useNavigate();
   const location = useLocation();

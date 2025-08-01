@@ -1,4 +1,4 @@
-// src/components/ProductoDetalle.test.jsx
+// src/features/products/components/ProductoDetalle.test.jsx
 
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event"; 
@@ -6,8 +6,9 @@ import { describe, it, expect, vi } from "vitest";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ProductoDetalle from "./ProductoDetalle";
-import { CarritoProvider } from "../../cart/context/CarritoContext";
+import { useCarritoStore } from '../../cart/store/carritoStore';
 import { AuthProvider } from "../../auth/context/AuthContext";
+import * as productService from '../services/productService';
 
 // Mock para react-router-dom para simular la navegación
 const mockNavigate = vi.fn();
@@ -19,21 +20,15 @@ vi.mock("react-router-dom", async () => {
   };
 });
 
-// Mock (simulación) de los servicios
-vi.mock("../services/productService", async () => {
-  const originalModule = await vi.importActual("../services/productService");
-  return {
-    ...originalModule,
-    getProductById: vi.fn().mockResolvedValue({
-      id: "1",
-      name: "Teclado Mecánico",
-      price: 150,
-      description: "Un teclado increíble.",
-      image: "test.jpg",
-    }),
-    deleteProduct: vi.fn(),
-  };
-});
+// Mock del service layer. Esta es la solución pragmática y robusta para este caso.
+vi.mock("../services/productService");
+
+// Mock del store de Zustand para espiar sus acciones
+const mockAgregarAlCarrito = vi.fn();
+vi.mock('../../cart/store/carritoStore', () => ({
+  useCarritoStore: vi.fn(() => mockAgregarAlCarrito),
+}));
+
 
 // Wrapper para proveer todos los contextos necesarios
 const AllTheProviders = ({ children }) => {
@@ -48,28 +43,35 @@ const AllTheProviders = ({ children }) => {
   });
   return (
     <QueryClientProvider client={queryClient}>
-      <CarritoProvider>
-        <AuthProvider>
-          <MemoryRouter initialEntries={["/productos/1"]}>
-            <Routes>
-              <Route path="/productos/:id" element={children} />
-            </Routes>
-          </MemoryRouter>
-        </AuthProvider>
-      </CarritoProvider>
+      <AuthProvider>
+        <MemoryRouter initialEntries={["/productos/1"]}>
+          <Routes>
+            <Route path="/productos/:id" element={children} />
+          </Routes>
+        </MemoryRouter>
+      </AuthProvider>
     </QueryClientProvider>
   );
 };
 
 describe("ProductoDetalle", () => {
   it("debería renderizar los detalles del producto y permitir añadirlo al carrito", async () => {
+    // Arrange: Define lo que la función mockeada debe devolver para este test específico.
+    productService.getProductById.mockResolvedValue({
+      id: "1",
+      name: "Teclado Mecánico desde Mock",
+      price: 150,
+      description: "Una descripción mockeada desde el servicio.",
+      image: "test.jpg",
+    });
+
     // Arrange: Renderizar el componente con sus proveedores
     render(<ProductoDetalle />, { wrapper: AllTheProviders });
 
     // Act & Assert: Verificar que los detalles del producto se muestran
     // Usamos `findBy` para esperar a que el contenido asíncrono cargue
-    expect(await screen.findByText("Teclado Mecánico")).toBeInTheDocument();
-    expect(screen.getByText("Un teclado increíble.")).toBeInTheDocument();
+    expect(await screen.findByText("Teclado Mecánico desde Mock")).toBeInTheDocument();
+    expect(screen.getByText("Una descripción mockeada desde el servicio.")).toBeInTheDocument();
 
     // Act: El usuario hace clic en el botón "Agregar al Carrito"
     const botonAgregar = screen.getByRole("button", {
@@ -82,5 +84,12 @@ describe("ProductoDetalle", () => {
     await waitFor(() => {
       expect(screen.getByText("¡Producto Agregado!")).toBeInTheDocument();
     });
+
+    // Assert: Verificar que la acción del store de Zustand fue llamada correctamente
+    expect(mockAgregarAlCarrito).toHaveBeenCalledTimes(1);
+    expect(mockAgregarAlCarrito).toHaveBeenCalledWith(expect.objectContaining({
+      id: "1",
+      name: "Teclado Mecánico desde Mock",
+    }));
   });
 });

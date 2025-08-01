@@ -1,35 +1,28 @@
-// src/components/FormularioEdicion.jsx
+// src/features/admin/components/FormularioEdicion.jsx
 // Este componente muestra un formulario para editar un producto existente.
-import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient, useIsMutating } from "@tanstack/react-query";
 import { getProductById, updateProduct } from "../../products/services/productService";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { StyledLinkButton } from "../../../components/ui/Button";
 import ProductForm from "./ProductForm";
-import { validarFormularioProducto } from "../utils/productValidation";
+import { PATHS } from "../../../constants/paths";
 
 function FormularioEdicion() {
   const { id } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-
-  const [producto, setProducto] = useState(null);
+  const isUpdating = useIsMutating({ mutationKey: ['updateProduct', id] }) > 0;
 
   const { data: initialProductData, isLoading: cargando, error } = useQuery({
     queryKey: ["product", id],
     queryFn: () => getProductById(id),
     enabled: !!id,
   });
-
-  useEffect(() => {
-    if (initialProductData) {
-      setProducto(initialProductData);
-    }
-  }, [initialProductData]);
-
+  
   const updateMutation = useMutation({
+    mutationKey: ['updateProduct', id],
     mutationFn: (updatedProduct) => updateProduct(updatedProduct.id, updatedProduct),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
@@ -37,27 +30,15 @@ function FormularioEdicion() {
     },
   });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const esValido = validarFormularioProducto(producto);
-    if (esValido === true) {
-      // Aseguramos que los valores numéricos se envíen como números
-      const productoAActualizar = {
-        ...producto,
-        price: Number(producto.price),
-        stock: Number(producto.stock),
-      };
-      toast.promise(
-        updateMutation.mutateAsync(productoAActualizar), {
+  const handleSubmit = async (data) => {
+      const productoAActualizar = { ...data, id };
+      toast.promise(updateMutation.mutateAsync(productoAActualizar), {
         pending: "Actualizando producto...",
         success: "¡Producto actualizado con éxito!",
         error: "Hubo un problema al actualizar el producto.",
       }).then(() => {
-        setTimeout(() => navigate(`/productos/${id}`), 2000);
+        setTimeout(() => navigate(`${PATHS.PRODUCTS}/${id}`), 2000);
       });
-    } else {
-      toast.error(esValido);
-    }
   };
 
   if (cargando) {
@@ -79,16 +60,13 @@ function FormularioEdicion() {
         <div className="alert alert-danger text-center">
           <h2>Error</h2>
           <p>{error.message}</p>
-          <StyledLinkButton to="/productos" $variant="primary">
+          <StyledLinkButton to={PATHS.PRODUCTS} $variant="primary">
             Volver a Productos
           </StyledLinkButton>
         </div>
       </div>
     );
   }
-
-  // Evita renderizar el formulario hasta que los datos iniciales estén listos
-  if (!producto) return null;
 
   return (
     <div className="container mt-5 mb-5">
@@ -108,13 +86,14 @@ function FormularioEdicion() {
               >
                 Editar Producto
               </h2>
-              <ProductForm
-                producto={producto}
-                setProducto={setProducto}
+              {initialProductData && <ProductForm
+                key={initialProductData.id} // Clave para forzar el re-renderizado con nuevos datos
+                initialData={initialProductData}
                 onSubmit={handleSubmit}
-                isSubmitting={updateMutation.isPending}
+                isSubmitting={isUpdating}
                 submitButtonText="Actualizar Producto"
               />
+              }
             </div>
           </div>
         </div>

@@ -1,7 +1,7 @@
 // src/components/Carrito.jsx
 import SEO from "../../../components/ui/SEO";
 import { Navigate, useNavigate, useLocation } from "react-router-dom";
-import { useCarritoContext } from "../context/CarritoContext.jsx";
+import { useCarritoStore } from "../store/carritoStore";
 import { useAuthContext } from "../../auth/context/AuthContext.jsx";
 import CarritoCard from "./CarritoCard.jsx";
 import { StyledButton, StyledLinkButton } from "../../../components/ui/Button.jsx";
@@ -11,7 +11,12 @@ import { toast } from "react-toastify";
 export default function Carrito() {
   const { user, admin } = useAuthContext();
   const location = useLocation();
-  const { productosCarrito, vaciarCarrito, borrarProductoCarrito } = useCarritoContext();
+  // --- Enfoque recomendado para seleccionar múltiples valores del store ---
+  // Cada selector se suscribe a su propia pieza del estado.
+  // Esto evita re-renders innecesarios porque las funciones (acciones) nunca cambian.
+  const productosCarrito = useCarritoStore((state) => state.productosCarrito);
+  const vaciarCarrito = useCarritoStore((state) => state.vaciarCarrito);
+  const eliminarDelCarrito = useCarritoStore((state) => state.eliminarDelCarrito);
   const navigate = useNavigate();
 
   const subtotal = productosCarrito.reduce(
@@ -69,7 +74,7 @@ export default function Carrito() {
       cancelButtonColor: "#4b5563",
     }).then((result) => {
       if (result.isConfirmed) {
-        borrarProductoCarrito(id);
+        eliminarDelCarrito(id);
         toast.info(`"${nombre}" fue eliminado de tu carrito.`);
       }
     });

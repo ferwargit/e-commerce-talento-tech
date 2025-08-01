@@ -1,55 +1,33 @@
-import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+// src/features/admin/components/FormularioProducto.jsx
+import { useMutation, useQueryClient, useIsMutating } from "@tanstack/react-query";
 import { useAuthContext } from "../../auth/context/AuthContext";
 import { toast } from "react-toastify";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { createProduct } from "../../products/services/productService";
 import ProductForm from "./ProductForm";
-import { validarFormularioProducto } from "../utils/productValidation";
+import { PATHS } from "../../../constants/paths";
 
 function FormularioProducto() {
   const queryClient = useQueryClient();
   const { admin } = useAuthContext();
-
-  const [producto, setProducto] = useState({
-    name: "",
-    price: "",
-    stock: "",
-    category: "",
-    description: "",
-    image: "",
-  });
+  const navigate = useNavigate();
+  const isCreating = useIsMutating({ mutationKey: ['createProduct'] }) > 0;
 
   const createMutation = useMutation({
+    mutationKey: ['createProduct'],
     mutationFn: createProduct,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
-      // Reseteamos el formulario
-      setProducto({
-        name: "", price: "", stock: "",
-        category: "", description: "", image: "",
-      });
+      navigate(PATHS.ADMIN_DASHBOARD);
     },
   });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const validarForm = validarFormularioProducto(producto);
-    if (validarForm === true) {
-      const productoConNumeros = {
-        ...producto,
-        price: Number(producto.price),
-        stock: Number(producto.stock),
-      };
-
-      toast.promise(createMutation.mutateAsync(productoConNumeros), {
+  const handleSubmit = async (data) => {
+      toast.promise(createMutation.mutateAsync(data), {
         pending: "Agregando producto...",
         success: "¡Producto agregado con éxito!",
         error: "Hubo un problema al agregar el producto.",
       });
-    } else {
-      toast.error(validarForm);
-    }
   };
 
   if (!admin) {
@@ -75,10 +53,8 @@ function FormularioProducto() {
                 Agregar Nuevo Producto
               </h2>
               <ProductForm
-                producto={producto}
-                setProducto={setProducto}
                 onSubmit={handleSubmit}
-                isSubmitting={createMutation.isPending}
+                isSubmitting={isCreating}
                 submitButtonText="Agregar Producto"
                 submitButtonVariant="success"
               />
