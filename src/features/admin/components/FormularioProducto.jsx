@@ -1,11 +1,11 @@
 // src/features/admin/components/FormularioProducto.jsx
 import { useMutation, useQueryClient, useIsMutating } from "@tanstack/react-query";
-import { useAuthStore } from "../../auth/store/authStore";
+import { useAuthStore } from "@/features/auth/store/authStore";
 import { toast } from "react-toastify";
 import { Navigate, useNavigate } from "react-router-dom";
-import { createProduct } from "../../products/services/productService";
+import { createProduct } from "@/features/products/services/productService";
 import ProductForm from "./ProductForm";
-import { PATHS } from "../../../constants/paths";
+import { PATHS } from "@/constants/paths";
 
 function FormularioProducto() {
   const queryClient = useQueryClient();

@@ -1,4 +1,4 @@
-import { StyledLinkButton } from "../../../components/ui/Button";
+import { StyledLinkButton } from "@/components/ui/Button";
 import styled from "styled-components";
 
 const CardImage = styled.img`

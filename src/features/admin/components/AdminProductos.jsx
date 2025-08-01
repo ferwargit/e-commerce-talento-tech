@@ -1,14 +1,14 @@
 // src/features/admin/components/AdminProductos.jsx
 import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getProducts, deleteProduct } from "../../products/services/productService";
-import { StyledLinkButton, StyledButton } from "../../../components/ui/Button";
-import SEO from "../../../components/ui/SEO";
+import { getProducts, deleteProduct } from "@/features/products/services/productService";
+import { StyledLinkButton, StyledButton } from "@/components/ui/Button";
+import SEO from "@/components/ui/SEO";
 import { toast } from "react-toastify";
 import styles from "./AdminTable.module.css";
-import ThemedSwal from "../../../assets/ThemedSwal";
-import Paginador from "../../../components/ui/Paginador";
-import { useSearchStore } from "../../search/store/searchStore";
+import ThemedSwal from "@/assets/ThemedSwal";
+import Paginador from "@/components/ui/Paginador";
+import { useSearchStore } from "@/features/search/store/searchStore";
 
 function AdminProductos() {
   const queryClient = useQueryClient();

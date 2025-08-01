@@ -1,4 +1,4 @@
-import { StyledButton } from "../../../components/ui/Button.jsx";
+import { StyledButton } from "@/components/ui/Button.jsx";
 
 function CarritoCard({ producto, onEliminar }) {
   const formatPrice = (value) =>

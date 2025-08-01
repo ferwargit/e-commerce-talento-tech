@@ -1,7 +1,7 @@
 // src/features/products/components/FeaturedProducts.jsx
 // Este componente muestra los productos destacados en la página de inicio.
 import { useQuery } from "@tanstack/react-query";
-import { getProducts } from "../services/productService";
+import { getProducts } from "@/features/products/services/productService";
 import Card from "./Card";
 
 function FeaturedProducts() {

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import styles from "./Footer.module.css";
-import { useAuthStore } from "../features/auth/store/authStore";
-import { PATHS } from "../constants/paths";
+import { useAuthStore } from "@/features/auth/store/authStore";
+import { PATHS } from "@/constants/paths";
 import { FaFacebook, FaInstagram, FaTwitter, FaLinkedin } from "react-icons/fa";
 
 function Footer() {

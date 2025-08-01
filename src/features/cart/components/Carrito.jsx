@@ -1,11 +1,11 @@
 // src/components/Carrito.jsx
-import SEO from "../../../components/ui/SEO";
+import SEO from "@/components/ui/SEO";
 import { Navigate, useNavigate, useLocation } from "react-router-dom";
-import { useCarritoStore } from "../store/carritoStore";
-import { useAuthStore } from "../../auth/store/authStore";
+import { useCarritoStore } from "@/features/cart/store/carritoStore";
+import { useAuthStore } from "@/features/auth/store/authStore";
 import CarritoCard from "./CarritoCard.jsx";
-import { StyledButton, StyledLinkButton } from "../../../components/ui/Button.jsx";
-import ThemedSwal from "../../../assets/ThemedSwal.js";
+import { StyledButton, StyledLinkButton } from "@/components/ui/Button.jsx";
+import ThemedSwal from "@/assets/ThemedSwal.js";
 import { toast } from "react-toastify";
 
 export default function Carrito() {
