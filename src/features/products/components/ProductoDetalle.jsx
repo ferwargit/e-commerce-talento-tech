@@ -6,8 +6,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import ThemedSwal from "../../../assets/ThemedSwal";
 import { toast } from "react-toastify"; 
-import { useCarritoStore } from "../../cart/store/carritoStore";
-import { useAuthContext } from "../../auth/context/AuthContext";
+import { useCarritoStore } from "../../cart/store/carritoStore"; 
+import { useAuthStore } from "../../auth/store/authStore";
 import { getProductById, deleteProduct } from "../services/productService";
 import { StyledButton, StyledLinkButton } from "../../../components/ui/Button";
 import styled from "styled-components";
@@ -37,7 +37,7 @@ const ContadorWrapper = styled.div`
 function ProductoDetalle() {
   const navegar = useNavigate();
   const queryClient = useQueryClient();
-  const { admin } = useAuthContext();
+  const admin = useAuthStore((state) => state.admin);
   // Seleccionamos la acción que necesitamos del store de Zustand
   const agregarAlCarrito = useCarritoStore((state) => state.agregarAlCarrito);
   const { id } = useParams();

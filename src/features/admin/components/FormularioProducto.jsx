@@ -1,6 +1,6 @@
 // src/features/admin/components/FormularioProducto.jsx
 import { useMutation, useQueryClient, useIsMutating } from "@tanstack/react-query";
-import { useAuthContext } from "../../auth/context/AuthContext";
+import { useAuthStore } from "../../auth/store/authStore";
 import { toast } from "react-toastify";
 import { Navigate, useNavigate } from "react-router-dom";
 import { createProduct } from "../../products/services/productService";
@@ -9,7 +9,7 @@ import { PATHS } from "../../../constants/paths";
 
 function FormularioProducto() {
   const queryClient = useQueryClient();
-  const { admin } = useAuthContext();
+  const admin = useAuthStore((state) => state.admin);
   const navigate = useNavigate();
   const isCreating = useIsMutating({ mutationKey: ['createProduct'] }) > 0;
 

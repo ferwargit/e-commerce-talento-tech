@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
 import styles from "./Footer.module.css";
-import { useAuthContext } from "../features/auth/context/AuthContext";
+import { useAuthStore } from "../features/auth/store/authStore";
 import { PATHS } from "../constants/paths";
 import { FaFacebook, FaInstagram, FaTwitter, FaLinkedin } from "react-icons/fa";
 
 function Footer() {
-  const { admin } = useAuthContext();
+  const admin = useAuthStore((state) => state.admin);
   const currentYear = new Date().getFullYear();
 
   const AdminFooterLinks = () => (

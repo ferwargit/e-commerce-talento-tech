@@ -62,9 +62,7 @@ La aplicación simula un entorno de venta real con un catálogo de productos din
     -   **Zod**: Para la validación de esquemas tanto en formularios (login, creación/edición de productos) como en variables de entorno, garantizando la integridad de los datos.   
 -   **Gestión de Estado:**
     -   **Estado del Servidor:** **TanStack Query (React Query)** para un fetching de datos, cacheo y sincronización de estado asíncrono declarativo y eficiente.
-    -   **Estado del Cliente (Global):**
-        -   **Zustand**: Para estados que cambian con alta frecuencia (carrito de compras, término de búsqueda), previniendo re-renders innecesarios y optimizando el rendimiento. Incluye middleware `persist` para el carrito.
-        -   **React Context API**: Para estado de bajo cambio como la autenticación de usuario (`useAuthContext`), manteniendo un enfoque simple y nativo de React donde es apropiado.
+    -   **Estado del Cliente (Global):** **Zustand** para una gestión de estado global unificada (autenticación, carrito, búsqueda). Este enfoque atómico previene re-renders innecesarios, optimiza el rendimiento y simplifica la arquitectura al eliminar la necesidad de `Providers` anidados. Incluye middleware `persist` para el carrito.
 -   **Iconografía:** **[React Icons](https://react-icons.github.io/react-icons/)**
 -   **Testing:**
     -   **Vitest**: Un framework de testing moderno y ultrarrápido integrado con Vite.

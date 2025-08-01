@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "../schemas/loginSchema";
-import { useAuthContext } from "../context/AuthContext";
+import { useAuthStore } from "../store/authStore";
 import { crearUsuario, loginEmailPass } from "../services/authService";
 import { PATHS } from "../../../constants/paths";
 import { dispararSweetBasico } from "../../../assets/SweetAlert";
@@ -18,7 +18,10 @@ function LoginBoost() {
     resolver: zodResolver(loginSchema),
   });
 
-  const { user, logout, admin } = useAuthContext();
+  const user = useAuthStore((state) => state.user);
+  const admin = useAuthStore((state) => state.admin);
+  const logout = useAuthStore((state) => state.logout);
+
   const navigate = useNavigate();
   const location = useLocation();
 

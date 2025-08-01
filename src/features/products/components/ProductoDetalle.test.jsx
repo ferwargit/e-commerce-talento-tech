@@ -6,8 +6,6 @@ import { describe, it, expect, vi } from "vitest";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ProductoDetalle from "./ProductoDetalle";
-import { useCarritoStore } from '../../cart/store/carritoStore';
-import { AuthProvider } from "../../auth/context/AuthContext";
 import * as productService from '../services/productService';
 
 // Mock para react-router-dom para simular la navegación
@@ -43,13 +41,11 @@ const AllTheProviders = ({ children }) => {
   });
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <MemoryRouter initialEntries={["/productos/1"]}>
-          <Routes>
-            <Route path="/productos/:id" element={children} />
-          </Routes>
-        </MemoryRouter>
-      </AuthProvider>
+      <MemoryRouter initialEntries={["/productos/1"]}>
+        <Routes>
+          <Route path="/productos/:id" element={children} />
+        </Routes>
+      </MemoryRouter>
     </QueryClientProvider>
   );
 };

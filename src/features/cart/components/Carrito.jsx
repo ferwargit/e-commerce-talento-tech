@@ -2,14 +2,15 @@
 import SEO from "../../../components/ui/SEO";
 import { Navigate, useNavigate, useLocation } from "react-router-dom";
 import { useCarritoStore } from "../store/carritoStore";
-import { useAuthContext } from "../../auth/context/AuthContext.jsx";
+import { useAuthStore } from "../../auth/store/authStore";
 import CarritoCard from "./CarritoCard.jsx";
 import { StyledButton, StyledLinkButton } from "../../../components/ui/Button.jsx";
 import ThemedSwal from "../../../assets/ThemedSwal.js";
 import { toast } from "react-toastify";
 
 export default function Carrito() {
-  const { user, admin } = useAuthContext();
+  const user = useAuthStore((state) => state.user);
+  const admin = useAuthStore((state) => state.admin);
   const location = useLocation();
   // --- Enfoque recomendado para seleccionar múltiples valores del store ---
   // Cada selector se suscribe a su propia pieza del estado.
