@@ -39,12 +39,11 @@ La aplicación simula un entorno de venta real con un catálogo de productos din
     -   Uso de **React-Toastify** para notificaciones pasivas ("toast") de éxito o error.
     -   Ambas librerías están tematizadas para integrarse perfectamente con el diseño "dark mode".
 -   **Carga Optimizada (Code Splitting):** Implementación de `React.lazy` y `Suspense` para dividir el código por rutas, asegurando que los usuarios solo descarguen el código necesario para la vista actual, resultando en tiempos de carga iniciales drásticamente reducidos.
--   **Arquitectura Escalable y Probada:**
-    -   Estructura de carpetas organizada por **"features"** (productos, autenticación, carrito) que facilita el mantenimiento y la escalabilidad del proyecto.
-    -   Suite de **tests unitarios y de integración** con Vitest y React Testing Library que garantiza la fiabilidad del código y permite refactorizar con confianza.
+-   **Arquitectura Escalable y Probada:** Estructura de carpetas organizada por **"features"** que facilita el mantenimiento. Suite de **tests unitarios y de integración** con Vitest y React Testing Library que garantiza la fiabilidad del código.
 -   **Microinteracciones y Efectos Visuales:** Efectos de `:hover` en las tarjetas de producto que incluyen elevación, un resplandor de marca y un sutil zoom en la imagen para mejorar el feedback visual.
 -   **Optimización SEO:** Metadatos (`<title>`, `<meta name="description">`) dinámicos para cada página, renderizados de forma nativa con React 19.
 -   **Seguridad de Claves:** Todas las claves de API y secretos están correctamente gestionados a través de variables de entorno (`.env`), y el historial de Git ha sido limpiado para eliminar cualquier exposición accidental.
+-   **Validación de Entorno Segura:** Uso de **Zod** para validar las variables de entorno (`.env`) al iniciar la aplicación, previniendo errores de configuración en tiempo de ejecución.
 
 ---
 
@@ -58,13 +57,19 @@ La aplicación simula un entorno de venta real con un catálogo de productos din
     -   **[Styled Components](https://styled-components.com/)** para un sistema de diseño de componentes encapsulado y reutilizable (`Button`, `StyledInput`, etc.).
     -   **Módulos CSS** para estilos específicos de componentes (`AdminTable.module.css`).
     -   **Variables CSS Globales (`:root`)** para una paleta de colores centralizada y mantenible.
+-   **Gestión de Formularios:**
+    -   **React Hook Form**: Para un manejo de formularios performante, desacoplado y con control preciso sobre los re-renders.
+    -   **Zod**: Para la validación de esquemas tanto en formularios (login, creación/edición de productos) como en variables de entorno, garantizando la integridad de los datos.   
 -   **Gestión de Estado:**
     -   **Estado del Servidor:** **TanStack Query (React Query)** para un fetching de datos, cacheo y sincronización de estado asíncrono declarativo y eficiente.
-    -   **Estado del Cliente:** **Context API & Hooks personalizados** (`useAuthContext`, `useProductosContext`, `useCarritoContext`) para una gestión de estado global desacoplada, legible y optimizada.
+    -   **Estado del Cliente (Global):**
+        -   **Zustand**: Para estados que cambian con alta frecuencia (carrito de compras, término de búsqueda), previniendo re-renders innecesarios y optimizando el rendimiento. Incluye middleware `persist` para el carrito.
+        -   **React Context API**: Para estado de bajo cambio como la autenticación de usuario (`useAuthContext`), manteniendo un enfoque simple y nativo de React donde es apropiado.
 -   **Iconografía:** **[React Icons](https://react-icons.github.io/react-icons/)**
 -   **Testing:**
     -   **Vitest**: Un framework de testing moderno y ultrarrápido integrado con Vite.
     -   **React Testing Library**: Para escribir tests que simulan el comportamiento real del usuario.
+    -   **Mocking de Servicios:** Mocks a nivel de capa de servicio (`productService`) para aislar los componentes de la lógica de fetching, permitiendo tests de UI puros y fiables.
 -   **Backend & Servicios:**
     -   **[Firebase Authentication](https://firebase.google.com/docs/auth)** para la autenticación de usuarios.
     -   **[Firebase Firestore](https://firebase.google.com/docs/firestore)** como base de datos NoSQL para el CRUD de productos.
