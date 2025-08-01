@@ -17,8 +17,8 @@ import "react-toastify/dist/ReactToastify.css";
 const Home = lazy(() => import("@/layouts/Home"));
 const ProductosContainer = lazy(() => import("@/features/products/components/ProductosContainer"));
 const Carrito = lazy(() => import("@/features/cart/components/Carrito"));
-const About = lazy(() => import("@/pages/About"));
-const Contacto = lazy(() => import("@/pages/Contacto"));
+const About = lazy(() => import("@/features/about/pages/About"));
+const Contacto = lazy(() => import("@/features/contact/pages/Contacto"));
 const ProductoDetalle = lazy(() => import("@/features/products/components/ProductoDetalle"));
 const LoginBoost = lazy(() => import("@/features/auth/components/LoginBoost"));
 const FormularioProducto = lazy(() => import("@/features/admin/components/FormularioProducto"));
@@ -59,7 +59,7 @@ function AppContent() {
             />
             <Route path={PATHS.CART} element={<Carrito />} />
             <Route path={PATHS.ABOUT} element={<About />} />
-            <Route path={PATHS.CONTACT} element={<Contacto />} />
+        <Route path={PATHS.CONTACT} element={<Contacto />} /> 
             <Route path={PATHS.PRODUCT_DETAIL} element={<ProductoDetalle />} />
             <Route
               path={PATHS.ADMIN_DASHBOARD}

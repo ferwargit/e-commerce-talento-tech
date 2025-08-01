@@ -29,28 +29,48 @@ function Contacto() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   
+  // Helper para codificar los datos del formulario para Netlify
+  const encode = (data) => {
+    return Object.keys(data)
+      .map(key => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
+      .join("&");
+  }
+
   // Función de envío para Netlify
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+
+    // --- Simulación para el entorno de desarrollo ---
+    // Vite nos da esta variable global para saber si estamos en `npm run dev`
+    if (import.meta.env.DEV) {
+      console.log("Formulario enviado (simulación en desarrollo):", {
+        "form-name": "contact",
+        ...formData,
+      });
+      await new Promise(resolve => setTimeout(resolve, 1000)); // Simular delay de red
+      toast.success('¡Gracias por tu mensaje! (Simulación en desarrollo)');
+      setFormData({ name: '', email: '', message: '' });
+      setIsSubmitting(false);
+      return; // Detenemos la ejecución para no hacer el fetch real
+    }
+    // --- Fin de la simulación ---
     
     try {
-      const formData = new FormData();
-      formData.append('form-name', 'contact');
-      formData.append('name', e.target.name.value);
-      formData.append('email', e.target.email.value);
-      formData.append('message', e.target.message.value);
-
       const response = await fetch("/", {
         method: "POST",
-        body: formData
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: encode({
+          "form-name": "contact",
+          ...formData
+        })
       });
 
       if (response.ok) {
         toast.success('¡Gracias por tu mensaje! Te contactaremos pronto.');
         setFormData({ name: '', email: '', message: '' });
       } else {
-        throw new Error('Error en el envío');
+        throw new Error('Error en el envío del formulario');
       }
     } catch (error) {
       console.error('Error:', error);
@@ -85,6 +105,7 @@ function Contacto() {
                 {/* Formulario que envía a Netlify */}
                 <form 
                   name="contact"
+                  action="/"
                   method="POST"
                   data-netlify="true"
                   data-netlify-honeypot="bot-field"
