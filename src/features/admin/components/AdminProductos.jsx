@@ -6,6 +6,7 @@ import { StyledLinkButton, StyledButton } from "@/components/ui/Button";
 import SEO from "@/components/ui/SEO";
 import { toast } from "react-toastify";
 import styles from "./AdminTable.module.css";
+import { getFriendlyErrorMessage } from "@/utils/getFriendlyErrorMessage";
 import ThemedSwal from "@/assets/ThemedSwal";
 import Paginador from "@/components/ui/Paginador";
 import { useSearchStore } from "@/features/search/store/searchStore";
@@ -47,7 +48,7 @@ function AdminProductos() {
         toast.promise(deleteMutation.mutateAsync(id), {
           pending: "Eliminando producto...",
           success: "Producto eliminado con éxito 👌",
-          error: "Error al eliminar el producto 🤯",
+          error: (err) => getFriendlyErrorMessage(err),
         });
       }
     });
