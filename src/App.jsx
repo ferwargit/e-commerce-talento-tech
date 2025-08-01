@@ -15,11 +15,11 @@ import "react-toastify/dist/ReactToastify.css";
 
 // --- Lazy Imports para Code Splitting ---
 const Home = lazy(() => import("@/layouts/Home"));
-const ProductosContainer = lazy(() => import("@/features/products/components/ProductosContainer"));
+const ProductosContainer = lazy(() => import("@/features/products/pages/ProductosContainer"));
 const Carrito = lazy(() => import("@/features/cart/components/Carrito"));
 const About = lazy(() => import("@/features/about/pages/About"));
 const Contacto = lazy(() => import("@/features/contact/pages/Contacto"));
-const ProductoDetalle = lazy(() => import("@/features/products/components/ProductoDetalle"));
+const ProductoDetalle = lazy(() => import("@/features/products/pages/ProductoDetalle"));
 const LoginBoost = lazy(() => import("@/features/auth/components/LoginBoost"));
 const FormularioProducto = lazy(() => import("@/features/admin/components/FormularioProducto"));
 const FormularioEdicion = lazy(() => import("@/features/admin/components/FormularioEdicion"));

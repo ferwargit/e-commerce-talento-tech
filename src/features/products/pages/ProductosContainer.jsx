@@ -3,7 +3,7 @@
 import SEO from "@/components/ui/SEO";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import Card from "./Card";
+import Card from "../components/Card";
 import { getProducts } from "@/features/products/services/productService";
 import Paginador from "@/components/ui/Paginador";
 import { useSearchStore } from "@/features/search/store/searchStore";
