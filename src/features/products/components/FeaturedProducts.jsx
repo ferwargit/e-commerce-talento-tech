@@ -1,16 +1,13 @@
 // src/features/products/components/FeaturedProducts.jsx
 // Este componente muestra los productos destacados en la página de inicio.
-import { useQuery } from "@tanstack/react-query";
-import { getProducts } from "@/features/products/services/productService";
+import { useProducts } from "@/features/products/hooks/useProducts";
 import Card from "./Card";
 
 function FeaturedProducts() {
-  const { data: productos = [], isLoading: cargando, error } = useQuery({
-    queryKey: ["products"],
-    queryFn: getProducts,
-  });
+  // Usamos el hook centralizado. React Query se encarga de no volver a pedir los datos si ya los tiene.
+  const { productos, isLoading: cargando, error } = useProducts();
 
-  const featured = productos.slice(0, 3);
+  const featured = productos.slice(0, 3); // Tomamos los 3 primeros productos como venían originalmente
 
   return (
     <div className="container my-5 py-5">

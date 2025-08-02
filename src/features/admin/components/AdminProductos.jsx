@@ -1,7 +1,7 @@
 // src/features/admin/components/AdminProductos.jsx
 import { useEffect, useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getProducts, deleteProduct } from "@/features/products/services/productService";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deleteProduct } from "@/features/products/services/productService";
 import { StyledLinkButton, StyledButton } from "@/components/ui/Button";
 import SEO from "@/components/ui/SEO";
 import { toast } from "react-toastify";
@@ -9,22 +9,18 @@ import styles from "./AdminTable.module.css";
 import { getFriendlyErrorMessage } from "@/utils/getFriendlyErrorMessage";
 import ThemedSwal from "@/assets/ThemedSwal";
 import Paginador from "@/components/ui/Paginador";
-import { useSearchStore } from "@/features/search/store/searchStore";
+import { useProducts } from "@/features/products/hooks/useProducts";
 
 function AdminProductos() {
   const queryClient = useQueryClient();
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(10);
-  const terminoBusqueda = useSearchStore((state) => state.terminoBusqueda);
-
-  const { data: productos = [], isLoading: cargando, error } = useQuery({
-    queryKey: ["products"],
-    queryFn: getProducts,
-  });
+  const { productos, productosFiltrados, isLoading: cargando, error } =
+    useProducts();
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [terminoBusqueda]);
+  }, [productosFiltrados]);
 
   const deleteMutation = useMutation({
     mutationFn: deleteProduct,
@@ -54,23 +50,14 @@ function AdminProductos() {
     });
   };
 
-  const productosFiltradosYOrdenados = productos
-    .filter(
-      (p) =>
-        p.name.toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
-        (p.category && // Verificamos que la categoría exista para evitar errores
-          p.category.toLowerCase().includes(terminoBusqueda.toLowerCase()))
-    )
-    .sort((a, b) => a.name.localeCompare(b.name));
-
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = productosFiltradosYOrdenados.slice(
+  const currentProducts = productosFiltrados.slice(
     indexOfFirstProduct,
     indexOfLastProduct
   );
   const totalPages = Math.ceil(
-    productosFiltradosYOrdenados.length / productsPerPage
+    productosFiltrados.length / productsPerPage
   );
 
   const handlePageChange = (pageNumber) => {
@@ -192,7 +179,7 @@ function AdminProductos() {
         </div>
 
         {/* Lógica de mensajes condicionales mejorada */}
-        {productos.length === 0 && !cargando ? (
+        {productos.length === 0 && !cargando ? ( // Usamos `productos` para el total
           <div className="text-center mt-4">
             <h4 style={{ color: "var(--color-text-primary)" }}>
               No hay productos para mostrar
@@ -201,7 +188,7 @@ function AdminProductos() {
               ¡Comienza agregando tu primer producto!
             </p>
           </div>
-        ) : productosFiltradosYOrdenados.length === 0 && !cargando ? (
+        ) : productosFiltrados.length === 0 && !cargando ? ( // Y `productosFiltrados` para la búsqueda
           <div className="text-center mt-4">
             <p className="text-light">
               No se encontraron productos con ese término de búsqueda.

@@ -1,30 +1,20 @@
-// src/components/ProductosContainer.jsx
+// src/features/products/pages/ProductosContainer.jsx
 // Este componente muestra una lista de productos con paginación y búsqueda.
 import SEO from "@/components/ui/SEO";
-import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import Card from "../components/Card";
-import { getProducts } from "@/features/products/services/productService";
+import { useState, useEffect } from "react";
+import Card from "@/features/products/components/Card";
 import Paginador from "@/components/ui/Paginador";
-import { useSearchStore } from "@/features/search/store/searchStore";
+import { useProducts } from "@/features/products/hooks/useProducts";
 
 function ProductosContainer() {
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(6);
-  const terminoBusqueda = useSearchStore((state) => state.terminoBusqueda);
-
-  const {
-    data: productos = [],
-    isLoading: cargando,
-    error,
-  } = useQuery({
-    queryKey: ["products"],
-    queryFn: getProducts,
-  });
+  // Usamos nuestro nuevo custom hook. ¡Mucho más limpio!
+  const { productosFiltrados, isLoading: cargando, error } = useProducts();
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [terminoBusqueda]);
+  }, [productosFiltrados]); // Se resetea si la búsqueda cambia
 
   if (cargando) {
     return (
@@ -38,26 +28,19 @@ function ProductosContainer() {
   }
 
   if (error) {
-    return <p className="container text-center mt-5 text-danger">{error}</p>;
+    return <p className="container text-center mt-5 text-danger">{error.message}</p>;
   }
-
-  // Filtra y ordena los productos primero
-  const productosFiltradosYOrdenados = productos
-    .filter((producto) =>
-      producto.name.toLowerCase().includes(terminoBusqueda.toLowerCase())
-    )
-    .sort((a, b) => a.name.localeCompare(b.name));
 
   // --- LÓGICA PARA CALCULAR QUÉ PRODUCTOS MOSTRAR ---
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = productosFiltradosYOrdenados.slice(
+  const currentProducts = productosFiltrados.slice(
     indexOfFirstProduct,
     indexOfLastProduct
   );
 
   const totalPages = Math.ceil(
-    productosFiltradosYOrdenados.length / productsPerPage
+    productosFiltrados.length / productsPerPage
   );
 
   // Función para cambiar de página
@@ -93,7 +76,7 @@ function ProductosContainer() {
             </div>
           ))}
 
-          {productosFiltradosYOrdenados.length === 0 && !cargando && (
+          {productosFiltrados.length === 0 && !cargando && (
             <div className="col-12 text-center">
               <h3 style={{ color: "var(--color-text-primary)" }}>
                 No se encontraron productos
