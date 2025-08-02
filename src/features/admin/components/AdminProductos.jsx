@@ -10,6 +10,7 @@ import ThemedSwal from "@/assets/ThemedSwal";
 import Loader from "@/components/ui/Loader";
 import Paginador from "@/components/ui/Paginador";
 import { useProducts } from "@/features/products/hooks/useProducts";
+import { formatPrice } from "@/utils/formatters";
 
 function AdminProductos() {
   const queryClient = useQueryClient();
@@ -74,11 +75,6 @@ function AdminProductos() {
       </div>
     );
   }
-  const formatPrice = (value) =>
-    new Intl.NumberFormat("es-AR", {
-      style: "currency",
-      currency: "ARS",
-    }).format(value);
 
   return (
     <>

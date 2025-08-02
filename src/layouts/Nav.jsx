@@ -15,6 +15,202 @@ import {
   BsFillTelephoneFill,
 } from "react-icons/bs";
 
+// --- Sub-componentes para los enlaces de la Navegación ---
+// Se definen fuera del componente principal para evitar que se re-creen en cada render.
+const AdminNavLinks = ({ closeMenu, handleLogout, terminoBusqueda, handleBusquedaChange, activeLinkStyle }) => (
+  <>
+    <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+      <li className="nav-item">
+        <NavLink
+          className="nav-link"
+          style={({ isActive }) => (isActive ? activeLinkStyle : undefined)}
+          to={PATHS.HOME}
+          onClick={closeMenu}
+        >
+          <BsFillHouseDoorFill className="me-2" />
+          Inicio
+        </NavLink>
+      </li>
+      <li className="nav-item">
+        <NavLink
+          className="nav-link"
+          style={({ isActive }) => (isActive ? activeLinkStyle : undefined)}
+          to={PATHS.PRODUCTS}
+          onClick={closeMenu}
+        >
+          <BsBoxSeamFill className="me-2" />
+          Productos
+        </NavLink>
+      </li>
+    </ul>
+    <div className="d-flex flex-column flex-lg-row align-items-lg-center gap-3 mt-3 mt-lg-0">
+      <form
+        className="d-flex"
+        role="search"
+        onSubmit={(e) => e.preventDefault()}
+      >
+        <StyledInput
+          type="search"
+          placeholder="Buscar productos..."
+          value={terminoBusqueda}
+          onChange={handleBusquedaChange}
+          style={{ width: '240px' }}
+        />
+      </form>
+      <div className="nav-item dropdown">
+        <a
+          className="nav-link dropdown-toggle text-white"
+          href="#"
+          role="button"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          <FaUserCircle className="me-1" /> Administrador
+        </a>
+        <ul className="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+          <li>
+            <NavLink
+              className="dropdown-item"
+              to={PATHS.ADMIN_DASHBOARD}
+              onClick={closeMenu}
+            >
+              <RiAdminFill className="me-1" />
+              Gestión de Productos
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              className="dropdown-item"
+              to={PATHS.ADMIN_ADD_PRODUCT}
+              onClick={closeMenu}
+            >
+              <RiAddBoxFill className="me-1" />
+              Agregar Producto
+            </NavLink>
+          </li>
+          <li>
+            <hr className="dropdown-divider" />
+          </li>
+          <li>
+            <Link className="dropdown-item" to={PATHS.HOME} onClick={handleLogout}>
+              <RiLoginBoxLine className="me-1" />
+              Cerrar Sesión
+            </Link>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </>
+);
+
+const ClientNavLinks = ({ user, totalItems, closeMenu, handleLogout, terminoBusqueda, handleBusquedaChange, activeLinkStyle }) => (
+  <>
+    <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+      <li className="nav-item">
+        <NavLink
+          className="nav-link"
+          style={({ isActive }) => (isActive ? activeLinkStyle : undefined)}
+          to={PATHS.HOME}
+          onClick={closeMenu}
+        >
+          <BsFillHouseDoorFill className="me-2" />
+          Inicio
+        </NavLink>
+      </li>
+      <li className="nav-item">
+        <NavLink
+          className="nav-link"
+          style={({ isActive }) => (isActive ? activeLinkStyle : undefined)}
+          to={PATHS.PRODUCTS}
+          onClick={closeMenu}
+        >
+          <BsBoxSeamFill className="me-2" />
+          Productos
+        </NavLink>
+      </li>
+      <li className="nav-item">
+        <NavLink
+          className="nav-link"
+          style={({ isActive }) => (isActive ? activeLinkStyle : undefined)}
+          to={PATHS.ABOUT}
+          onClick={closeMenu}
+        >
+          <BsFillInfoCircleFill className="me-2" />
+          Nosotros
+        </NavLink>
+      </li>
+      <li className="nav-item">
+        <NavLink
+          className="nav-link"
+          style={({ isActive }) => (isActive ? activeLinkStyle : undefined)}
+          to={PATHS.CONTACT}
+          onClick={closeMenu}
+        >
+          <BsFillTelephoneFill className="me-2" />
+          Contacto
+        </NavLink>
+      </li>
+    </ul>
+    <hr
+      className="d-lg-none"
+      style={{ borderColor: "var(--color-border)" }}
+    />
+    <div className="d-flex flex-column flex-lg-row align-items-lg-center gap-3 mt-3 mt-lg-0">
+      <form
+        className="d-flex w-100 w-lg-auto"
+        role="search"
+        onSubmit={(e) => e.preventDefault()}
+      >
+        <StyledInput
+          type="search"
+          placeholder="Buscar productos..."
+          value={terminoBusqueda}
+          onChange={handleBusquedaChange}
+          style={{ width: '240px' }}
+        />
+      </form>
+      <ul className="navbar-nav d-flex flex-row justify-content-between w-100 w-lg-auto pt-3 pt-lg-0">
+        <li className="nav-item">
+          <NavLink className="nav-link" to={PATHS.CART} onClick={closeMenu}>
+            <FaShoppingCart />
+            {totalItems > 0 && (
+              <span className="badge bg-primary ms-1">{totalItems}</span>
+            )}
+          </NavLink>
+        </li>
+        {user ? (
+          <li className="nav-item dropdown">
+            <a
+              className="nav-link dropdown-toggle"
+              href="#"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <FaUserCircle className="me-1" /> {user.split("@")[0]}
+            </a>
+            <ul className="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+              <li>
+                <Link className="dropdown-item" to={PATHS.HOME} onClick={handleLogout}>
+                  <RiLoginBoxLine className="me-1" />
+                  Cerrar Sesión
+                </Link>
+              </li>
+            </ul>
+          </li>
+        ) : (
+          <li className="nav-item">
+            <NavLink className="nav-link" to={PATHS.LOGIN} onClick={closeMenu}>
+              <RiLoginBoxLine className="me-1" />
+              Login
+            </NavLink>
+          </li>
+        )}
+      </ul>
+    </div>
+  </>
+);
+
 function Nav() {
   const productosCarrito = useCarritoStore(state => state.productosCarrito);
   // El estado de la búsqueda ahora vive en la URL.
@@ -62,198 +258,26 @@ function Nav() {
     closeMenu();
   };
 
-  const renderAdminNav = () => (
-    <>
-      <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-        <li className="nav-item">
-          <NavLink
-            className="nav-link"
-            style={({ isActive }) => (isActive ? activeLinkStyle : undefined)}
-            to={PATHS.HOME}
-            onClick={closeMenu}
-          >
-            <BsFillHouseDoorFill className="me-2" />
-            Inicio
-          </NavLink>
-        </li>
-        <li className="nav-item">
-          <NavLink
-            className="nav-link"
-            style={({ isActive }) => (isActive ? activeLinkStyle : undefined)}
-            to={PATHS.PRODUCTS}
-            onClick={closeMenu}
-          >
-            <BsBoxSeamFill className="me-2" />
-            Productos
-          </NavLink>
-        </li>
-      </ul>
-      <div className="d-flex flex-column flex-lg-row align-items-lg-center gap-3 mt-3 mt-lg-0">
-        <form
-          className="d-flex"
-          role="search"
-          onSubmit={(e) => e.preventDefault()}
-        >
-          <StyledInput
-            type="search"
-            placeholder="Buscar productos..."
-            value={terminoBusqueda}
-            onChange={handleBusquedaChange}
-            style={{ width: '240px' }}
-          />
-        </form>
-        <div className="nav-item dropdown">
-          <a
-            className="nav-link dropdown-toggle text-white"
-            href="#"
-            role="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            <FaUserCircle className="me-1" /> Administrador
-          </a>
-          <ul className="dropdown-menu dropdown-menu-dark dropdown-menu-end">
-            <li>
-              <NavLink
-                className="dropdown-item"
-                to={PATHS.ADMIN_DASHBOARD}
-                onClick={closeMenu}
-              >
-                <RiAdminFill className="me-1" />
-                Gestión de Productos
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                className="dropdown-item"
-                to={PATHS.ADMIN_ADD_PRODUCT}
-                onClick={closeMenu}
-              >
-                <RiAddBoxFill className="me-1" />
-                Agregar Producto
-              </NavLink>
-            </li>
-            <li>
-              <hr className="dropdown-divider" />
-            </li>
-            <li>
-              <Link className="dropdown-item" to={PATHS.HOME} onClick={handleLogout}>
-                <RiLoginBoxLine className="me-1" />
-                Cerrar Sesión
-              </Link>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </>
+  const renderClientNav = () => (
+    <ClientNavLinks
+      user={user}
+      totalItems={totalItems}
+      closeMenu={closeMenu}
+      handleLogout={handleLogout}
+      terminoBusqueda={terminoBusqueda}
+      handleBusquedaChange={handleBusquedaChange}
+      activeLinkStyle={activeLinkStyle}
+    />
   );
 
-  const renderClientNav = () => (
-    <>
-      <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-        <li className="nav-item">
-          <NavLink
-            className="nav-link"
-            style={({ isActive }) => (isActive ? activeLinkStyle : undefined)}
-            to={PATHS.HOME}
-            onClick={closeMenu}
-          >
-            <BsFillHouseDoorFill className="me-2" />
-            Inicio
-          </NavLink>
-        </li>
-        <li className="nav-item">
-          <NavLink
-            className="nav-link"
-            style={({ isActive }) => (isActive ? activeLinkStyle : undefined)}
-            to={PATHS.PRODUCTS}
-            onClick={closeMenu}
-          >
-            <BsBoxSeamFill className="me-2" />
-            Productos
-          </NavLink>
-        </li>
-        <li className="nav-item">
-          <NavLink
-            className="nav-link"
-            style={({ isActive }) => (isActive ? activeLinkStyle : undefined)}
-            to={PATHS.ABOUT}
-            onClick={closeMenu}
-          >
-            <BsFillInfoCircleFill className="me-2" />
-            Nosotros
-          </NavLink>
-        </li>
-        <li className="nav-item">
-          <NavLink
-            className="nav-link"
-            style={({ isActive }) => (isActive ? activeLinkStyle : undefined)}
-            to={PATHS.CONTACT}
-            onClick={closeMenu}
-          >
-            <BsFillTelephoneFill className="me-2" />
-            Contacto
-          </NavLink>
-        </li>
-      </ul>
-      <hr
-        className="d-lg-none"
-        style={{ borderColor: "var(--color-border)" }}
-      />
-      <div className="d-flex flex-column flex-lg-row align-items-lg-center gap-3 mt-3 mt-lg-0">
-        <form
-          className="d-flex w-100 w-lg-auto"
-          role="search"
-          onSubmit={(e) => e.preventDefault()}
-        >
-          <StyledInput
-            type="search"
-            placeholder="Buscar productos..."
-            value={terminoBusqueda}
-            onChange={handleBusquedaChange}
-            style={{ width: '240px' }}
-          />
-        </form>
-        <ul className="navbar-nav d-flex flex-row justify-content-between w-100 w-lg-auto pt-3 pt-lg-0">
-          <li className="nav-item">
-            <NavLink className="nav-link" to={PATHS.CART} onClick={closeMenu}>
-              <FaShoppingCart />
-              {totalItems > 0 && (
-                <span className="badge bg-primary ms-1">{totalItems}</span>
-              )}
-            </NavLink>
-          </li>
-          {user ? (
-            <li className="nav-item dropdown">
-              <a
-                className="nav-link dropdown-toggle"
-                href="#"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                <FaUserCircle className="me-1" /> {user.split("@")[0]}
-              </a>
-              <ul className="dropdown-menu dropdown-menu-dark dropdown-menu-end">
-                <li>
-                  <Link className="dropdown-item" to={PATHS.HOME} onClick={handleLogout}>
-                    <RiLoginBoxLine className="me-1" />
-                    Cerrar Sesión
-                  </Link>
-                </li>
-              </ul>
-            </li>
-          ) : (
-            <li className="nav-item">
-              <NavLink className="nav-link" to={PATHS.LOGIN} onClick={closeMenu}>
-                <RiLoginBoxLine className="me-1" />
-                Login
-              </NavLink>
-            </li>
-          )}
-        </ul>
-      </div>
-    </>
+  const renderAdminNav = () => (
+    <AdminNavLinks
+      closeMenu={closeMenu}
+      handleLogout={handleLogout}
+      terminoBusqueda={terminoBusqueda}
+      handleBusquedaChange={handleBusquedaChange}
+      activeLinkStyle={activeLinkStyle}
+    />
   );
 
   return (
@@ -266,7 +290,7 @@ function Nav() {
           <button
             className="navbar-toggler"
             type="button"
-            onClick={handleNavCollapse} 
+            onClick={handleNavCollapse}
             aria-controls="navContent"
             aria-expanded={!isNavCollapsed}
             aria-label="Toggle navigation"
@@ -278,7 +302,15 @@ function Nav() {
           className={`${isNavCollapsed ? "collapse" : ""} navbar-collapse`}
           id="navContent"
         >
-          <RoleBasedGuard allowedRoles={['admin']} fallback={<RoleBasedGuard allowedRoles={['client', 'guest']} children={renderClientNav()} />}>
+          <RoleBasedGuard
+            allowedRoles={["admin"]}
+            fallback={
+              <RoleBasedGuard
+                allowedRoles={["client", "guest"]}
+                children={renderClientNav()}
+              />
+            }
+          >
             {renderAdminNav()}
           </RoleBasedGuard>
         </div>

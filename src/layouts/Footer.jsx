@@ -5,74 +5,76 @@ import { PATHS } from "@/constants/paths";
 import RoleBasedGuard from "@/components/auth/RoleBasedGuard";
 import { FaFacebook, FaInstagram, FaTwitter, FaLinkedin } from "react-icons/fa";
 
+// --- Sub-componentes para los enlaces del Footer ---
+// Se definen fuera del componente principal para evitar que se re-creen en cada render.
+const AdminFooterLinks = () => (
+  <>
+    <div className="col-lg-2 col-md-4 col-6">
+      <h5 className={styles.footerTitle}>Administración</h5>
+      <ul className={styles.footerLinks}>
+        <li>
+          <Link to={PATHS.ADMIN_DASHBOARD} className={styles.footerLink}>
+            Gestión de Productos
+          </Link>
+        </li>
+        <li>
+          <Link to={PATHS.ADMIN_ADD_PRODUCT} className={styles.footerLink}>
+            Agregar Productos
+          </Link>
+        </li>
+      </ul>
+    </div>
+    <div className="col-lg-2 col-md-4 col-6">
+      <h5 className={styles.footerTitle}>Tienda</h5>
+      <ul className={styles.footerLinks}>
+        <li>
+          <Link to={PATHS.PRODUCTS} className={styles.footerLink}>
+            Ver Productos
+          </Link>
+        </li>
+      </ul>
+    </div>
+  </>
+);
+
+const ClientFooterLinks = () => (
+  <>
+    <div className="col-lg-2 col-md-4 col-6">
+      <h5 className={styles.footerTitle}>Tienda</h5>
+      <ul className={styles.footerLinks}>
+        <li>
+          <Link to={PATHS.PRODUCTS} className={styles.footerLink}>
+            Productos
+          </Link>
+        </li>
+        <li>
+          <Link to={PATHS.CART} className={styles.footerLink}>
+            Carrito
+          </Link>
+        </li>
+      </ul>
+    </div>
+    <div className="col-lg-2 col-md-4 col-6">
+      <h5 className={styles.footerTitle}>Empresa</h5>
+      <ul className={styles.footerLinks}>
+        <li>
+          <Link to={PATHS.ABOUT} className={styles.footerLink}>
+            Nosotros
+          </Link>
+        </li>
+        <li>
+          <Link to={PATHS.CONTACT} className={styles.footerLink}>
+            Contacto
+          </Link>
+        </li>
+      </ul>
+    </div>
+  </>
+);
+
 function Footer() {
   const admin = useAuthStore((state) => state.admin);
   const currentYear = new Date().getFullYear();
-
-  const AdminFooterLinks = () => (
-    <>
-      <div className="col-lg-2 col-md-4 col-6">
-        <h5 className={styles.footerTitle}>Administración</h5>
-        <ul className={styles.footerLinks}>
-          <li>
-            <Link to={PATHS.ADMIN_DASHBOARD} className={styles.footerLink}>
-              Gestión de Productos
-            </Link>
-          </li>
-          <li>
-            <Link to={PATHS.ADMIN_ADD_PRODUCT} className={styles.footerLink}>
-              Agregar Productos
-            </Link>
-          </li>
-        </ul>
-      </div>
-      <div className="col-lg-2 col-md-4 col-6">
-        <h5 className={styles.footerTitle}>Tienda</h5>
-        <ul className={styles.footerLinks}>
-          <li>
-            <Link to={PATHS.PRODUCTS} className={styles.footerLink}>
-              Ver Productos
-            </Link>
-          </li>
-        </ul>
-      </div>
-    </>
-  );
-
-  const ClientFooterLinks = () => (
-    <>
-      <div className="col-lg-2 col-md-4 col-6">
-        <h5 className={styles.footerTitle}>Tienda</h5>
-        <ul className={styles.footerLinks}>
-          <li>
-            <Link to={PATHS.PRODUCTS} className={styles.footerLink}>
-              Productos
-            </Link>
-          </li>
-          <li>
-            <Link to={PATHS.CART} className={styles.footerLink}>
-              Carrito
-            </Link>
-          </li>
-        </ul>
-      </div>
-      <div className="col-lg-2 col-md-4 col-6">
-        <h5 className={styles.footerTitle}>Empresa</h5>
-        <ul className={styles.footerLinks}>
-          <li>
-            <Link to={PATHS.ABOUT} className={styles.footerLink}>
-              Nosotros
-            </Link>
-          </li>
-          <li>
-            <Link to={PATHS.CONTACT} className={styles.footerLink}>
-              Contacto
-            </Link>
-          </li>
-        </ul>
-      </div>
-    </>
-  );
 
   return (
     <>

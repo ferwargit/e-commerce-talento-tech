@@ -10,6 +10,7 @@ import { getFriendlyErrorMessage } from "@/utils/getFriendlyErrorMessage";
 import { useCarritoStore } from "@/features/cart/store/carritoStore"; 
 import { useAuthStore } from "@/features/auth/store/authStore";
 import { getProductById, deleteProduct } from "@/features/products/services/productService";
+import { formatPrice } from "@/utils/formatters";
 import Loader from "@/components/ui/Loader";
 import { StyledButton, StyledLinkButton } from "@/components/ui/Button";
 import styled from "styled-components";
@@ -122,11 +123,6 @@ function ProductoDetalle() {
     );
   }
 
-  const formattedPrice = new Intl.NumberFormat("es-AR", {
-    style: "currency",
-    currency: "ARS",
-  }).format(productoEncontrado.price);
-
   return (
     <>
       <SEO
@@ -152,7 +148,7 @@ function ProductoDetalle() {
               {productoEncontrado.name}
             </h1>
             <p className="fs-2 my-3" style={{ color: "var(--color-primary)" }}>
-              {formattedPrice}
+              {formatPrice(productoEncontrado.price)}
             </p>
             <p
               className="lead mb-4"
