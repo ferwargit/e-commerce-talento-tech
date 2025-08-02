@@ -27,6 +27,7 @@ function AdminProductos() {
     mutationFn: deleteProduct,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
+      toast.success("Producto eliminado con éxito 👌");
     },
   });
 
@@ -42,11 +43,7 @@ function AdminProductos() {
       cancelButtonColor: "#4b5563",
     }).then((result) => {
       if (result.isConfirmed) {
-        toast.promise(deleteMutation.mutateAsync(id), {
-          pending: "Eliminando producto...",
-          success: "Producto eliminado con éxito 👌",
-          error: (err) => getFriendlyErrorMessage(err),
-        });
+        deleteMutation.mutate(id); // Llamada más simple, los efectos se manejan en la mutación
       }
     });
   };

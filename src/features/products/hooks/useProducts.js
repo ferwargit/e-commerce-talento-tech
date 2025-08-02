@@ -1,14 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 import { getProducts } from "@/features/products/services/productService";
-import { useSearchStore } from "@/features/search/store/searchStore";
 
 /**
  * Custom Hook para gestionar la obtención, filtrado y ordenamiento de productos.
  * Centraliza la lógica de datos de productos para ser reutilizada en la aplicación.
  */
 export function useProducts() {
-  const terminoBusqueda = useSearchStore((state) => state.terminoBusqueda);
+  // La URL es ahora la fuente de verdad para la búsqueda.
+  const [searchParams] = useSearchParams();
+  const terminoBusqueda = searchParams.get("q") || "";
 
   const {
     data: productos = [],

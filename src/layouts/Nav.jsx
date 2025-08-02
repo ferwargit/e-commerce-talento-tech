@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useCarritoStore } from "@/features/cart/store/carritoStore";
 import { useAuthStore } from "@/features/auth/store/authStore";
-import { useSearchStore } from "@/features/search/store/searchStore";
 import { PATHS } from "@/constants/paths";
 import { StyledInput } from "@/components/ui/StyledFormElements";
 
@@ -17,8 +16,9 @@ import {
 
 function Nav() {
   const productosCarrito = useCarritoStore(state => state.productosCarrito);
-  const terminoBusqueda = useSearchStore((state) => state.terminoBusqueda);
-  const setTerminoBusqueda = useSearchStore((state) => state.setTerminoBusqueda);
+  // El estado de la búsqueda ahora vive en la URL.
+  const [searchParams, setSearchParams] = useSearchParams();
+  const terminoBusqueda = searchParams.get("q") || "";
   // Seleccionamos los valores y acciones del store de autenticación
   const user = useAuthStore((state) => state.user);
   const admin = useAuthStore((state) => state.admin);
@@ -43,9 +43,16 @@ function Nav() {
 
   const handleBusquedaChange = (e) => {
     const nuevoTermino = e.target.value;
-    setTerminoBusqueda(nuevoTermino);
-    if (location.pathname !== PATHS.PRODUCTS && nuevoTermino) {
-      navigate(PATHS.PRODUCTS);
+    // Si el usuario no está en la página de productos, lo navegamos allí con el término de búsqueda.
+    if (location.pathname !== PATHS.PRODUCTS) {
+      navigate(`${PATHS.PRODUCTS}?q=${encodeURIComponent(nuevoTermino)}`);
+    } else {
+      // Si ya está en la página de productos, solo actualizamos los parámetros de la URL.
+      if (nuevoTermino) {
+        setSearchParams({ q: nuevoTermino }, { replace: true });
+      } else {
+        setSearchParams({}, { replace: true });
+      }
     }
   };
 
