@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import styles from "./Footer.module.css";
 import { useAuthStore } from "@/features/auth/store/authStore";
 import { PATHS } from "@/constants/paths";
+import RoleBasedGuard from "@/components/auth/RoleBasedGuard";
 import { FaFacebook, FaInstagram, FaTwitter, FaLinkedin } from "react-icons/fa";
 
 function Footer() {
@@ -87,7 +88,9 @@ function Footer() {
               </p>
             </div>
 
-            {admin ? <AdminFooterLinks /> : <ClientFooterLinks />}
+            <RoleBasedGuard allowedRoles={['admin']} fallback={<ClientFooterLinks />}>
+              <AdminFooterLinks />
+            </RoleBasedGuard>
 
             <div className="col-lg-4 col-md-4">
               <h5 className={styles.footerTitle}>Síguenos</h5>

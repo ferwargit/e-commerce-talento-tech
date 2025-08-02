@@ -3,6 +3,7 @@ import { Link, NavLink, useLocation, useNavigate, useSearchParams } from "react-
 import { useCarritoStore } from "@/features/cart/store/carritoStore";
 import { useAuthStore } from "@/features/auth/store/authStore";
 import { PATHS } from "@/constants/paths";
+import RoleBasedGuard from "@/components/auth/RoleBasedGuard";
 import { StyledInput } from "@/components/ui/StyledFormElements";
 
 import { FaShoppingCart, FaUserCircle } from "react-icons/fa";
@@ -255,12 +256,6 @@ function Nav() {
     </>
   );
 
-  const getNavContent = () => {
-    if (admin) return renderAdminNav();
-    if (location.pathname.startsWith("/admin")) return null;
-    return renderClientNav();
-  };
-
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
       <div className="container-fluid">
@@ -283,7 +278,9 @@ function Nav() {
           className={`${isNavCollapsed ? "collapse" : ""} navbar-collapse`}
           id="navContent"
         >
-          {getNavContent()}
+          <RoleBasedGuard allowedRoles={['admin']} fallback={<RoleBasedGuard allowedRoles={['client', 'guest']} children={renderClientNav()} />}>
+            {renderAdminNav()}
+          </RoleBasedGuard>
         </div>
       </div>
     </nav>

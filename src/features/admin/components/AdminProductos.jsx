@@ -6,7 +6,6 @@ import { StyledLinkButton, StyledButton } from "@/components/ui/Button";
 import SEO from "@/components/ui/SEO";
 import { toast } from "react-toastify";
 import styles from "./AdminTable.module.css";
-import { getFriendlyErrorMessage } from "@/utils/getFriendlyErrorMessage";
 import ThemedSwal from "@/assets/ThemedSwal";
 import Loader from "@/components/ui/Loader";
 import Paginador from "@/components/ui/Paginador";
