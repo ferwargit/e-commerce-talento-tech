@@ -5,9 +5,9 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
-import Spinner from "react-bootstrap/Spinner";
 import Nav from "@/layouts/Nav";
 import Footer from "@/layouts/Footer";
+import Loader from "@/components/ui/Loader";
 import ScrollToTop from "@/components/ui/ScrollToTop";
 import { ToastContainer } from "react-toastify";
 import { PATHS } from "@/constants/paths";
@@ -45,9 +45,7 @@ function AppContent() {
         <ScrollToTop />
         <Suspense
           fallback={
-            <div className="vh-100 d-flex justify-content-center align-items-center">
-              <Spinner animation="border" variant="primary" />
-            </div>
+            <Loader text="Cargando página..." />
           }
         >
           <Routes>

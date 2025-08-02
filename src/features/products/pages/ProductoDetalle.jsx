@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import { useCarritoStore } from "@/features/cart/store/carritoStore"; 
 import { useAuthStore } from "@/features/auth/store/authStore";
 import { getProductById, deleteProduct } from "@/features/products/services/productService";
+import Loader from "@/components/ui/Loader";
 import { StyledButton, StyledLinkButton } from "@/components/ui/Button";
 import styled from "styled-components";
 
@@ -103,14 +104,7 @@ function ProductoDetalle() {
   const restarContador = () => setCantidad((c) => (c > 1 ? c - 1 : 1));
 
   if (cargando) {
-    return (
-      <div className="container text-center my-5">
-        <div className="spinner-border text-light" role="status">
-          <span className="visually-hidden">Cargando...</span>
-        </div>
-        <p className="mt-2 text-light">Cargando producto...</p>
-      </div>
-    );
+    return <Loader text="Cargando datos del producto..." />;
   }
 
   if (error || !productoEncontrado) {

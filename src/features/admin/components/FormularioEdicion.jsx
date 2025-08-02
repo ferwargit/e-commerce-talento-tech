@@ -1,57 +1,81 @@
 // src/features/admin/components/FormularioEdicion.jsx
 // Este componente muestra un formulario para editar un producto existente.
+import { useEffect } from "react";
+import { useAuthStore } from "@/features/auth/store/authStore";
 import { useParams, useNavigate } from "react-router-dom";
-import { useQuery, useMutation, useQueryClient, useIsMutating } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getProductById, updateProduct } from "@/features/products/services/productService";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { StyledLinkButton } from "@/components/ui/Button";
+import Loader from "@/components/ui/Loader";
 import ProductForm from "./ProductForm";
 import { PATHS } from "@/constants/paths";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { productSchema } from "@/features/products/schemas/productSchema";
+import { getFriendlyErrorMessage } from "@/utils/getFriendlyErrorMessage";
 
 function FormularioEdicion() {
   const { id } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const isUpdating = useIsMutating({ mutationKey: ['updateProduct', id] }) > 0;
+  const admin = useAuthStore((state) => state.admin);
+  const authLoading = useAuthStore((state) => state.loading);
 
   const { data: initialProductData, isLoading: cargando, error } = useQuery({
     queryKey: ["product", id],
     queryFn: () => getProductById(id),
     enabled: !!id,
   });
-  
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    setError,
+    reset,
+  } = useForm({
+    resolver: zodResolver(productSchema),
+  });
+
+  useEffect(() => {
+    if (initialProductData) {
+      reset(initialProductData);
+    }
+  }, [initialProductData, reset]);
+
   const updateMutation = useMutation({
     mutationKey: ['updateProduct', id],
     mutationFn: (updatedProduct) => updateProduct(updatedProduct.id, updatedProduct),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
       queryClient.invalidateQueries({ queryKey: ["product", id] });
+      toast.success("¡Producto actualizado con éxito!");
+      navigate(`${PATHS.PRODUCTS}/${id}`);
     },
+    onError: (error) => {
+      const message = getFriendlyErrorMessage(error);
+      setError("root.serverError", { type: "custom", message });
+      toast.error(message);
+    }
   });
 
-  const handleSubmit = async (data) => {
-      const productoAActualizar = { ...data, id };
-      toast.promise(updateMutation.mutateAsync(productoAActualizar), {
-        pending: "Actualizando producto...",
-        success: "¡Producto actualizado con éxito!",
-        error: "Hubo un problema al actualizar el producto.",
-      }).then(() => {
-        setTimeout(() => navigate(`${PATHS.PRODUCTS}/${id}`), 2000);
-      });
+  const onSubmit = (data) => {
+    const productoAActualizar = { ...data, id };
+    updateMutation.mutate(productoAActualizar);
   };
 
+  if (authLoading) {
+    return <Loader text="Verificando autenticación..." />;
+  }
+
+  if (!admin && !authLoading) {
+    return <Navigate to="/login" replace />;
+  }
+
   if (cargando) {
-    return (
-      <div className="container text-center my-5">
-        <div className="spinner-border text-light" role="status">
-          <span className="visually-hidden">
-            Cargando datos del producto...
-          </span>
-        </div>
-        <p className="mt-2 text-light">Cargando datos del producto...</p>
-      </div>
-    );
+    return <Loader text="Cargando datos del producto..." />;
   }
 
   if (error) {
@@ -69,36 +93,14 @@ function FormularioEdicion() {
   }
 
   return (
-    <div className="container mt-5 mb-5">
-      <div className="row justify-content-center">
-        <div className="col-lg-8 col-md-10">
-          <div
-            className="card shadow-lg border-0"
-            style={{
-              backgroundColor: "var(--color-background-light)",
-              borderColor: "var(--color-border)",
-            }}
-          >
-            <div className="card-body p-4">
-              <h2
-                className="card-title text-center mb-4"
-                style={{ color: "var(--color-text-primary)" }}
-              >
-                Editar Producto
-              </h2>
-              {initialProductData && <ProductForm
-                key={initialProductData.id} // Clave para forzar el re-renderizado con nuevos datos
-                initialData={initialProductData}
-                onSubmit={handleSubmit}
-                isSubmitting={isUpdating}
-                submitButtonText="Actualizar Producto"
-              />
-              }
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <ProductForm
+      onSubmit={handleSubmit(onSubmit)}
+      register={register}
+      errors={errors}
+      isSubmitting={isSubmitting}
+      title="Editar Producto"
+      buttonText="Actualizar Producto"
+    />
   );
 }
 

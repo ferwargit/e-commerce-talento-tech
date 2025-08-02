@@ -1,5 +1,6 @@
 // src/features/products/components/FeaturedProducts.jsx
 // Este componente muestra los productos destacados en la página de inicio.
+import Loader from "@/components/ui/Loader";
 import { useProducts } from "@/features/products/hooks/useProducts";
 import Card from "./Card";
 
@@ -22,13 +23,7 @@ function FeaturedProducts() {
           Una selección de nuestros items más populares.
         </p>
       </div>
-      {cargando ? (
-        <div className="text-center">
-          <div className="spinner-border text-light" role="status">
-            <span className="visually-hidden">Cargando...</span>
-          </div>
-        </div>
-      ) : error ? (
+      {cargando ? <Loader text="Cargando destacados..." /> : error ? (
         <div className="text-center text-danger">
           <p>Error al cargar los productos destacados.</p>
         </div>

@@ -1,130 +1,149 @@
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { productSchema } from "@/features/products/schemas/productSchema";
+import { StyledInput, StyledTextarea, StyledLabel } from "@/components/ui/StyledFormElements";
 import { StyledButton } from "@/components/ui/Button";
-import {
-  StyledInput,
-  StyledTextarea,
-} from "@/components/ui/StyledFormElements";
+import styled from "styled-components";
 
-// Componente de UI para mostrar errores de validación
-const ErrorMessage = ({ message }) => (
-  <p className="text-danger mt-1 mb-0" style={{ fontSize: '0.875em' }}>{message}</p>
-);
+const FormContainer = styled.div`
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 2.5rem;
+  background-color: var(--color-background-light);
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--color-border);
+`;
 
-function ProductForm({
-  onSubmit,
-  initialData = {},
-  submitButtonText,
-  submitButtonVariant = "primary",
-}) {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm({
-    resolver: zodResolver(productSchema),
-    defaultValues: initialData,
-  });
+const FormGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem; /* Reducido para un diseño más compacto, similar a mb-3 de Bootstrap */
 
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+    
+    .full-width {
+      grid-column: 1 / -1;
+    }
+  }
+`;
+
+/* Componente específico para el input de precio para que se integre visualmente con el span '$' */
+const PriceInput = styled(StyledInput)`
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  /* Estas dos líneas son la clave para la alineación correcta */
+  width: auto;
+  flex: 1 1 auto;
+`;
+
+const ErrorMessage = styled.p`
+  color: var(--color-danger);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  min-height: 1rem; // Evita que el layout salte al aparecer/desaparecer el error
+`;
+
+function ProductForm({ onSubmit, register, errors, isSubmitting, title, buttonText }) {
   return (
-    <form onSubmit={handleSubmit(onSubmit)} noValidate>
-      <div className="mb-3">
-        <label htmlFor="name" className="form-label">
-          Nombre del Producto
-        </label>
-        <StyledInput
-          id="name"
-          {...register("name")}
-          className="form-control"
-          placeholder="Ej: Teclado Mecánico RGB"
-        />
-        {errors.name && <ErrorMessage message={errors.name.message} />}
-      </div>
+    <FormContainer>
+      <form onSubmit={onSubmit} noValidate>
+        <h1 className="text-center mb-4" style={{ color: "var(--color-text-primary)" }}>{title}</h1>
 
-      <div className="mb-3">
-        <label htmlFor="image" className="form-label">
-          URL de la Imagen
-        </label>
-        <StyledInput
-          id="image"
-          {...register("image")}
-          className="form-control"
-          placeholder="/images/products/nombre-del-producto.jpg"
-        />
-        {errors.image && <ErrorMessage message={errors.image.message} />}
-      </div>
+        {errors.root?.serverError && (
+          <div className="alert alert-danger">
+            {errors.root.serverError.message}
+          </div>
+        )}
 
-      <div className="mb-3">
-        <label htmlFor="price" className="form-label">
-          Precio
-        </label>
-        <div className="input-group">
-          <span className="input-group-text">$</span>
-          <StyledInput
-            id="price"
-            type="number"
-            {...register("price")}
-            className="form-control"
-            min="0.01"
-            step="0.01"
-          />
-        </div>
-        {errors.price && <ErrorMessage message={errors.price.message} />}
-      </div>
+        <FormGrid>
+          <div className="full-width">
+            <StyledLabel htmlFor="name">Nombre del Producto</StyledLabel>
+            <StyledInput
+              id="name"
+              {...register("name")}
+              disabled={isSubmitting}
+              aria-invalid={errors.name ? "true" : "false"}
+              placeholder="Ej: Teclado Mecánico RGB"
+            />
+            {errors.name && <ErrorMessage>{errors.name.message}</ErrorMessage>}
+          </div>
 
-      <div className="row">
-        <div className="col-md-6 mb-3">
-          <label htmlFor="stock" className="form-label">
-            Stock
-          </label>
-          <StyledInput
-            id="stock"
-            type="number"
-            {...register("stock")}
-            className="form-control"
-            min="0"
-          />
-          {errors.stock && <ErrorMessage message={errors.stock.message} />}
-        </div>
-        <div className="col-md-6 mb-3">
-          <label htmlFor="category" className="form-label">
-            Categoría
-          </label>
-          <StyledInput
-            id="category"
-            {...register("category")}
-            className="form-control"
-            placeholder="Ej: Teclados"
-          />
-          {errors.category && <ErrorMessage message={errors.category.message} />}
-        </div>
-      </div>
+          <div>
+            <StyledLabel htmlFor="price">Precio</StyledLabel>
+            <div className="input-group">
+              <span className="input-group-text" style={{ 
+                backgroundColor: 'var(--color-background-dark)', 
+                borderColor: 'var(--color-border)', 
+                color: 'var(--color-text-muted)' 
+              }}>$</span>
+              <PriceInput
+                id="price"
+                type="number"
+                step="0.01"
+                {...register("price", { valueAsNumber: true })}
+                disabled={isSubmitting}
+                aria-invalid={errors.price ? "true" : "false"}
+                placeholder="199.99"
+              />
+            </div>
+            {errors.price && <ErrorMessage>{errors.price.message}</ErrorMessage>}
+          </div>
 
-      <div className="mb-4">
-        <label htmlFor="description" className="form-label">
-          Descripción
-        </label>
-        <StyledTextarea
-          id="description"
-          {...register("description")}
-          className="form-control"
-          rows="4"
-          placeholder="Describe el producto aquí..."
-        />
-        {errors.description && <ErrorMessage message={errors.description.message} />}
-      </div>
+          <div>
+            <StyledLabel htmlFor="stock">Stock</StyledLabel>
+            <StyledInput
+              id="stock"
+              type="number"
+              {...register("stock", { valueAsNumber: true })}
+              disabled={isSubmitting}
+              aria-invalid={errors.stock ? "true" : "false"}
+              placeholder="50"
+            />
+            {errors.stock && <ErrorMessage>{errors.stock.message}</ErrorMessage>}
+          </div>
 
-      <div className="d-grid">
-        <StyledButton
-          type="submit"
-          $variant={submitButtonVariant}
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? "Procesando..." : submitButtonText}
+          <div className="full-width">
+            <StyledLabel htmlFor="category">Categoría</StyledLabel>
+            <StyledInput
+              id="category"
+              {...register("category")}
+              disabled={isSubmitting}
+              aria-invalid={errors.category ? "true" : "false"}
+              placeholder="Ej: Teclados, Mouses, Monitores"
+            />
+            {errors.category && <ErrorMessage>{errors.category.message}</ErrorMessage>}
+          </div>
+
+          <div className="full-width">
+            <StyledLabel htmlFor="description">Descripción</StyledLabel>
+            <StyledTextarea
+              id="description"
+              rows="4"
+              {...register("description")}
+              disabled={isSubmitting}
+              aria-invalid={errors.description ? "true" : "false"}
+              placeholder="Describe las características principales del producto..."
+            />
+            {errors.description && <ErrorMessage>{errors.description.message}</ErrorMessage>}
+          </div>
+
+          <div className="full-width">
+            <StyledLabel htmlFor="image">URL de la Imagen</StyledLabel>
+            <StyledInput
+              id="image"
+              {...register("image")}
+              disabled={isSubmitting}
+              aria-invalid={errors.image ? "true" : "false"}
+              placeholder="Ej: /images/products/teclado-mecanico.jpg"
+            />
+            {errors.image && <ErrorMessage>{errors.image.message}</ErrorMessage>}
+          </div>
+        </FormGrid>
+
+        <StyledButton type="submit" $variant="primary" className="w-100 mt-4" disabled={isSubmitting}>
+          {isSubmitting ? "Guardando..." : buttonText}
         </StyledButton>
-      </div>
-    </form>
+      </form>
+    </FormContainer>
   );
 }
 

@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import styles from "./AdminTable.module.css";
 import { getFriendlyErrorMessage } from "@/utils/getFriendlyErrorMessage";
 import ThemedSwal from "@/assets/ThemedSwal";
+import Loader from "@/components/ui/Loader";
 import Paginador from "@/components/ui/Paginador";
 import { useProducts } from "@/features/products/hooks/useProducts";
 
@@ -66,16 +67,7 @@ function AdminProductos() {
   };
 
   if (cargando) {
-    return (
-      <div className="text-center my-5">
-        <div className="spinner-border text-light" role="status">
-          <span className="visually-hidden">
-            Cargando gestión de productos...
-          </span>
-        </div>
-        <p className="mt-2 text-light">Cargando gestión de productos...</p>
-      </div>
-    );
+    return <Loader text="Cargando gestión de productos..." />;
   }
 
   if (error) {

@@ -6,7 +6,7 @@ const commonInputStyles = css`
   color: var(--color-text-primary);
   border: 1px solid var(--color-border);
   width: 100%;
-  padding: 0.5rem 1rem;
+  padding: 0.375rem 0.75rem; /* Alineado con padding de Bootstrap para compatibilidad con input-group */
   font-size: 1rem;
   border-radius: 0.375rem;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
@@ -26,6 +26,14 @@ const commonInputStyles = css`
     outline: 0;
     box-shadow: 0 0 0 0.25rem rgba(20, 184, 166, 0.25);
   }
+`;
+
+export const StyledLabel = styled.label`
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--color-text-muted);
+  font-weight: 500;
+  text-align: left;
 `;
 
 export const StyledInput = styled.input`

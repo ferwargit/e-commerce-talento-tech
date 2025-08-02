@@ -2,6 +2,7 @@
 // Este componente muestra una lista de productos con paginación y búsqueda.
 import SEO from "@/components/ui/SEO";
 import { useState, useEffect } from "react";
+import Loader from "@/components/ui/Loader";
 import Card from "@/features/products/components/Card";
 import Paginador from "@/components/ui/Paginador";
 import { useProducts } from "@/features/products/hooks/useProducts";
@@ -17,14 +18,7 @@ function ProductosContainer() {
   }, [productosFiltrados]); // Se resetea si la búsqueda cambia
 
   if (cargando) {
-    return (
-      <div className="container text-center my-5">
-        <div className="spinner-border text-light" role="status">
-          <span className="visually-hidden">Cargando...</span>
-        </div>
-        <p className="mt-2 text-light">Cargando productos...</p>
-      </div>
-    );
+    return <Loader text="Cargando productos..." />;
   }
 
   if (error) {
