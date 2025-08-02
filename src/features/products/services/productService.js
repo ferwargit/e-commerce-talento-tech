@@ -20,13 +20,6 @@ const productsCollectionRef = collection(db, "products");
  * @returns {Promise<Array>} Una promesa que se resuelve con un array de productos.
  */
 export const getProducts = async () => {
-  // --- TRUCO DE DESARROLLO: Simular una red lenta ---
-  // Vite nos da esta variable para saber si estamos en `npm run dev`
-  if (import.meta.env.DEV) {
-    await new Promise(resolve => setTimeout(resolve, 2000)); // Reducido a 2s para agilidad
-  }
-  // --- Fin del truco ---
-
   const snapshot = await getDocs(productsCollectionRef);
   // Mapeamos los documentos para incluir el ID que Firestore maneja por separado.
   return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
@@ -38,13 +31,6 @@ export const getProducts = async () => {
  * @returns {Promise<Object|null>} Una promesa que se resuelve con el producto o null si no se encuentra.
  */
 export const getProductById = async (id) => {
-  // --- TRUCO DE DESARROLLO: Simular una red lenta ---
-  // Lo añadimos aquí también para poder probar los loaders en las páginas de detalle y edición.
-  if (import.meta.env.DEV) {
-    await new Promise(resolve => setTimeout(resolve, 2000)); // Espera 2 segundos
-  }
-  // --- Fin del truco ---
-
   const docRef = doc(db, "products", id);
   const snapshot = await getDoc(docRef);
   if (snapshot.exists()) {

@@ -34,15 +34,19 @@ La aplicación simula un entorno de venta real con un catálogo de productos din
     -   Funcionalidad de **búsqueda por nombre o categoría** y paginación integrada.
 
 ### Características Técnicas y de UX:
--   **Sistema de Notificaciones Unificado:**
+-   **Sistema de Notificaciones y Feedback Unificado:**
     -   Uso de **SweetAlert2** para modales de confirmación críticos (ej. "¿Eliminar producto?").
     -   Uso de **React-Toastify** para notificaciones pasivas ("toast") de éxito o error.
-    -   Ambas librerías están tematizadas para integrarse perfectamente con el diseño "dark mode".
--   **Carga Optimizada (Code Splitting):** Implementación de `React.lazy` y `Suspense` para dividir el código por rutas, asegurando que los usuarios solo descarguen el código necesario para la vista actual, resultando en tiempos de carga iniciales drásticamente reducidos.
--   **Arquitectura Escalable y Probada:** Estructura de carpetas organizada por **"features"** que facilita el mantenimiento. Suite de **tests unitarios y de integración** con Vitest y React Testing Library que garantiza la fiabilidad del código.
+    -   **Manejo de Errores Centralizado:** Los errores de API (ej. de Firebase) se traducen a mensajes amigables y consistentes que se muestran a través del sistema de notificaciones.
+-   **Carga Optimizada y Coherente:**
+    -   **Code Splitting:** Implementación de `React.lazy` y `Suspense` para dividir el código por rutas, asegurando que los usuarios solo descarguen el código necesario para la vista actual.
+    -   **Feedback de Carga Unificado:** Un único componente `<Loader>` personalizado se utiliza en toda la aplicación, tanto para la carga de páginas como para la obtención de datos, garantizando una experiencia de usuario (UX) consistente y sin saltos de layout.
+-   **Arquitectura Escalable y Probada:**
+    -   Estructura de carpetas organizada por **"features"** (auth, products, admin, etc.), donde cada feature contiene su propia lógica, componentes, hooks y páginas.
+    -   Suite de **tests unitarios y de integración** con Vitest y React Testing Library que garantiza la fiabilidad del código.  
 -   **Microinteracciones y Efectos Visuales:** Efectos de `:hover` en las tarjetas de producto que incluyen elevación, un resplandor de marca y un sutil zoom en la imagen para mejorar el feedback visual.
 -   **Optimización SEO:** Metadatos (`<title>`, `<meta name="description">`) dinámicos para cada página, renderizados de forma nativa con React 19.
--   **Seguridad de Claves:** Todas las claves de API y secretos están correctamente gestionados a través de variables de entorno (`.env`), y el historial de Git ha sido limpiado para eliminar cualquier exposición accidental.
+-   **Seguridad de Claves:** Todas las claves de API y secretos están correctamente gestionados a través de variables de entorno (`.env`).
 -   **Validación de Entorno Segura:** Uso de **Zod** para validar las variables de entorno (`.env`) al iniciar la aplicación, previniendo errores de configuración en tiempo de ejecución.
 
 ---
@@ -59,9 +63,9 @@ La aplicación simula un entorno de venta real con un catálogo de productos din
     -   **Variables CSS Globales (`:root`)** para una paleta de colores centralizada y mantenible.
 -   **Gestión de Formularios:**
     -   **React Hook Form**: Para un manejo de formularios performante, desacoplado y con control preciso sobre los re-renders.
-    -   **Zod**: Para la validación de esquemas tanto en formularios (login, creación/edición de productos) como en variables de entorno, garantizando la integridad de los datos.   
--   **Gestión de Estado:**
-    -   **Estado del Servidor:** **TanStack Query (React Query)** para un fetching de datos, cacheo y sincronización de estado asíncrono declarativo y eficiente.
+    -   **Zod**: Para la validación de esquemas tanto en formularios (login, creación/edición de productos) como en variables de entorno, garantizando la integridad de los datos.
+-   **Gestión de Estado:**   
+    -   **Estado del Servidor:** **TanStack Query (React Query)** para un fetching de datos, cacheo y sincronización de estado asíncrono declarativo y eficiente. La lógica de datos se centraliza en **custom hooks** (ej. `useProducts`) para máxima reutilización y limpieza del código.
     -   **Estado del Cliente (Global):** **Zustand** para una gestión de estado global unificada (autenticación, carrito, búsqueda). Este enfoque atómico previene re-renders innecesarios, optimiza el rendimiento y simplifica la arquitectura al eliminar la necesidad de `Providers` anidados. Incluye middleware `persist` para el carrito.
 -   **Iconografía:** **[React Icons](https://react-icons.github.io/react-icons/)**
 -   **Testing:**
