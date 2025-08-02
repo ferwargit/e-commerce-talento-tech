@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import ThemedSwal from "@/assets/ThemedSwal";
 import { toast } from "react-toastify"; 
+import { getFriendlyErrorMessage } from "@/utils/getFriendlyErrorMessage";
 import { useCarritoStore } from "@/features/cart/store/carritoStore"; 
 import { useAuthStore } from "@/features/auth/store/authStore";
 import { getProductById, deleteProduct } from "@/features/products/services/productService";
@@ -55,7 +56,11 @@ function ProductoDetalle() {
     mutationFn: deleteProduct,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
+      toast.success("Producto eliminado con éxito. Redirigiendo...");
       setTimeout(() => navegar("/admin"), 1500);
+    },
+    onError: (error) => {
+      toast.error(getFriendlyErrorMessage(error));
     },
   });
 
@@ -91,11 +96,7 @@ function ProductoDetalle() {
       cancelButtonColor: "#4b5563",
     }).then((result) => {
       if (result.isConfirmed) {
-        toast.promise(deleteMutation.mutateAsync(id), {
-          pending: "Eliminando producto...",
-          success: "Producto eliminado con éxito. Redirigiendo...",
-          error: "Error al eliminar el producto.",
-        });
+        deleteMutation.mutate(id);
       }
     });
   };
