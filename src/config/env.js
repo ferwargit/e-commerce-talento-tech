@@ -13,6 +13,8 @@ const envSchema = z.object({
     .string()
     .email("VITE_FIREBASE_ADMIN_EMAIL must be a valid email")
     .min(1, "VITE_FIREBASE_ADMIN_EMAIL is required"),
+  // Añadimos la validación para la URL de nuestra futura API
+  VITE_API_BASE_URL: z.string().url("VITE_API_BASE_URL must be a valid URL").min(1),
 });
 
 // 2. Validamos las variables de entorno de Vite contra nuestro esquema.

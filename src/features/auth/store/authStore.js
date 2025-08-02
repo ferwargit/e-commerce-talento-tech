@@ -15,10 +15,10 @@ export const useAuthStore = create((set) => ({
 // --- Listener de Firebase ---
 // Esto se ejecuta una vez cuando la app carga y se mantiene escuchando.
 // Es la forma moderna de manejar el estado de autenticación en toda la app.
-onEstadoAuth((firebaseUser) => {
-  if (firebaseUser) {
-    const isAdmin = firebaseUser.email === env.VITE_FIREBASE_ADMIN_EMAIL;
-    useAuthStore.setState({ user: firebaseUser.email, admin: isAdmin ? firebaseUser.email : null, loading: false });
+onEstadoAuth((user) => {
+  if (user) {
+    const isAdmin = user.email === env.VITE_FIREBASE_ADMIN_EMAIL;
+    useAuthStore.setState({ user: user.email, admin: isAdmin ? user.email : null, loading: false });
   } else {
     useAuthStore.setState({ user: null, admin: null, loading: false });
   }

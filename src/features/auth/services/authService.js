@@ -37,7 +37,19 @@ export async function loginEmailPass(email, password) {
 }
 
 export function onEstadoAuth(callback) {
-  return onAuthStateChanged(auth, callback);
+  return onAuthStateChanged(auth, (firebaseUser) => {
+    if (firebaseUser) {
+      // Creamos nuestro propio objeto de usuario, agnóstico del backend.
+      // El resto de la app solo conocerá este formato.
+      const user = {
+        email: firebaseUser.email,
+        uid: firebaseUser.uid,
+      };
+      callback(user);
+    } else {
+      callback(null);
+    }
+  });
 }
 
 export function cerrarSesion() {
