@@ -6,9 +6,11 @@ export const useAuthStore = create((set) => ({
   user: null,
   admin: null,
   loading: true, // Inicia en true hasta que Firebase verifique el estado
-  logout: () => {
+  logout: () => { 
+    // Actualización optimista: cambiamos el estado local inmediatamente para una UX instantánea.
+    set({ user: null, admin: null });
     cerrarSesion();
-    // El listener de onEstadoAuth se encargará de actualizar el estado a null
+    // El listener de onEstadoAuth confirmará este estado cuando Firebase responda.
   },
 }));
 

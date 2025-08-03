@@ -1,10 +1,18 @@
-import { useState } from "react";
-import { Link, NavLink, useLocation, useNavigate, useSearchParams } from "react-router-dom";
+// src/layouts/Nav.jsx
+import { useState, useEffect, useRef } from "react";
+import {
+  Link,
+  NavLink,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import { useCarritoStore } from "@/features/cart/store/carritoStore";
 import { useAuthStore } from "@/features/auth/store/authStore";
 import { PATHS } from "@/constants/paths";
 import RoleBasedGuard from "@/components/auth/RoleBasedGuard";
 import { StyledInput } from "@/components/ui/StyledFormElements";
+import { useDebounce } from "@/hooks/useDebounce";
 
 import { FaShoppingCart, FaUserCircle } from "react-icons/fa";
 import { RiAdminFill, RiLoginBoxLine, RiAddBoxFill } from "react-icons/ri";
@@ -16,8 +24,13 @@ import {
 } from "react-icons/bs";
 
 // --- Sub-componentes para los enlaces de la Navegación ---
-// Se definen fuera del componente principal para evitar que se re-creen en cada render.
-const AdminNavLinks = ({ closeMenu, handleLogout, terminoBusqueda, handleBusquedaChange, activeLinkStyle }) => (
+const AdminNavLinks = ({
+  closeMenu,
+  handleLogout,
+  terminoBusqueda,
+  handleBusquedaChange,
+  activeLinkStyle,
+}) => (
   <>
     <ul className="navbar-nav me-auto mb-2 mb-lg-0">
       <li className="nav-item">
@@ -54,7 +67,7 @@ const AdminNavLinks = ({ closeMenu, handleLogout, terminoBusqueda, handleBusqued
           placeholder="Buscar productos..."
           value={terminoBusqueda}
           onChange={handleBusquedaChange}
-          style={{ width: '240px' }}
+          style={{ width: "240px" }}
         />
       </form>
       <div className="nav-item dropdown">
@@ -92,7 +105,11 @@ const AdminNavLinks = ({ closeMenu, handleLogout, terminoBusqueda, handleBusqued
             <hr className="dropdown-divider" />
           </li>
           <li>
-            <Link className="dropdown-item" to={PATHS.HOME} onClick={handleLogout}>
+            <Link
+              className="dropdown-item"
+              to={PATHS.HOME}
+              onClick={handleLogout}
+            >
               <RiLoginBoxLine className="me-1" />
               Cerrar Sesión
             </Link>
@@ -103,7 +120,15 @@ const AdminNavLinks = ({ closeMenu, handleLogout, terminoBusqueda, handleBusqued
   </>
 );
 
-const ClientNavLinks = ({ user, totalItems, closeMenu, handleLogout, terminoBusqueda, handleBusquedaChange, activeLinkStyle }) => (
+const ClientNavLinks = ({
+  user,
+  totalItems,
+  closeMenu,
+  handleLogout,
+  terminoBusqueda,
+  handleBusquedaChange,
+  activeLinkStyle,
+}) => (
   <>
     <ul className="navbar-nav me-auto mb-2 mb-lg-0">
       <li className="nav-item">
@@ -151,10 +176,7 @@ const ClientNavLinks = ({ user, totalItems, closeMenu, handleLogout, terminoBusq
         </NavLink>
       </li>
     </ul>
-    <hr
-      className="d-lg-none"
-      style={{ borderColor: "var(--color-border)" }}
-    />
+    <hr className="d-lg-none" style={{ borderColor: "var(--color-border)" }} />
     <div className="d-flex flex-column flex-lg-row align-items-lg-center gap-3 mt-3 mt-lg-0">
       <form
         className="d-flex w-100 w-lg-auto"
@@ -166,7 +188,7 @@ const ClientNavLinks = ({ user, totalItems, closeMenu, handleLogout, terminoBusq
           placeholder="Buscar productos..."
           value={terminoBusqueda}
           onChange={handleBusquedaChange}
-          style={{ width: '240px' }}
+          style={{ width: "240px" }}
         />
       </form>
       <ul className="navbar-nav d-flex flex-row justify-content-between w-100 w-lg-auto pt-3 pt-lg-0">
@@ -191,7 +213,11 @@ const ClientNavLinks = ({ user, totalItems, closeMenu, handleLogout, terminoBusq
             </a>
             <ul className="dropdown-menu dropdown-menu-dark dropdown-menu-end">
               <li>
-                <Link className="dropdown-item" to={PATHS.HOME} onClick={handleLogout}>
+                <Link
+                  className="dropdown-item"
+                  to={PATHS.HOME}
+                  onClick={handleLogout}
+                >
                   <RiLoginBoxLine className="me-1" />
                   Cerrar Sesión
                 </Link>
@@ -212,11 +238,12 @@ const ClientNavLinks = ({ user, totalItems, closeMenu, handleLogout, terminoBusq
 );
 
 function Nav() {
-  const productosCarrito = useCarritoStore(state => state.productosCarrito);
-  // El estado de la búsqueda ahora vive en la URL.
+  const productosCarrito = useCarritoStore((state) => state.productosCarrito);
   const [searchParams, setSearchParams] = useSearchParams();
-  const terminoBusqueda = searchParams.get("q") || "";
-  // Seleccionamos los valores y acciones del store de autenticación
+  const searchTermFromUrl = searchParams.get("q") || "";
+  const [inputValue, setInputValue] = useState(searchTermFromUrl);
+  const debouncedInputValue = useDebounce(inputValue, 300);
+
   const user = useAuthStore((state) => state.user);
   const admin = useAuthStore((state) => state.admin);
   const logout = useAuthStore((state) => state.logout);
@@ -224,7 +251,11 @@ function Nav() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // --- ESTADO PARA CONTROLAR EL MENÚ MÓVIL ---
+  // Ref para evitar navegación automática cuando es causada por clic en enlaces
+  const isNavigatingToDetail = useRef(false);
+  // Ref para trackear si el usuario está escribiendo activamente
+  const isUserTyping = useRef(false);
+
   const [isNavCollapsed, setIsNavCollapsed] = useState(true);
   const handleNavCollapse = () => setIsNavCollapsed(!isNavCollapsed);
   const closeMenu = () => setIsNavCollapsed(true);
@@ -238,19 +269,89 @@ function Nav() {
     color: "var(--color-primary)",
   };
 
-  const handleBusquedaChange = (e) => {
-    const nuevoTermino = e.target.value;
-    // Si el usuario no está en la página de productos, lo navegamos allí con el término de búsqueda.
-    if (location.pathname !== PATHS.PRODUCTS) {
-      navigate(`${PATHS.PRODUCTS}?q=${encodeURIComponent(nuevoTermino)}`);
-    } else {
-      // Si ya está en la página de productos, solo actualizamos los parámetros de la URL.
-      if (nuevoTermino) {
-        setSearchParams({ q: nuevoTermino }, { replace: true });
-      } else {
-        setSearchParams({}, { replace: true });
-      }
+  // Sincronizar el input con la URL SOLO cuando cambia la URL y hay un término de búsqueda
+  // O cuando estamos en la página de productos
+  useEffect(() => {
+    if (searchTermFromUrl && searchTermFromUrl !== inputValue) {
+      isUserTyping.current = false; // No es el usuario escribiendo, es sincronización
+      setInputValue(searchTermFromUrl);
+    } else if (
+      !searchTermFromUrl &&
+      location.pathname === PATHS.PRODUCTS &&
+      inputValue
+    ) {
+      // Solo limpiar el input si estamos en productos y no hay término de búsqueda en la URL
+      isUserTyping.current = false;
+      setInputValue("");
     }
+  }, [searchTermFromUrl, location.pathname]);
+
+  // Detectar navegación a páginas de detalle para pausar búsqueda automática
+  useEffect(() => {
+    const isProductDetail = location.pathname.startsWith(PATHS.PRODUCTS + "/");
+    if (isProductDetail && inputValue.trim()) {
+      isNavigatingToDetail.current = true;
+      // Resetear después de un breve delay
+      setTimeout(() => {
+        isNavigatingToDetail.current = false;
+      }, 100);
+    }
+  }, [location.pathname, inputValue]);
+
+  // Búsqueda automática global con debounce
+  // useEffect(() => {
+  //   const newQuery = debouncedInputValue.trim();
+  //   const currentQuery = searchTermFromUrl;
+
+  //   // No hacer nada si no hay cambio real, si estamos navegando a detalle, o si no es el usuario escribiendo
+  //   if (newQuery === currentQuery || isNavigatingToDetail.current || !isUserTyping.current) {
+  //     return;
+  //   }
+
+  //   if (newQuery) {
+  //     // BÚSQUEDA GLOBAL: Navegar a productos con búsqueda desde cualquier página
+  //     navigate(`${PATHS.PRODUCTS}?q=${encodeURIComponent(newQuery)}`);
+  //   } else if (location.pathname === PATHS.PRODUCTS && searchTermFromUrl) {
+  //     // Solo limpiar si estamos en productos y había una búsqueda
+  //     const newSearchParams = new URLSearchParams(searchParams);
+  //     newSearchParams.delete('q');
+  //     setSearchParams(newSearchParams, { replace: true });
+  //   }
+  // }, [debouncedInputValue, searchTermFromUrl, navigate, location.pathname, setSearchParams, searchParams]);
+
+  useEffect(() => {
+    const newQuery = debouncedInputValue.trim();
+    const currentQuery = searchTermFromUrl;
+
+    if (
+      newQuery === currentQuery ||
+      isNavigatingToDetail.current ||
+      !isUserTyping.current
+    ) {
+      return;
+    }
+
+    if (newQuery) {
+      navigate(`${PATHS.PRODUCTS}?q=${encodeURIComponent(newQuery)}`);
+      isUserTyping.current = false; // <-- AÑADIR ESTA LÍNEA
+    } else if (location.pathname === PATHS.PRODUCTS && searchTermFromUrl) {
+      const newSearchParams = new URLSearchParams(searchParams);
+      newSearchParams.delete("q");
+      setSearchParams(newSearchParams, { replace: true });
+      isUserTyping.current = false; // <-- AÑADIR ESTA LÍNEA
+    }
+  }, [
+    debouncedInputValue,
+    searchTermFromUrl,
+    navigate,
+    location.pathname,
+    setSearchParams,
+    searchParams,
+  ]);
+
+  const handleBusquedaChange = (e) => {
+    isUserTyping.current = true; // Marcar que el usuario está escribiendo
+    setInputValue(e.target.value);
   };
 
   const handleLogout = () => {
@@ -264,7 +365,7 @@ function Nav() {
       totalItems={totalItems}
       closeMenu={closeMenu}
       handleLogout={handleLogout}
-      terminoBusqueda={terminoBusqueda}
+      terminoBusqueda={inputValue}
       handleBusquedaChange={handleBusquedaChange}
       activeLinkStyle={activeLinkStyle}
     />
@@ -274,7 +375,7 @@ function Nav() {
     <AdminNavLinks
       closeMenu={closeMenu}
       handleLogout={handleLogout}
-      terminoBusqueda={terminoBusqueda}
+      terminoBusqueda={inputValue}
       handleBusquedaChange={handleBusquedaChange}
       activeLinkStyle={activeLinkStyle}
     />
