@@ -15,16 +15,17 @@ export const useCarritoStore = create(
         const productoExistente = productosCarrito.find(p => p.id === producto.id);
 
         if (productoExistente) {
+          const nuevaCantidad = productoExistente.cantidad + producto.cantidad;
           // Si el producto ya existe, suma la nueva cantidad a la existente
           const productosActualizados = productosCarrito.map(p =>
-            p.id === producto.id ? { ...p, cantidad: p.cantidad + producto.cantidad } : p
+            p.id === producto.id ? { ...p, cantidad: nuevaCantidad } : p
           );
           set({ productosCarrito: productosActualizados });
-          toast.info(`Se agregaron ${producto.cantidad} unidad(es) de ${producto.name}`);
+          toast.info(`${producto.name} ahora tiene ${nuevaCantidad} unidades en el carrito.`);
         } else {
           // Si es un producto nuevo, lo añade al carrito con su cantidad inicial
           set({ productosCarrito: [...productosCarrito, producto] });
-          toast.success(`${producto.name} se agregó al carrito`);
+          toast.success(`${producto.name} (${producto.cantidad} ${producto.cantidad > 1 ? 'unidades' : 'unidad'}) se agregó al carrito.`);
         }
       },
 
