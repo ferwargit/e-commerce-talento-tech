@@ -298,27 +298,6 @@ function Nav() {
     }
   }, [location.pathname, inputValue]);
 
-  // Búsqueda automática global con debounce
-  // useEffect(() => {
-  //   const newQuery = debouncedInputValue.trim();
-  //   const currentQuery = searchTermFromUrl;
-
-  //   // No hacer nada si no hay cambio real, si estamos navegando a detalle, o si no es el usuario escribiendo
-  //   if (newQuery === currentQuery || isNavigatingToDetail.current || !isUserTyping.current) {
-  //     return;
-  //   }
-
-  //   if (newQuery) {
-  //     // BÚSQUEDA GLOBAL: Navegar a productos con búsqueda desde cualquier página
-  //     navigate(`${PATHS.PRODUCTS}?q=${encodeURIComponent(newQuery)}`);
-  //   } else if (location.pathname === PATHS.PRODUCTS && searchTermFromUrl) {
-  //     // Solo limpiar si estamos en productos y había una búsqueda
-  //     const newSearchParams = new URLSearchParams(searchParams);
-  //     newSearchParams.delete('q');
-  //     setSearchParams(newSearchParams, { replace: true });
-  //   }
-  // }, [debouncedInputValue, searchTermFromUrl, navigate, location.pathname, setSearchParams, searchParams]);
-
   useEffect(() => {
     const newQuery = debouncedInputValue.trim();
     const currentQuery = searchTermFromUrl;
