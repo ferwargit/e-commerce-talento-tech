@@ -1,18 +1,17 @@
 // src/layouts/Nav.jsx
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import {
   Link,
   NavLink,
   useLocation,
   useNavigate,
-  useSearchParams,
 } from "react-router-dom";
 import { useCarritoStore } from "@/features/cart/store/carritoStore";
 import { useAuthStore } from "@/features/auth/store/authStore";
 import { PATHS } from "@/constants/paths";
 import RoleBasedGuard from "@/components/auth/RoleBasedGuard";
 import { StyledInput } from "@/components/ui/StyledFormElements";
-import { useDebounce } from "@/hooks/useDebounce";
+import { useProductSearch } from "@/features/products/hooks/useProductSearch";
 
 import { FaShoppingCart, FaUserCircle } from "react-icons/fa";
 import { RiAdminFill, RiLoginBoxLine, RiAddBoxFill } from "react-icons/ri";
@@ -239,10 +238,7 @@ const ClientNavLinks = ({
 
 function Nav() {
   const productosCarrito = useCarritoStore((state) => state.productosCarrito);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const searchTermFromUrl = searchParams.get("q") || "";
-  const [inputValue, setInputValue] = useState(searchTermFromUrl);
-  const debouncedInputValue = useDebounce(inputValue, 300);
+  const { searchTerm, handleSearchChange } = useProductSearch();
 
   const user = useAuthStore((state) => state.user);
   const admin = useAuthStore((state) => state.admin);
@@ -250,11 +246,6 @@ function Nav() {
 
   const navigate = useNavigate();
   const location = useLocation();
-
-  // Ref para evitar navegación automática cuando es causada por clic en enlaces
-  const isNavigatingToDetail = useRef(false);
-  // Ref para trackear si el usuario está escribiendo activamente
-  const isUserTyping = useRef(false);
 
   const [isNavCollapsed, setIsNavCollapsed] = useState(true);
   const handleNavCollapse = () => setIsNavCollapsed(!isNavCollapsed);
@@ -269,70 +260,6 @@ function Nav() {
     color: "var(--color-primary)",
   };
 
-  // Sincronizar el input con la URL SOLO cuando cambia la URL y hay un término de búsqueda
-  // O cuando estamos en la página de productos
-  useEffect(() => {
-    if (searchTermFromUrl && searchTermFromUrl !== inputValue) {
-      isUserTyping.current = false; // No es el usuario escribiendo, es sincronización
-      setInputValue(searchTermFromUrl);
-    } else if (
-      !searchTermFromUrl &&
-      location.pathname === PATHS.PRODUCTS &&
-      inputValue
-    ) {
-      // Solo limpiar el input si estamos en productos y no hay término de búsqueda en la URL
-      isUserTyping.current = false;
-      setInputValue("");
-    }
-  }, [searchTermFromUrl, location.pathname]);
-
-  // Detectar navegación a páginas de detalle para pausar búsqueda automática
-  useEffect(() => {
-    const isProductDetail = location.pathname.startsWith(PATHS.PRODUCTS + "/");
-    if (isProductDetail && inputValue.trim()) {
-      isNavigatingToDetail.current = true;
-      // Resetear después de un breve delay
-      setTimeout(() => {
-        isNavigatingToDetail.current = false;
-      }, 100);
-    }
-  }, [location.pathname, inputValue]);
-
-  useEffect(() => {
-    const newQuery = debouncedInputValue.trim();
-    const currentQuery = searchTermFromUrl;
-
-    if (
-      newQuery === currentQuery ||
-      isNavigatingToDetail.current ||
-      !isUserTyping.current
-    ) {
-      return;
-    }
-
-    if (newQuery) {
-      navigate(`${PATHS.PRODUCTS}?q=${encodeURIComponent(newQuery)}`);
-      isUserTyping.current = false; // <-- AÑADIR ESTA LÍNEA
-    } else if (location.pathname === PATHS.PRODUCTS && searchTermFromUrl) {
-      const newSearchParams = new URLSearchParams(searchParams);
-      newSearchParams.delete("q");
-      setSearchParams(newSearchParams, { replace: true });
-      isUserTyping.current = false; // <-- AÑADIR ESTA LÍNEA
-    }
-  }, [
-    debouncedInputValue,
-    searchTermFromUrl,
-    navigate,
-    location.pathname,
-    setSearchParams,
-    searchParams,
-  ]);
-
-  const handleBusquedaChange = (e) => {
-    isUserTyping.current = true; // Marcar que el usuario está escribiendo
-    setInputValue(e.target.value);
-  };
-
   const handleLogout = () => {
     logout();
     closeMenu();
@@ -344,8 +271,8 @@ function Nav() {
       totalItems={totalItems}
       closeMenu={closeMenu}
       handleLogout={handleLogout}
-      terminoBusqueda={inputValue}
-      handleBusquedaChange={handleBusquedaChange}
+      terminoBusqueda={searchTerm}
+      handleBusquedaChange={handleSearchChange}
       activeLinkStyle={activeLinkStyle}
     />
   );
@@ -354,8 +281,8 @@ function Nav() {
     <AdminNavLinks
       closeMenu={closeMenu}
       handleLogout={handleLogout}
-      terminoBusqueda={inputValue}
-      handleBusquedaChange={handleBusquedaChange}
+      terminoBusqueda={searchTerm}
+      handleBusquedaChange={handleSearchChange}
       activeLinkStyle={activeLinkStyle}
     />
   );
