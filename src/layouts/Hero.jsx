@@ -30,7 +30,7 @@ const HeroWrapper = styled.section`
 
   background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
     // url("${heroImageBase64}");
-    url("/public/images/fondo-hero.jpg"); /* Usamos una imagen local optimizada */
+    url("/images/fondo-hero.jpg"); /* Usamos una imagen local optimizada */
 
   background-size: cover;
   background-position: center;
