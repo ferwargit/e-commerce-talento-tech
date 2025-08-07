@@ -1,71 +1,22 @@
-// src/features/admin/components/FormularioEdicion.jsx
-// Este componente muestra un formulario para editar un producto existente.
-import { useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getProductById, updateProduct } from "@/features/products/services/productService";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { StyledLinkButton } from "@/components/ui/Button";
-import Loader from "@/components/ui/Loader";
-import ProductForm from "./ProductForm";
-import { PATHS } from "@/constants/paths";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { productSchema } from "@/features/products/schemas/productSchema";
-import { getFriendlyErrorMessage } from "@/utils/getFriendlyErrorMessage";
+import { useParams } from 'react-router-dom';
+import { useProductForm } from '@/features/admin/hooks/useProductForm';
+import ProductForm from '../components/ProductForm';
+import Loader from '@/components/ui/Loader';
+import { StyledLinkButton } from '@/components/ui/Button';
+import { PATHS } from '@/constants/paths';
 
 function FormularioEdicion() {
   const { id } = useParams();
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
-
-  const { data: initialProductData, isLoading: cargando, error } = useQuery({
-    queryKey: ["product", id],
-    queryFn: () => getProductById(id),
-    enabled: !!id,
-  });
-
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
-    setError,
-    reset,
-  } = useForm({
-    resolver: zodResolver(productSchema),
-  });
+    errors,
+    isSubmitting,
+    isLoading,
+    error,
+  } = useProductForm({ id });
 
-  useEffect(() => {
-    if (initialProductData) {
-      reset(initialProductData);
-    }
-  }, [initialProductData, reset]);
-
-  const updateMutation = useMutation({
-    mutationKey: ['updateProduct', id],
-    mutationFn: (updatedProduct) => updateProduct(updatedProduct.id, updatedProduct),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["products"] });
-      queryClient.invalidateQueries({ queryKey: ["product", id] });
-      toast.success("¡Producto actualizado con éxito!");
-      navigate(`${PATHS.PRODUCTS}/${id}`);
-    },
-    onError: (error) => {
-      const message = getFriendlyErrorMessage(error);
-      setError("root.serverError", { type: "custom", message });
-      toast.error(message);
-    }
-  });
-
-  const onSubmit = (data) => {
-    const productoAActualizar = { ...data, id };
-    updateMutation.mutate(productoAActualizar);
-  };
-
-  
-
-  if (cargando) {
+  if (isLoading) {
     return <Loader text="Cargando datos del producto..." />;
   }
 
@@ -85,7 +36,7 @@ function FormularioEdicion() {
 
   return (
     <ProductForm
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit}
       register={register}
       errors={errors}
       isSubmitting={isSubmitting}
