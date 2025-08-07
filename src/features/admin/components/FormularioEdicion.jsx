@@ -1,7 +1,6 @@
 // src/features/admin/components/FormularioEdicion.jsx
 // Este componente muestra un formulario para editar un producto existente.
 import { useEffect } from "react";
-import { useAuthStore } from "@/features/auth/store/authStore";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getProductById, updateProduct } from "@/features/products/services/productService";
@@ -20,8 +19,6 @@ function FormularioEdicion() {
   const { id } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const admin = useAuthStore((state) => state.admin);
-  const authLoading = useAuthStore((state) => state.loading);
 
   const { data: initialProductData, isLoading: cargando, error } = useQuery({
     queryKey: ["product", id],
@@ -66,13 +63,7 @@ function FormularioEdicion() {
     updateMutation.mutate(productoAActualizar);
   };
 
-  if (authLoading) {
-    return <Loader text="Verificando autenticación..." />;
-  }
-
-  if (!admin && !authLoading) {
-    return <Navigate to="/login" replace />;
-  }
+  
 
   if (cargando) {
     return <Loader text="Cargando datos del producto..." />;

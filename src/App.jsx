@@ -1,6 +1,6 @@
 import { Suspense, lazy } from "react"; // Eliminamos useState
 import "./App.css";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Nav from "@/layouts/Nav";
 import Footer from "@/layouts/Footer";
 import Loader from "@/components/ui/Loader";
@@ -8,6 +8,7 @@ import ScrollToTop from "@/components/ui/ScrollToTop";
 import { ToastContainer } from "react-toastify";
 import { PATHS } from "@/constants/paths";
 import "react-toastify/dist/ReactToastify.css";
+import RoleBasedGuard from "@/components/auth/RoleBasedGuard";
 
 // --- Lazy Imports para Code Splitting ---
 const Home = lazy(() => import("@/layouts/Home"));
@@ -58,14 +59,38 @@ function AppContent() {
             <Route path={PATHS.ABOUT} element={<About />} />
             <Route path={PATHS.CONTACT} element={<Contacto />} />
             <Route path={PATHS.PRODUCT_DETAIL} element={<ProductoDetalle />} />
-            <Route path={PATHS.ADMIN_DASHBOARD} element={<AdminProductos />} />
+            <Route
+              path={PATHS.ADMIN_DASHBOARD}
+              element={
+                <RoleBasedGuard
+                  allowedRoles={["admin"]}
+                  fallback={<Navigate to="/login" replace />}
+                >
+                  <AdminProductos />
+                </RoleBasedGuard>
+              }
+            />
             <Route
               path={PATHS.ADMIN_ADD_PRODUCT}
-              element={<FormularioProducto />}
+              element={
+                <RoleBasedGuard
+                  allowedRoles={["admin"]}
+                  fallback={<Navigate to="/login" replace />}
+                >
+                  <FormularioProducto />
+                </RoleBasedGuard>
+              }
             />
             <Route
               path={PATHS.ADMIN_EDIT_PRODUCT}
-              element={<FormularioEdicion />}
+              element={
+                <RoleBasedGuard
+                  allowedRoles={["admin"]}
+                  fallback={<Navigate to="/login" replace />}
+                >
+                  <FormularioEdicion />
+                </RoleBasedGuard>
+              }
             />
           </Routes>
         </Suspense>

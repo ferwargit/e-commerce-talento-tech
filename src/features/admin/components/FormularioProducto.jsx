@@ -1,9 +1,8 @@
 // src/features/admin/components/FormularioProducto.jsx
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import Loader from "@/components/ui/Loader";
-import { useAuthStore } from "@/features/auth/store/authStore";
+
 import { toast } from "react-toastify";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { createProduct } from "@/features/products/services/productService";
 import ProductForm from "./ProductForm";
 import { PATHS } from "@/constants/paths";
@@ -14,8 +13,6 @@ import { getFriendlyErrorMessage } from "@/utils/getFriendlyErrorMessage";
 
 function FormularioProducto() {
   const queryClient = useQueryClient();
-  const admin = useAuthStore((state) => state.admin);
-  const authLoading = useAuthStore((state) => state.loading);
   const navigate = useNavigate();
 
   const {
@@ -46,13 +43,7 @@ function FormularioProducto() {
     createMutation.mutate(data);
   };
 
-  if (authLoading) {
-    return <Loader text="Verificando autenticación..." />;
-  }
-
-  if (!admin && !authLoading) {
-    return <Navigate to="/login" replace />;
-  }
+  
 
   return (
     <ProductForm
