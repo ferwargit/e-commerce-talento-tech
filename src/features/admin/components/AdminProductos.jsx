@@ -10,18 +10,19 @@ import ThemedSwal from "@/assets/ThemedSwal";
 import Loader from "@/components/ui/Loader";
 import Paginador from "@/components/ui/Paginador";
 import { useProducts } from "@/features/products/hooks/useProducts";
+import { usePagination } from "@/hooks/usePagination";
 import { formatPrice } from "@/utils/formatters";
 
 function AdminProductos() {
   const queryClient = useQueryClient();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [productsPerPage] = useState(10);
   const { productos, productosFiltrados, isLoading: cargando, error } =
     useProducts();
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [productosFiltrados]);
+  const {
+    currentPage,
+    totalPages,
+    currentData: currentProducts,
+    handlePageChange,
+  } = usePagination(productosFiltrados, 10);
 
   const deleteMutation = useMutation({
     mutationFn: deleteProduct,
@@ -48,20 +49,7 @@ function AdminProductos() {
     });
   };
 
-  const indexOfLastProduct = currentPage * productsPerPage;
-  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = productosFiltrados.slice(
-    indexOfFirstProduct,
-    indexOfLastProduct
-  );
-  const totalPages = Math.ceil(
-    productosFiltrados.length / productsPerPage
-  );
-
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-    window.scrollTo(0, 0);
-  };
+  
 
   if (cargando) {
     return <Loader text="Cargando gestión de productos..." />;

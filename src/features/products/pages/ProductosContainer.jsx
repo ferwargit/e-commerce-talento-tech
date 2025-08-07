@@ -6,16 +6,16 @@ import Loader from "@/components/ui/Loader";
 import Card from "@/features/products/components/Card";
 import Paginador from "@/components/ui/Paginador";
 import { useProducts } from "@/features/products/hooks/useProducts";
+import { usePagination } from "@/hooks/usePagination";
 
 function ProductosContainer() {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [productsPerPage] = useState(6);
-  // Usamos nuestro nuevo custom hook. ¡Mucho más limpio!
   const { productosFiltrados, isLoading: cargando, error } = useProducts();
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [productosFiltrados]); // Se resetea si la búsqueda cambia
+  const {
+    currentPage,
+    totalPages,
+    currentData: currentProducts,
+    handlePageChange,
+  } = usePagination(productosFiltrados, 6);
 
   if (cargando) {
     return <Loader text="Cargando productos..." />;
@@ -25,23 +25,7 @@ function ProductosContainer() {
     return <p className="container text-center mt-5 text-danger">{error.message}</p>;
   }
 
-  // --- LÓGICA PARA CALCULAR QUÉ PRODUCTOS MOSTRAR ---
-  const indexOfLastProduct = currentPage * productsPerPage;
-  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = productosFiltrados.slice(
-    indexOfFirstProduct,
-    indexOfLastProduct
-  );
-
-  const totalPages = Math.ceil(
-    productosFiltrados.length / productsPerPage
-  );
-
-  // Función para cambiar de página
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-    window.scrollTo(0, 0); // Opcional: lleva al usuario al tope de la página
-  };
+  
 
   return (
     <>

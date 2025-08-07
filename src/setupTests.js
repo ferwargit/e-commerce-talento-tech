@@ -26,3 +26,9 @@ Object.defineProperty(window, 'matchMedia', {
     dispatchEvent: vi.fn(),
   })),
 });
+
+// Mock para window.scrollTo, que tampoco está en JSDOM.
+Object.defineProperty(window, 'scrollTo', {
+  writable: true,
+  value: vi.fn(),
+});
