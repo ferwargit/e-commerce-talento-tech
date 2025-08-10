@@ -45,7 +45,7 @@ export function useProductForm({ id } = {}) {
     mutationFn: (productData) => {
       return isEditMode ? updateProduct(id, productData) : createProduct(productData);
     },
-    onSuccess: (_variables) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products'] });
       if (isEditMode) {
         queryClient.invalidateQueries({ queryKey: ['product', id] });

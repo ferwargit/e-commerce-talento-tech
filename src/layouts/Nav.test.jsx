@@ -52,6 +52,7 @@ vi.mock("@/features/products/hooks/useProductSearch", () => ({
         setSearchTerm(urlTerm);
         globalSearchTerm = urlTerm;
       }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchParams]);
 
     const handleSearchChange = (e) => {

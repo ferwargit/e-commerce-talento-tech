@@ -66,6 +66,7 @@ export function useProductSearch() {
         lastSyncedUrlTerm.current = '';
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTermFromUrl, isProductsPage, isInitialized]);
 
   // Control de navegación a páginas de detalle de producto
