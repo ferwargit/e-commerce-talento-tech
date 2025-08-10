@@ -1,7 +1,6 @@
 // src/features/products/pages/ProductosContainer.jsx
 // Este componente muestra una lista de productos con paginación y búsqueda.
 import SEO from "@/components/ui/SEO";
-import { useState, useEffect } from "react";
 import Loader from "@/components/ui/Loader";
 import Card from "@/features/products/components/Card";
 import Paginador from "@/components/ui/Paginador";
