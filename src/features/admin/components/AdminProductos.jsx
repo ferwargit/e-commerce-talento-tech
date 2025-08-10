@@ -1,5 +1,4 @@
 // src/features/admin/components/AdminProductos.jsx
-import { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteProduct } from "@/features/products/services/productService";
 import { StyledLinkButton, StyledButton } from "@/components/ui/Button";

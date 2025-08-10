@@ -4,7 +4,7 @@ import {
   Link,
   NavLink,
   useLocation,
-  useNavigate,
+  // useNavigate,
 } from "react-router-dom";
 import { useCarritoStore } from "@/features/cart/store/carritoStore";
 import { useAuthStore } from "@/features/auth/store/authStore";
@@ -241,10 +241,10 @@ function Nav() {
   const { searchTerm, handleSearchChange } = useProductSearch();
 
   const user = useAuthStore((state) => state.user);
-  const admin = useAuthStore((state) => state.admin);
+  // const admin = useAuthStore((state) => state.admin);
   const logout = useAuthStore((state) => state.logout);
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const location = useLocation();
 
   const [isNavCollapsed, setIsNavCollapsed] = useState(true);

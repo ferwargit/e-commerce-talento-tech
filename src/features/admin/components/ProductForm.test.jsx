@@ -1,6 +1,6 @@
 // src/features/admin/components/ProductForm.test.jsx
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { vi } from 'vitest';
 import ProductForm from './ProductForm';
 
 describe('ProductForm', () => {

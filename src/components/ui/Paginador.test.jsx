@@ -1,7 +1,7 @@
 // src/components/ui/Paginador.test.jsx
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, beforeEach, it, expect, vi } from 'vitest';
 import Paginador from './Paginador';
 
 describe('Paginador Component', () => {

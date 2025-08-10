@@ -1,6 +1,6 @@
 
 import { useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -45,7 +45,7 @@ export function useProductForm({ id } = {}) {
     mutationFn: (productData) => {
       return isEditMode ? updateProduct(id, productData) : createProduct(productData);
     },
-    onSuccess: (data, variables) => {
+    onSuccess: (_variables) => {
       queryClient.invalidateQueries({ queryKey: ['products'] });
       if (isEditMode) {
         queryClient.invalidateQueries({ queryKey: ['product', id] });

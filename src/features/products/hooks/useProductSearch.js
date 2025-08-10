@@ -1,5 +1,4 @@
-
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useDebounce } from '@/hooks/useDebounce';
 import { PATHS } from '@/constants/paths';
@@ -7,85 +6,132 @@ import { PATHS } from '@/constants/paths';
 /**
  * Hook personalizado para manejar la lógica de búsqueda de productos en la barra de navegación.
  * Sincroniza el input de búsqueda con los parámetros de la URL y maneja el debounce.
+ * 
+ * Características:
+ * - Sincronización bidireccional entre input y URL
+ * - Debounce para evitar navegaciones excesivas
+ * - Control de flujo para evitar loops infinitos
+ * - Manejo de navegación a páginas de detalle
  */
 export function useProductSearch() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const searchTermFromUrl = searchParams.get('q') || '';
-  const [inputValue, setInputValue] = useState(searchTermFromUrl);
-  const debouncedInputValue = useDebounce(inputValue, 300);
-
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Ref para evitar navegación automática cuando es causada por clic en enlaces
+  // Estados separados para mejor control
+  const [inputValue, setInputValue] = useState('');
+  const [isInitialized, setIsInitialized] = useState(false);
+  
+  // Valores derivados memoizados para optimización
+  const searchTermFromUrl = useMemo(() => searchParams.get('q') || '', [searchParams]);
+  const debouncedInputValue = useDebounce(inputValue, 300);
+  const isProductsPage = useMemo(() => location.pathname === PATHS.PRODUCTS, [location.pathname]);
+  const isProductDetail = useMemo(() => 
+    location.pathname.startsWith(PATHS.PRODUCTS + '/'), 
+    [location.pathname]
+  );
+
+  // Referencias para control de flujo y estado interno
   const isNavigatingToDetail = useRef(false);
-  // Ref para trackear si el usuario está escribiendo activamente
   const isUserTyping = useRef(false);
+  const lastSyncedUrlTerm = useRef('');
 
-  // Sincronizar el input con la URL SOLO cuando cambia la URL y hay un término de búsqueda
-  // O cuando estamos en la página de productos
+  // Inicialización única del hook al montar
   useEffect(() => {
-    if (searchTermFromUrl && searchTermFromUrl !== inputValue) {
-      isUserTyping.current = false; // No es el usuario escribiendo, es sincronización
+    if (!isInitialized) {
       setInputValue(searchTermFromUrl);
-    } else if (
-      !searchTermFromUrl &&
-      location.pathname === PATHS.PRODUCTS &&
-      inputValue
-    ) {
-      // Solo limpiar el input si estamos en productos y no hay término de búsqueda en la URL
-      isUserTyping.current = false;
-      setInputValue('');
+      lastSyncedUrlTerm.current = searchTermFromUrl;
+      setIsInitialized(true);
     }
-  }, [searchTermFromUrl, location.pathname]);
+  }, [searchTermFromUrl, isInitialized]);
 
-  // Detectar navegación a páginas de detalle para pausar búsqueda automática
+  // Sincronización con cambios en URL (navegación externa o back/forward)
   useEffect(() => {
-    const isProductDetail = location.pathname.startsWith(PATHS.PRODUCTS + '/');
+    // No sincronizar hasta que el hook esté inicializado
+    if (!isInitialized) return;
+
+    // Solo sincronizar si NO hay interacción del usuario activa
+    if (isUserTyping.current) return;
+
+    const shouldSync = searchTermFromUrl !== lastSyncedUrlTerm.current;
+    
+    if (shouldSync) {
+      if (searchTermFromUrl) {
+        // Hay un término en la URL, actualizar el input
+        setInputValue(searchTermFromUrl);
+        lastSyncedUrlTerm.current = searchTermFromUrl;
+      } else if (isProductsPage && inputValue && lastSyncedUrlTerm.current) {
+        // No hay término en URL pero estamos en productos y hay texto, limpiar
+        setInputValue('');
+        lastSyncedUrlTerm.current = '';
+      }
+    }
+  }, [searchTermFromUrl, isProductsPage, isInitialized]);
+
+  // Control de navegación a páginas de detalle de producto
+  useEffect(() => {
     if (isProductDetail && inputValue.trim()) {
+      // Pausar búsqueda automática temporalmente al navegar a detalle
       isNavigatingToDetail.current = true;
-      // Resetear después de un breve delay
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         isNavigatingToDetail.current = false;
       }, 100);
+      
+      // Cleanup del timer
+      return () => clearTimeout(timer);
     }
-  }, [location.pathname, inputValue]);
+  }, [isProductDetail, inputValue]);
 
-  // Efecto principal para disparar la búsqueda debounced
+  // Efecto principal de búsqueda con debounce
   useEffect(() => {
-    const newQuery = debouncedInputValue.trim();
-    const currentQuery = searchTermFromUrl;
+    // No ejecutar si no está inicializado o el usuario no está escribiendo
+    if (!isInitialized || !isUserTyping.current) return;
 
-    if (
-      newQuery === currentQuery ||
-      isNavigatingToDetail.current ||
-      !isUserTyping.current
-    ) {
+    const trimmedQuery = debouncedInputValue.trim();
+    const currentUrlQuery = searchTermFromUrl;
+
+    // Evitar navegación innecesaria si el valor es igual al actual o estamos navegando a detalle
+    if (trimmedQuery === currentUrlQuery || isNavigatingToDetail.current) {
+      // Resetear flag SOLO si no vamos a navegar
+      isUserTyping.current = false;
       return;
     }
 
-    if (newQuery) {
-      navigate(`${PATHS.PRODUCTS}?q=${encodeURIComponent(newQuery)}`);
-      isUserTyping.current = false; // Restablecer después de la navegación
-    } else if (location.pathname === PATHS.PRODUCTS && searchTermFromUrl) {
-      const newSearchParams = new URLSearchParams(searchParams);
-      newSearchParams.delete('q');
-      setSearchParams(newSearchParams, { replace: true });
-      isUserTyping.current = false; // Restablecer después de la navegación
+    // Ejecutar la navegación correspondiente
+    if (trimmedQuery) {
+      // Hay texto de búsqueda, navegar a productos con query
+      navigate(`${PATHS.PRODUCTS}?q=${encodeURIComponent(trimmedQuery)}`);
+      lastSyncedUrlTerm.current = trimmedQuery;
+    } else if (isProductsPage) {
+      // CORREGIDO: Input vacío en página de productos, eliminar parámetro de búsqueda
+      // Removimos la condición && currentUrlQuery que impedía la limpieza
+      const newParams = new URLSearchParams(searchParams);
+      newParams.delete('q');
+      setSearchParams(newParams, { replace: true });
+      lastSyncedUrlTerm.current = '';
     }
+
+    // Resetear flag de control después de la navegación exitosa
+    // Usar setTimeout para permitir que el usuario siga escribiendo sin interrupciones
+    setTimeout(() => {
+      isUserTyping.current = false;
+    }, 100);
   }, [
     debouncedInputValue,
     searchTermFromUrl,
+    isProductsPage,
     navigate,
-    location.pathname,
     setSearchParams,
     searchParams,
+    isInitialized,
   ]);
 
-  const handleSearchChange = (e) => {
-    isUserTyping.current = true; // Marcar que el usuario está escribiendo
-    setInputValue(e.target.value);
-  };
+  // Handler optimizado para cambios en el input
+  const handleSearchChange = useCallback((e) => {
+    const newValue = e.target.value;
+    isUserTyping.current = true;
+    setInputValue(newValue);
+  }, []);
 
   return {
     searchTerm: inputValue,
