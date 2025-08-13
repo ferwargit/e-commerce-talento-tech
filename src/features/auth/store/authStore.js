@@ -18,10 +18,16 @@ export const useAuthStore = create((set) => ({
 // Esto se ejecuta una vez cuando la app carga y se mantiene escuchando.
 // Es la forma moderna de manejar el estado de autenticación en toda la app.
 onEstadoAuth((user) => {
-  if (user) {
-    const isAdmin = user.email === env.VITE_FIREBASE_ADMIN_EMAIL;
-    useAuthStore.setState({ user: user.email, admin: isAdmin ? user.email : null, loading: false });
-  } else {
+  try {
+    if (user) {
+      const isAdmin = user.email === env.VITE_FIREBASE_ADMIN_EMAIL;
+      useAuthStore.setState({ user: user.email, admin: isAdmin ? user.email : null, loading: false });
+    } else {
+      useAuthStore.setState({ user: null, admin: null, loading: false });
+    }
+  } catch (error) {
+    console.error("Error en el listener de autenticación:", error);
+    // Aseguramos que loading se establezca a false incluso si hay un error
     useAuthStore.setState({ user: null, admin: null, loading: false });
   }
 });

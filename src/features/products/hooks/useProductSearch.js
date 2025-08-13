@@ -104,8 +104,6 @@ export function useProductSearch() {
       navigate(`${PATHS.PRODUCTS}?q=${encodeURIComponent(trimmedQuery)}`);
       lastSyncedUrlTerm.current = trimmedQuery;
     } else if (isProductsPage) {
-      // CORREGIDO: Input vacío en página de productos, eliminar parámetro de búsqueda
-      // Removimos la condición && currentUrlQuery que impedía la limpieza
       const newParams = new URLSearchParams(searchParams);
       newParams.delete('q');
       setSearchParams(newParams, { replace: true });
