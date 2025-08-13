@@ -24,3 +24,7 @@ dist-ssr
 *.sw?
 
 .env
+.env.test
+GEMINI.md
+QWEN.md
+start-qwen-simple.bat

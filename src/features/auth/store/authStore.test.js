@@ -1,5 +1,6 @@
 // src/features/auth/store/authStore.test.js
-import { act, renderHook } from '@testing-library/react';
+import { renderHook } from '@testing-library/react';
+import { act } from 'react';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { useAuthStore } from './authStore';
 import * as authService from '@/features/auth/services/authService';

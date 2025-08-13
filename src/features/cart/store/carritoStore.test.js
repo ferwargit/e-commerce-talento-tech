@@ -1,5 +1,6 @@
 // src/features/cart/store/carritoStore.test.js
-import { act, renderHook } from '@testing-library/react';
+import { renderHook } from '@testing-library/react';
+import { act } from 'react';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { useCarritoStore } from './carritoStore';
 
