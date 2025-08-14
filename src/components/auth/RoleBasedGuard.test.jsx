@@ -1,4 +1,3 @@
-
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
@@ -27,7 +26,7 @@ const TestApp = ({ initialEntries = ['/'] }) => {
         <Route
           path="/admin"
           element={
-            <RoleBasedGuard allowedRoles={['admin']} fallback={<Navigate to="/login" replace />}>
+            <RoleBasedGuard allowedRoles={['admin']} fallback={<Navigate to="/login" replace />} >
               <AdminProductos />
             </RoleBasedGuard>
           }
@@ -38,15 +37,19 @@ const TestApp = ({ initialEntries = ['/'] }) => {
 };
 
 describe('RoleBasedGuard', () => {
+  const getRole = (state) => {
+    if (state.admin) return 'admin';
+    if (state.user) return 'client';
+    return 'guest';
+  };
+
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   it('debería redirigir a la página de login si el usuario no está autenticado', () => {
-    useAuthStore.mockImplementation(selector => {
-      const state = { user: null, admin: null };
-      return selector(state);
-    });
+    const state = { user: null, admin: null };
+    useAuthStore.mockImplementation(selector => selector({ ...state, getRole: () => getRole(state) }));
 
     render(<TestApp initialEntries={['/admin']} />);
 
@@ -55,10 +58,8 @@ describe('RoleBasedGuard', () => {
   });
 
   it('debería renderizar la página de admin si el usuario es un administrador', () => {
-    useAuthStore.mockImplementation(selector => {
-      const state = { user: null, admin: { email: 'admin@test.com' } };
-      return selector(state);
-    });
+    const state = { user: null, admin: { email: 'admin@test.com' } };
+    useAuthStore.mockImplementation(selector => selector({ ...state, getRole: () => getRole(state) }));
 
     render(<TestApp initialEntries={['/admin']} />);
 
@@ -67,10 +68,8 @@ describe('RoleBasedGuard', () => {
   });
 
   it('debería redirigir a la página de login si el usuario es un cliente pero no un administrador', () => {
-    useAuthStore.mockImplementation(selector => {
-      const state = { user: { email: 'user@test.com' }, admin: null };
-      return selector(state);
-    });
+    const state = { user: { email: 'user@test.com' }, admin: null };
+    useAuthStore.mockImplementation(selector => selector({ ...state, getRole: () => getRole(state) }));
 
     render(<TestApp initialEntries={['/admin']} />);
 

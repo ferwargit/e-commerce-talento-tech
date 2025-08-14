@@ -2,11 +2,20 @@ import { create } from "zustand";
 import { onEstadoAuth, cerrarSesion } from "@/features/auth/services/authService";
 import { env } from "@/config/env";
 
-export const useAuthStore = create((set) => ({
+export const useAuthStore = create((set, get) => ({
   user: null,
   admin: null,
   loading: true, // Inicia en true hasta que Firebase verifique el estado
-  logout: () => { 
+
+  // Selector para obtener el rol del usuario de forma derivada
+  getRole: () => {
+    const { admin, user } = get();
+    if (admin) return 'admin';
+    if (user) return 'client';
+    return 'guest';
+  },
+
+  logout: () => {
     // Actualización optimista: cambiamos el estado local inmediatamente para una UX instantánea.
     set({ user: null, admin: null });
     cerrarSesion();
