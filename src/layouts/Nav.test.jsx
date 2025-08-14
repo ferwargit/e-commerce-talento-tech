@@ -21,11 +21,11 @@ vi.mock("@/features/cart/store/carritoStore", () => ({
   useCarritoStore: vi.fn((selector) => selector({ productosCarrito: [] })),
 }));
 
+// Mock corregido para useAuthStore con getRole
 vi.mock("@/features/auth/store/authStore", () => ({
-  useAuthStore: vi.fn(selector => selector({ user: null, admin: null, logout: vi.fn() })),
+  useAuthStore: vi.fn(),
 }));
 
-// Mock mejorado para useProductSearch que maneja correctamente la lógica de limpieza
 // Estado global para persistir el valor del search term entre renders
 let globalSearchTerm = '';
 
@@ -80,6 +80,22 @@ vi.mock("@/features/products/hooks/useProductSearch", () => ({
   },
 }));
 
+// Función helper para crear el estado del auth store
+const createAuthState = (user = null, admin = null) => {
+  const getRole = () => {
+    if (admin) return 'admin';
+    if (user) return 'client';
+    return 'guest';
+  };
+
+  return {
+    user,
+    admin,
+    logout: vi.fn(),
+    getRole,
+  };
+};
+
 // Componente helper
 const LocationDisplay = () => {
   const location = useLocation();
@@ -107,11 +123,13 @@ const MockProductDetail = () => (
     <h1>Detalle del Producto</h1>
   </div>
 );
+
 const MockHome = () => (
   <div>
     <h1>Página de Inicio</h1>
   </div>
 );
+
 const MockContact = () => (
   <div>
     <h1>Página de Contacto</h1>
@@ -140,14 +158,13 @@ describe("Nav Component - E-commerce Search Experience", () => {
     vi.clearAllMocks();
     // Limpiar estado global del mock
     globalSearchTerm = '';
-    vi.mocked(useAuthStore).mockImplementation(selector => selector({
-      user: null,
-      admin: null,
-      logout: vi.fn()
-    }));
+    
+    // Mock por defecto para usuario guest
+    vi.mocked(useAuthStore).mockImplementation(selector => 
+      selector(createAuthState())
+    );
   });
 
-  // El resto de tus tests están perfectos y no necesitan cambios.
   it("debería buscar automáticamente desde cualquier página (Home)", async () => {
     const user = userEvent.setup();
     renderNavWithRouter(["/"]);
@@ -259,11 +276,10 @@ describe("Nav Component - E-commerce Search Experience", () => {
   });
 
   test("NO debería interceptar navegación programática cuando hay valor en el input", async () => {
-    vi.mocked(useAuthStore).mockImplementation(selector => selector({
-      user: "test@example.com",
-      admin: null,
-      logout: vi.fn(),
-    }));
+    // Mock para usuario autenticado (client)
+    vi.mocked(useAuthStore).mockImplementation(selector =>
+      selector(createAuthState("test@example.com"))
+    );
 
     const user = userEvent.setup();
     const MockCart = () => (
@@ -323,5 +339,46 @@ describe("Nav Component - E-commerce Search Experience", () => {
     });
     expect(screen.getByText("Página de Inicio")).toBeInTheDocument();
     expect(searchInput.value).toBe("test");
+  });
+
+  describe("Navegación por roles", () => {
+    test("debería mostrar navegación de cliente para usuario guest", () => {
+      renderNavWithRouter(["/"]);
+      
+      expect(screen.getByRole("link", { name: /inicio/i })).toBeInTheDocument();
+      expect(screen.getByRole("link", { name: /productos/i })).toBeInTheDocument();
+      expect(screen.getByRole("link", { name: /nosotros/i })).toBeInTheDocument();
+      expect(screen.getByRole("link", { name: /contacto/i })).toBeInTheDocument();
+      expect(screen.getByRole("link", { name: /login/i })).toBeInTheDocument();
+    });
+
+    test("debería mostrar navegación de cliente para usuario autenticado", () => {
+      vi.mocked(useAuthStore).mockImplementation(selector =>
+        selector(createAuthState("test@example.com"))
+      );
+
+      renderNavWithRouter(["/"]);
+      
+      expect(screen.getByRole("link", { name: /inicio/i })).toBeInTheDocument();
+      expect(screen.getByRole("link", { name: /productos/i })).toBeInTheDocument();
+      expect(screen.getByRole("link", { name: /nosotros/i })).toBeInTheDocument();
+      expect(screen.getByRole("link", { name: /contacto/i })).toBeInTheDocument();
+      expect(screen.queryByRole("link", { name: /login/i })).not.toBeInTheDocument();
+      expect(screen.getByText(/test/i)).toBeInTheDocument(); // Dropdown con nombre de usuario
+    });
+
+    test("debería mostrar navegación de admin para administrador", () => {
+      vi.mocked(useAuthStore).mockImplementation(selector =>
+        selector(createAuthState(null, { email: "admin@test.com" }))
+      );
+
+      renderNavWithRouter(["/"]);
+      
+      expect(screen.getByRole("link", { name: /inicio/i })).toBeInTheDocument();
+      expect(screen.getByRole("link", { name: /^productos$/i })).toBeInTheDocument();
+      expect(screen.queryByRole("link", { name: /nosotros/i })).not.toBeInTheDocument();
+      expect(screen.queryByRole("link", { name: /contacto/i })).not.toBeInTheDocument();
+      expect(screen.getByText(/administrador/i)).toBeInTheDocument(); // Dropdown de admin
+    });
   });
 });
