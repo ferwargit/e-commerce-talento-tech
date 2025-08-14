@@ -10,10 +10,8 @@ import { useAuthStore } from "@/features/auth/store/authStore";
  * @param {React.ReactNode} [props.fallback=null] - Contenido opcional a renderizar si el rol no es válido.
  */
 function RoleBasedGuard({ children, allowedRoles, fallback = null }) {
-  const admin = useAuthStore((state) => state.admin);
-  const user = useAuthStore((state) => state.user);
-
-  const currentRole = admin ? 'admin' : (user ? 'client' : 'guest');
+  const getRole = useAuthStore((state) => state.getRole);
+  const currentRole = getRole();
 
   const isAllowed = allowedRoles.includes(currentRole);
 
